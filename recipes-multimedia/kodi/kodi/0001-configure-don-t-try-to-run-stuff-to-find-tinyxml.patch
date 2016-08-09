@@ -1,0 +1,25 @@
+From 27fc03853c9305d285a80563db27aea5ddebda2a Mon Sep 17 00:00:00 2001
+From: Koen Kooi <koen@dominion.thruhere.net>
+Date: Sat, 6 Feb 2016 15:43:01 +0100
+Subject: [PATCH 1/7] configure: don't try to run stuff to find tinyxml
+
+---
+ configure.ac | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/configure.ac b/configure.ac
+index 95f285b..d26c5d0 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -1109,7 +1109,7 @@ AC_CHECK_LIB([bluetooth],   [hci_devid],, AC_MSG_RESULT([Could not find suitable
+ AC_LANG_PUSH([C++])
+ PKG_CHECK_MODULES([TINYXML], [tinyxml >= 2.6.2],
+   [INCLUDES="$INCLUDES $TINYXML_CFLAGS"; LIBS="$LIBS $TINYXML_LIBS"],
+-  [AC_RUN_IFELSE(
++  [AC_COMPILE_IFELSE(
+    [AC_LANG_SOURCE([[
+ #include <stdlib.h>
+ #include <tinyxml.h>
+-- 
+2.0.1
+

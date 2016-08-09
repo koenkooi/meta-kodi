@@ -1,0 +1,39 @@
+From e9c7f4d2b134e7b8721487c19a50d9e443db95b5 Mon Sep 17 00:00:00 2001
+From: Koen Kooi <koen@dominion.thruhere.net>
+Date: Thu, 11 Feb 2016 14:56:49 +0100
+Subject: [PATCH 4/7] configure: remove gles/neon/wayland assumptions
+
+Signed-off-by: Koen Kooi <koen@dominion.thruhere.net>
+---
+ configure.ac | 8 --------
+ 1 file changed, 8 deletions(-)
+
+diff --git a/configure.ac b/configure.ac
+index 8aad06d..e7178ee 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -650,10 +650,6 @@ case $host in
+      ARCH="arm"
+      use_arch="arm"
+      use_joystick=no
+-     use_neon=yes
+-     use_gles=yes
+-     use_gl=no
+-     use_wayland=no
+      USE_STATIC_FFMPEG=1
+      ;;
+   aarch64*-*-linux-gnu*|aarch64*-*-linux-uclibc*)
+@@ -661,10 +657,6 @@ case $host in
+      ARCH="aarch64"
+      use_arch="aarch64"
+      use_joystick=no
+-     use_neon=yes
+-     use_gles=yes
+-     use_gl=no
+-     use_wayland=no
+      USE_STATIC_FFMPEG=1
+      ;;
+   arm*-*linux-android*)
+-- 
+2.0.1
+

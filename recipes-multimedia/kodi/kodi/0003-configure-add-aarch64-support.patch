@@ -1,0 +1,50 @@
+From 8d7649565863731593e1a4123195b6ce9961cd12 Mon Sep 17 00:00:00 2001
+From: Koen Kooi <koen@dominion.thruhere.net>
+Date: Tue, 9 Feb 2016 13:35:36 +0100
+Subject: [PATCH 3/7] configure: add aarch64 support
+
+Signed-off-by: Koen Kooi <koen@dominion.thruhere.net>
+---
+ configure.ac    | 11 +++++++++++
+ m4/xbmc_arch.m4 |  3 +++
+ 2 files changed, 14 insertions(+)
+
+diff --git a/configure.ac b/configure.ac
+index d26c5d0..8aad06d 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -656,6 +656,17 @@ case $host in
+      use_wayland=no
+      USE_STATIC_FFMPEG=1
+      ;;
++  aarch64*-*-linux-gnu*|aarch64*-*-linux-uclibc*)
++     target_platform=target_linux
++     ARCH="aarch64"
++     use_arch="aarch64"
++     use_joystick=no
++     use_neon=yes
++     use_gles=yes
++     use_gl=no
++     use_wayland=no
++     USE_STATIC_FFMPEG=1
++     ;;
+   arm*-*linux-android*)
+      target_platform=target_android
+      use_arch="arm"
+diff --git a/m4/xbmc_arch.m4 b/m4/xbmc_arch.m4
+index 0b66a82..ad09584 100644
+--- a/m4/xbmc_arch.m4
++++ b/m4/xbmc_arch.m4
+@@ -63,6 +63,9 @@ case $host in
+   arm*-*-linux-gnu*|arm*-*-linux-uclibc*)
+      AC_SUBST(ARCH_DEFINES, "-DTARGET_POSIX -DTARGET_LINUX -D_LINUX")
+      ;;
++  aarch64*-*-linux-gnu*|aarch64*-*-linux-uclibc*)
++     AC_SUBST(ARCH_DEFINES, "-DTARGET_POSIX -DTARGET_LINUX -D_LINUX")
++     ;;
+   mips*-*-linux-gnu*|mips*-*-linux-uclibc*)
+      AC_SUBST(ARCH_DEFINES, "-DTARGET_POSIX -DTARGET_LINUX -D_LINUX")
+      ;;
+-- 
+2.0.1
+

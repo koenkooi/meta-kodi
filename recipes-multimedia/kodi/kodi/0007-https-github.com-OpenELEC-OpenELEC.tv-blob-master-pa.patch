@@ -1,0 +1,85 @@
+From 1ec2dca41d4e50d06f35a98f2fef6f81fd0571ae Mon Sep 17 00:00:00 2001
+From: Koen Kooi <koen@dominion.thruhere.net>
+Date: Fri, 19 Feb 2016 10:41:36 +0100
+Subject: [PATCH 7/7] 
+ https://github.com/OpenELEC/OpenELEC.tv/blob/master/packages/mediacenter/kodi/patches/kodi-999.42-KEY_EPG.patch
+
+---
+ system/keymaps/keyboard.xml            | 2 ++
+ xbmc/input/XBMC_keysym.h               | 1 +
+ xbmc/input/XBMC_keytable.cpp           | 1 +
+ xbmc/input/XBMC_vkeys.h                | 1 +
+ xbmc/input/linux/LinuxInputDevices.cpp | 1 +
+ 5 files changed, 6 insertions(+)
+
+diff --git a/system/keymaps/keyboard.xml b/system/keymaps/keyboard.xml
+index 9833cff..4bcc1ce 100644
+--- a/system/keymaps/keyboard.xml
++++ b/system/keymaps/keyboard.xml
+@@ -95,6 +95,7 @@
+       <sleep>ActivateWindow(shutdownmenu)</sleep>
+       <!-- PVR windows -->
+       <e>ActivateWindow(TVGuide)</e>
++      <epg>ActivateWindow(TVGuide)</epg>
+       <h>ActivateWindow(TVChannels)</h>
+       <j>ActivateWindow(RadioChannels)</j>
+       <k>ActivateWindow(TVRecordings)</k>
+@@ -246,6 +247,7 @@
+   <TVGuide>
+     <keyboard>
+       <e>PreviousMenu</e>
++      <epg>PreviousMenu</epg>
+     </keyboard>
+   </TVGuide>
+   <MyFiles>
+diff --git a/xbmc/input/XBMC_keysym.h b/xbmc/input/XBMC_keysym.h
+index 89c21f5..e7410ec 100644
+--- a/xbmc/input/XBMC_keysym.h
++++ b/xbmc/input/XBMC_keysym.h
+@@ -229,6 +229,7 @@ typedef enum {
+   XBMCK_FAVORITES   = 0x14d,
+   XBMCK_HOMEPAGE    = 0x14e,
+   XBMCK_CONFIG      = 0x14f,
++  XBMCK_EPG         = 0x150,
+ 
+   // Add any other keys here
+ 
+diff --git a/xbmc/input/XBMC_keytable.cpp b/xbmc/input/XBMC_keytable.cpp
+index 4d05464..14fd384 100644
+--- a/xbmc/input/XBMC_keytable.cpp
++++ b/xbmc/input/XBMC_keytable.cpp
+@@ -243,6 +243,7 @@ static const XBMCKEYTABLE XBMCKeyTable[] =
+ , { XBMCK_FAVORITES,              0,    0, XBMCVK_FAVORITES,     "favorites" }
+ , { XBMCK_HOMEPAGE ,              0,    0, XBMCVK_HOMEPAGE,      "homepage" }
+ , { XBMCK_CONFIG,                 0,    0, XBMCVK_CONFIG,        "config" }
++, { XBMCK_EPG   ,                 0,    0, XBMCVK_EPG,           "epg" }
+ };
+ 
+ static int XBMCKeyTableSize = sizeof(XBMCKeyTable)/sizeof(XBMCKEYTABLE);
+diff --git a/xbmc/input/XBMC_vkeys.h b/xbmc/input/XBMC_vkeys.h
+index af114c9..4e3787c 100644
+--- a/xbmc/input/XBMC_vkeys.h
++++ b/xbmc/input/XBMC_vkeys.h
+@@ -221,6 +221,7 @@ typedef enum {
+   XBMCVK_FAVORITES      = 0xE9,
+   XBMCVK_HOMEPAGE       = 0xEA,
+   XBMCVK_CONFIG         = 0xEB,
++  XBMCVK_EPG            = 0xEC,
+ 
+   XBMCVK_LAST           = 0xFF
+ } XBMCVKey;
+diff --git a/xbmc/input/linux/LinuxInputDevices.cpp b/xbmc/input/linux/LinuxInputDevices.cpp
+index 9f3e866..73f338f 100644
+--- a/xbmc/input/linux/LinuxInputDevices.cpp
++++ b/xbmc/input/linux/LinuxInputDevices.cpp
+@@ -268,6 +268,7 @@ KeyMap keyMap[] = {
+   { KEY_FILE          , XBMCK_LAUNCH_FILE_BROWSER},
+   { KEY_SELECT        , XBMCK_RETURN      },
+   { KEY_CONFIG        , XBMCK_CONFIG      },
++  { KEY_EPG           , XBMCK_EPG         },
+   // The Little Black Box Remote Additions
+   { 384               , XBMCK_LEFT        }, // Red
+   { 378               , XBMCK_RIGHT       }, // Green
+-- 
+2.0.1
+
