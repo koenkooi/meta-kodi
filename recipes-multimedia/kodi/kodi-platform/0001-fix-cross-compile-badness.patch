@@ -1,8 +1,19 @@
+From 3136317f096ea7fda4fb907e775a01952c4aae3d Mon Sep 17 00:00:00 2001
+From: Stefan Saraev <stefan@saraev.ca>
+Date: Fri, 19 Feb 2016 10:33:00 +0100
+Subject: [PATCH] fix cross compile badness
+
+From https://github.com/OpenELEC/OpenELEC.tv/blob/master/packages/mediacenter/kodi-platform/patches/kodi-platform-01_crosscompile-badness.patch
+---
+ CMakeLists.txt               | 2 +-
+ kodiplatform-config.cmake.in | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 2765341..1bd4fc2 100644
+index bf6b659..9abe773 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -26,7 +26,7 @@ else()
+@@ -22,7 +22,7 @@ if(NOT WIN32)
    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC")
  endif()
  
@@ -24,3 +35,6 @@ index 3fc5273..60bdf1b 100644
  set (kodiplatform_LIBRARY_DIRS "@CMAKE_LIBRARY_OUTPUT_DIRECTORY@")
  set (kodiplatform_LINKER_FLAGS "@kodiplatform_LINKER_FLAGS@")
  set (kodiplatform_CONFIG_VARS "@kodiplatform_CONFIG_VARS@")
+-- 
+2.0.1
+
