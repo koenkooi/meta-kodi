@@ -1,8 +1,13 @@
-require recipes-graphics/xorg-xserver/xserver-xorg.inc
+require xserver-xorg.inc
 
-SRC_URI[md5sum] = "1509a9daae713895e7f5bcba8bcc05b2"
-SRC_URI[sha256sum] = "0c4b45c116a812a996eb432d8508cf26c2ec8c3916ff2a50781796882f8d6457"
+SRCREV = "8b312db7d1d98be67f0283d982428545cf948a66"
 
+SRC_URI = " git://anongit.freedesktop.org/git/xorg/xserver.git;protocol=https;branch=server-1.18-branch \
+            file://macro_tweak.patch \
+            file://musl-arm-inb-outb.patch \
+           "
+
+S = "${WORKDIR}/git"
 
 # These extensions are now integrated into the server, so declare the migration
 # path for in-place upgrades.
