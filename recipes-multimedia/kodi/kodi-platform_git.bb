@@ -34,6 +34,17 @@ do_compile_prepend() {
 	          ${B}/CMakeFiles/kodiplatform.dir/link.txt
 }
 
+do_install_append() {
+	sed -i -e '/CXX/d' \
+               -e '/CC/d' \
+               -e 's:${STAGING_LIBDIR}:${libdir}:g' \
+               -e 's:${STAGING_DIR_HOST}:/:g' \
+               -e 's:${STAGING_DIR_NATIVE}:/:g' \
+               -e 's:${prefix}/${libdir}:${libdir}:g' \
+               -e 's:${WORKDIR}=::g' \ 
+            ${D}${libdir}/pkgconfig/*.pc
+}
+
 RPROVIDES_${PN} += "libkodiplatform"
 FILES_${PN}-dev += "${libdir}/*platform"
 
