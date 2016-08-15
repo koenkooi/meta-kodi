@@ -9,7 +9,7 @@ SRC_URI = "git://anongit.freedesktop.org/git/mesa/mesa.git;protocol=http;branch=
 
 S = "${WORKDIR}/git"
 
-DEPENDS += "python-mako-native llvm3.3"
+DEPENDS += "python-mako-native nettle"
 
 inherit pythonnative
 
