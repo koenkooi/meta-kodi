@@ -11,7 +11,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=8730ad58d11c7bbad9a7066d69f7808e"
 
 PV = "2.99.917+git${SRCPV}"
 
-SRCREV = "26f8ab5429a554801641415f0ab3b2d68cea1d00"
+SRCREV = "12c14deb40fb4a9488d11ce53c5ce956c776a742"
 SRC_URI = "git://anongit.freedesktop.org/git/xorg/driver/xf86-video-intel.git;protocol=http \
            file://0001-sna_display-fix-printf-to-distinguish-between-24Hz-a.patch \
            "
@@ -20,7 +20,7 @@ S = "${WORKDIR}/git"
 
 DEPENDS += "virtual/libx11 drm libpciaccess pixman"
 
-PACKAGECONFIG ??= "xvmc sna uxa udev ${@bb.utils.contains('DISTRO_FEATURES', 'opengl', 'dri dri2', '', d)}"
+PACKAGECONFIG ??= "xvmc sna uxa udev ${@bb.utils.contains('DISTRO_FEATURES', 'opengl', 'dri dri2 dri3', '', d)}"
 
 PACKAGECONFIG[dri] = "--enable-dri,--disable-dri"
 PACKAGECONFIG[dri1] = "--enable-dri1,--disable-dri1,xf86driproto"
