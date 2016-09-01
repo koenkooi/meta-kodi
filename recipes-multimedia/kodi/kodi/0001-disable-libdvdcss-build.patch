@@ -1,0 +1,26 @@
+From e0832c2eb702bd63a20b01c3a0283b31c4c70c55 Mon Sep 17 00:00:00 2001
+From: Koen Kooi <koen@dominion.thruhere.net>
+Date: Fri, 15 Apr 2016 13:43:59 +0200
+Subject: [PATCH] disable libdvdcss build
+
+Signed-off-by: Koen Kooi <koen@dominion.thruhere.net>
+---
+ lib/libdvd/Makefile.in | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/lib/libdvd/Makefile.in b/lib/libdvd/Makefile.in
+index 00827cf..e5fdf7a 100644
+--- a/lib/libdvd/Makefile.in
++++ b/lib/libdvd/Makefile.in
+@@ -35,7 +35,7 @@ endif
+ ifeq ($(ARCH),arm-osx)
+   BUILD_DVDCSS = 0
+ else
+-  BUILD_DVDCSS = 1
++  BUILD_DVDCSS = 0
+ endif
+ ifeq ($(BUILD_DVDCSS),1)
+   SOS += libdvdcss-$(ARCH).so
+-- 
+2.0.1
+
