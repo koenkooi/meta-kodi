@@ -1,7 +1,7 @@
 SUMMARY = "Kodi Media Center PVR plugins"
 
 LICENSE = "GPLv2+"
-LIC_FILES_CHKSUM = "file://src/client.cpp;md5=c8f6b73c5bc1048a3d6506700a7a91d2"
+LIC_FILES_CHKSUM = "file://src/client.cpp;beginline=1;endline=19;md5=101ceb1255392ba347350e6c3e543f3a"
 
 DEPENDS = " \
             zip-native \
@@ -9,13 +9,12 @@ DEPENDS = " \
             kodi-platform \
           "
 
-SRCREV_pvrhts = "7f75b70527922aef953123ff97ebaa22d9fb7cb4"
+SRCREV_pvrhts = "66dcb89f849b2fcf70d9697f08a7b182e08fed78"
 
 SRCREV_FORMAT = "pvrhts"
 
-PV = "2.2.13+gitr${SRCPV}"
-SRC_URI = "git://github.com/kodi-pvr/pvr.hts.git;branch=Jarvis;destsuffix=pvr.hts;name=pvrhts \
-           file://0001-Update-to-p8-platform.patch \
+PV = "3.3.1+gitr${SRCPV}"
+SRC_URI = "git://github.com/kodi-pvr/pvr.hts.git;branch=master;destsuffix=pvr.hts;name=pvrhts \
           "
 
 inherit cmake pkgconfig gettext

@@ -6,12 +6,11 @@ LIC_FILES_CHKSUM = "file://src/util/XMLUtils.cpp;beginline=2;endline=18;md5=dae8
 
 DEPENDS = "libtinyxml kodi"
 
-PV = "16.0.0"
+PV = "17.0.0"
 
-SRCREV = "15edaf78d6307eaa5e1d17028122d8bce9d55aa2"
+SRCREV = "c8188d82678fec6b784597db69a68e74ff4986b5"
 SRC_URI = "git://github.com/xbmc/kodi-platform.git \
-           file://0001-Fix-build-after-platform-rename.patch \
-           file://0001-fix-cross-compile-badness.patch \
+           file://kodi-platform-01_crosscompile-badness.patch \
            file://kodi-platform-02_no-multi-lib.patch \
           "
 
@@ -19,11 +18,11 @@ S = "${WORKDIR}/git"
 
 inherit cmake pkgconfig
 
-EXTRA_OECMAKE = " -DCMAKE_INSTALL_PREFIX_TOOLCHAIN=${STAGING_DIR_TARGET} \
+EXTRA_OECMAKE = " -DCMAKE_INSTALL_PREFIX_TOOLCHAIN=${STAGING_DIR_HOST}${prefix} \
                   -DCMAKE_INSTALL_LIBDIR=${libdir} \
                   -DCMAKE_INSTALL_LIBDIR_NOARCH=${libdir} \
-                  -DKODI_INCLUDE_DIR=${STAGING_LIBDIR}/kodi \
-                  -DKODI_INCLUDE_DIR=${STAGING_INCDIR}/kodi \
+                  -DCMAKE_MODULE_PATH=${STAGING_DIR_HOST}${libdir}/kodi \
+                  -DCMAKE_PREFIX_PATH=${STAGING_DIR_HOST}${prefix} \
                 "
 
 do_compile_prepend() {
@@ -46,5 +45,9 @@ do_install_append() {
 }
 
 RPROVIDES_${PN} += "libkodiplatform"
+PACKAGES =+ "libkodiplatform"
+
+FILES_libkodiplatform = "${libdir}/lib*.so.*"
+
 FILES_${PN}-dev += "${libdir}/*platform"
 
