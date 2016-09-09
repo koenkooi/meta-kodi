@@ -56,6 +56,7 @@ EXTRA_OECONF = " \
     --enable-gpl \
     ${@bb.utils.contains('USE_NONFREE', 'yes', '--enable-nonfree', '', d)} \
     --enable-avfilter \
+    --enable-avresample \
     \
     --cross-prefix=${TARGET_PREFIX} \
     --prefix=${prefix} \
