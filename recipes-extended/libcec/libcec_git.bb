@@ -6,9 +6,9 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=e61fd86f9c947b430126181da2c6c715"
 
 DEPENDS = "p8platform udev lockdev"
 
-PV = "3.1.0"
+PV = "4.0.0.2"
 
-SRCREV = "6d68d21243aa92862592435e8396b4280ea46c3f"
+SRCREV = "481dd826235adc76d6b9046ff175d88741445d6d"
 SRC_URI = "git://github.com/Pulse-Eight/libcec.git"
 
 S = "${WORKDIR}/git"

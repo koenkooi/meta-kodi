@@ -4,10 +4,10 @@ HOMEPAGE = "http://libcec.pulse-eight.com/"
 LICENSE = "GPLv2+"
 LIC_FILES_CHKSUM = "file://src/os.h;md5=752555fa94e82005d45fd201fee5bd33"
 
-PV = "2.0.1"
+PV = "2.1.0"
 
 SRC_URI = "git://github.com/Pulse-Eight/platform.git"
-SRCREV = "38343e0acd6a636ac46139aa666aee4a8d1f13db"
+SRCREV = "d7bceb64541cb046421cbcd4c98d91e9bf24822f"
 
 S = "${WORKDIR}/git"
 
