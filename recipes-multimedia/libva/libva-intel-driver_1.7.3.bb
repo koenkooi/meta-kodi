@@ -13,7 +13,7 @@ COMPATIBLE_HOST = '(i.86|x86_64).*-linux'
 
 DEPENDS = "libva libdrm"
 
-SRCREV = "396224348ae47f3093e79dc84a7d4f1f1513ba55"
+SRCREV = "c747c3428cd862869b75e96b737fa61532d6f27f"
 
 SRC_URI = "git://anongit.freedesktop.org/git/vaapi/intel-driver.git;protocol=http;branch=v1.7-branch"
 
