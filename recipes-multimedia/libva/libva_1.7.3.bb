@@ -17,11 +17,11 @@ SECTION = "x11"
 LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://COPYING;md5=2e48940f94acb0af582e5ef03537800f"
 
-SRC_URI = "http://www.freedesktop.org/software/vaapi/releases/libva/${BP}.tar.bz2 \
-          "
+SRCREV = "dbf9f7e33349c3cee8d131e93a6a4f91255635cb"
 
-SRC_URI[md5sum] = "77d30af5a4bfaec6dddc2bdcbbd92ef5"
-SRC_URI[sha256sum] = "5dd61cf16a5648b680e6146a58064e93be11bf4e65a9e4e30f1e9cb8ecfa2c13"
+SRC_URI = "git://anongit.freedesktop.org/git/vaapi/libva.git;protocol=http;branch=v1.7-branch"
+
+S = "${WORKDIR}/git"
 
 DEPENDS = "libdrm virtual/mesa virtual/libgles1 virtual/libgles2 virtual/egl"
 
