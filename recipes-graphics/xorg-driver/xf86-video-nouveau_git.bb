@@ -9,9 +9,9 @@ DESCRIPTION = "Open-source X.org graphics driver for NVIDIA graphics"
 DEPENDS += "virtual/libx11 libxvmc drm xf86driproto glproto \
             virtual/libgl xineramaproto libpciaccess"
 
-PV = "1.0.12+git${SRCPV}"
+PV = "1.0.13+git${SRCPV}"
 
-SRCREV = "6473b68762b0dca2dfccfdfc74100398b7459296"
+SRCREV = "1516d35b06c9cda399bef01d992805d6e63dcbae"
 SRC_URI = "git://anongit.freedesktop.org/git/nouveau/xf86-video-nouveau.git;protocol=https"
 
 S = "${WORKDIR}/git"
