@@ -2,7 +2,7 @@ require recipes-graphics/mesa/${BPN}.inc
 
 LIC_FILES_CHKSUM = "file://docs/license.html;md5=899fbe7e42d494c7c8c159c7001693d5"
 
-SRCREV = "edfc17a19a17e8dae41a703a9cb4b9eb3c255c34"
+SRCREV = "6b1c3c3aa0a2b643dbb9964b7001097eed3c4888"
 SRC_URI = "git://anongit.freedesktop.org/git/mesa/mesa.git;protocol=http;branch=12.0 \
            file://0001-freedreno-disable-error-check-to-make-it-continue.patch \
           "
