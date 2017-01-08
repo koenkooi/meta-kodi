@@ -64,13 +64,16 @@ DEPENDS = " \
             zlib \
           "
 
-SRCREV = "1dd86137b04008f30ac5879c4966a2c06a4f4b85"
+SRCREV = "509c6d6e8f74eaf7445794e936e17684e075d18d"
 
 # 'patch' doesn't support binary diffs
 PATCHTOOL = "git"
 
 PV = "17+gitr${SRCPV}"
 SRC_URI = "git://github.com/xbmc/xbmc.git;branch=Krypton \
+           file://0001-library-tvshows-switch-genre-and-recently-added.patch \
+           file://0002-library-movies-switch-genre-and-recently-added.patch \
+           file://0003-estuary-move-recently-added-entries-to-the-top-in-ho.patch \
            file://0002-configure-don-t-try-to-run-stuff-to-find-tinyxml.patch \
            file://0004-add-support-to-read-frequency-output-if-using-intel-.patch \
            file://0005-Revert-posix-move-libdvd-to-depends.patch \
@@ -174,7 +177,7 @@ RRECOMMENDS_${PN}_append = " libcec \
                              libcurl \
                              xdpyinfo \
                              xrandr \
-                             ${@base_contains('PACKAGECONFIG', 'opengl', 'mesa-demos', '', d)} \
+                             ${@bb.utils.contains('PACKAGECONFIG', 'opengl', 'mesa-demos', '', d)} \
                              tzdata-africa \
                              tzdata-americas \
                              tzdata-antarctica \
