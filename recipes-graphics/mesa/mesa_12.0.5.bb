@@ -1,5 +1,7 @@
 require recipes-graphics/mesa/${BPN}.inc
 
+DEPENDS += "libdrm"
+
 LIC_FILES_CHKSUM = "file://docs/license.html;md5=899fbe7e42d494c7c8c159c7001693d5"
 
 SRCREV = "6b1c3c3aa0a2b643dbb9964b7001097eed3c4888"
