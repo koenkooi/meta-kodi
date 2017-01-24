@@ -64,7 +64,7 @@ DEPENDS = " \
             zlib \
           "
 
-SRCREV = "509c6d6e8f74eaf7445794e936e17684e075d18d"
+SRCREV = "0e7c42ee350ae6479faace96a3c4675e7410026a"
 
 # 'patch' doesn't support binary diffs
 PATCHTOOL = "git"
@@ -77,7 +77,11 @@ SRC_URI = "git://github.com/xbmc/xbmc.git;branch=Krypton \
            file://0002-configure-don-t-try-to-run-stuff-to-find-tinyxml.patch \
            file://0004-add-support-to-read-frequency-output-if-using-intel-.patch \
            file://0005-Revert-posix-move-libdvd-to-depends.patch \
-"
+           file://kodi-rpi-001-reduce-priority-of-python-threads.patch \
+           file://kodi-rpi-002-avoid-memcpy-on-every-demuxer-packet.patch \
+           file://kodi-rpi-003-load-OSD-dialogs-on-startup.patch \
+           file://kodi-rpi-004-speedup-thumb-loading.patch \
+          "
 
 inherit autotools-brokensep gettext python-dir
 
