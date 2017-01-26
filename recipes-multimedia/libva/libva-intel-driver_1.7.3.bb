@@ -21,8 +21,8 @@ S = "${WORKDIR}/git"
 
 inherit autotools pkgconfig
 
-PACKAGECONFIG ??= "${@base_contains("DISTRO_FEATURES", "x11", "x11", "", d)} \
-                   ${@base_contains("DISTRO_FEATURES", "opengl wayland", "wayland", "", d)}"
+PACKAGECONFIG ??= "${@bb.utils.contains("DISTRO_FEATURES", "x11", "x11", "", d)} \
+                   ${@bb.utils.contains("DISTRO_FEATURES", "opengl wayland", "wayland", "", d)}"
 PACKAGECONFIG[x11] = "--enable-x11,--disable-x11"
 PACKAGECONFIG[wayland] = "--enable-wayland,--disable-wayland,wayland virtual/egl"
 
