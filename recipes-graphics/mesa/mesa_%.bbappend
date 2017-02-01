@@ -1,6 +1,13 @@
 DEPENDS += "libvdpau"
 
+PROVIDES += "libegl"
+
 MESA_LLVM_RELEASE = "3.7.1"
+
+PACKAGECONFIG_append = " gbm egl gles dri ${MESA_CRYPTO} \
+                ${@bb.utils.contains('DISTRO_FEATURES', 'x11', 'x11', '', d)}\
+                ${@bb.utils.contains('DISTRO_FEATURES', 'wayland', 'wayland', '', d)}\
+                " 
 
 PACKAGECONFIG_x86 = " egl gles gbm dri dri3 x11 xa r600 gallium gallium-llvm "
 PACKAGECONFIG_x86-64 = " egl gles gbm dri dri3 x11 xa r600 gallium gallium-llvm "
