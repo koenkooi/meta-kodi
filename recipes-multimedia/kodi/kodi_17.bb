@@ -64,7 +64,7 @@ DEPENDS = " \
             zlib \
           "
 
-SRCREV = "f80a2a101eab3a309464424df9371435396888a5"
+SRCREV = "a10c5048f2487bd9b2dc1f35d2fee48a25945a70"
 
 # 'patch' doesn't support binary diffs
 PATCHTOOL = "git"
