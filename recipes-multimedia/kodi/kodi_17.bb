@@ -64,12 +64,12 @@ DEPENDS = " \
             zlib \
           "
 
-SRCREV = "a10c5048f2487bd9b2dc1f35d2fee48a25945a70"
+SRCREV = "fc1619b118f6d503f920a49cf4ac4afcd0dd6b41"
 
 # 'patch' doesn't support binary diffs
 PATCHTOOL = "git"
 
-PV = "17+gitr${SRCPV}"
+PV = "17.1+gitr${SRCPV}"
 SRC_URI = "git://github.com/xbmc/xbmc.git;branch=Krypton \
            file://0001-library-tvshows-switch-genre-and-recently-added.patch \
            file://0002-library-movies-switch-genre-and-recently-added.patch \
@@ -77,10 +77,12 @@ SRC_URI = "git://github.com/xbmc/xbmc.git;branch=Krypton \
            file://0002-configure-don-t-try-to-run-stuff-to-find-tinyxml.patch \
            file://0004-add-support-to-read-frequency-output-if-using-intel-.patch \
            file://0005-Revert-posix-move-libdvd-to-depends.patch \
+           file://0005-added-Audio-video-bitrate-info-for-video-process-dia.patch  \
            file://kodi-rpi-001-reduce-priority-of-python-threads.patch \
            file://kodi-rpi-002-avoid-memcpy-on-every-demuxer-packet.patch \
            file://kodi-rpi-003-load-OSD-dialogs-on-startup.patch \
            file://kodi-rpi-004-speedup-thumb-loading.patch \
+           file://ec7fad1340916e916c5e387a09908d73148ab226.patch \
           "
 
 inherit autotools-brokensep gettext python-dir
