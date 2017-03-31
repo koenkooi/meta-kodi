@@ -9,11 +9,11 @@ DEPENDS = " \
             kodi-platform \
           "
 
-SRCREV_pvrhts = "5bf84c3acde83bc5172be7aeaf36543726fb8ada"
+SRCREV_pvrhts = "33b8487db3381435efc8b8f0f6c92e8a87d491bf"
 
 SRCREV_FORMAT = "pvrhts"
 
-PV = "3.4.19+gitr${SRCPV}"
+PV = "3.4.20+gitr${SRCPV}"
 SRC_URI = "git://github.com/kodi-pvr/pvr.hts.git;branch=Krypton;destsuffix=pvr.hts;name=pvrhts \
           "
 
