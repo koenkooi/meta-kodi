@@ -9,10 +9,10 @@ DEPENDS = " \
             kodi-platform \
           "
 
-SRCREV = "d248490ba4ac384c377b4aa420b7ad4c87fa0928"
+SRCREV = "f05370da31d80aab8ec42ca93d35b46ebf00ed04"
 
 
-PV = "1.0.6+gitr${SRCPV}"
+PV = "1.0.8+gitr${SRCPV}"
 SRC_URI = "git://github.com/peak3d/inputstream.adaptive.git;protocol=https \
           "
 
