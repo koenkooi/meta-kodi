@@ -1,0 +1,29 @@
+From f77d0d1e627bbed5b81337ab6038bda9e92ddc89 Mon Sep 17 00:00:00 2001
+From: fritsch <Peter.Fruehberger@gmail.com>
+Date: Sat, 22 Apr 2017 08:06:16 +0200
+Subject: [PATCH 9/9] DVDDemuxFFmpeg: Store probe_buffer on heap
+
+---
+ xbmc/cores/VideoPlayer/DVDDemuxers/DVDDemuxFFmpeg.cpp | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/xbmc/cores/VideoPlayer/DVDDemuxers/DVDDemuxFFmpeg.cpp b/xbmc/cores/VideoPlayer/DVDDemuxers/DVDDemuxFFmpeg.cpp
+index 33d1e5a..67f7ef7 100644
+--- a/xbmc/cores/VideoPlayer/DVDDemuxers/DVDDemuxFFmpeg.cpp
++++ b/xbmc/cores/VideoPlayer/DVDDemuxers/DVDDemuxFFmpeg.cpp
+@@ -293,10 +293,10 @@ bool CDVDDemuxFFmpeg::Open(CDVDInputStream* pInput, bool streaminfo, bool filein
+       if (trySPDIFonly || (iformat && strcmp(iformat->name, "wav") == 0))
+       {
+         AVProbeData pd;
+-        uint8_t probe_buffer[FFMPEG_FILE_BUFFER_SIZE + AVPROBE_PADDING_SIZE];
++        std::unique_ptr<uint8_t[]> probe_buffer (new uint8_t[FFMPEG_FILE_BUFFER_SIZE + AVPROBE_PADDING_SIZE]);
+ 
+         // init probe data
+-        pd.buf = probe_buffer;
++        pd.buf = probe_buffer.get();
+         pd.filename = strFile.c_str();
+ 
+         // av_probe_input_buffer might have changed the buffer_size beyond our allocated amount
+-- 
+2.0.1
+

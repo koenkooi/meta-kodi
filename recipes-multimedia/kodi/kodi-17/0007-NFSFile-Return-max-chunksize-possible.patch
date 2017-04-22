@@ -1,0 +1,25 @@
+From d61b28ac542665e68664a3457047064f51b4b38f Mon Sep 17 00:00:00 2001
+From: fritsch <Peter.Fruehberger@gmail.com>
+Date: Sun, 5 Feb 2017 21:59:24 +0100
+Subject: [PATCH 7/9] NFSFile: Return max chunksize possible
+
+---
+ xbmc/filesystem/NFSFile.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/xbmc/filesystem/NFSFile.h b/xbmc/filesystem/NFSFile.h
+index fc474e5..a3e2957 100644
+--- a/xbmc/filesystem/NFSFile.h
++++ b/xbmc/filesystem/NFSFile.h
+@@ -147,7 +147,7 @@ namespace XFILE
+     //implement iocontrol for seek_possible for preventing the stat in File class for
+     //getting this info ...
+     virtual int IoControl(EIoControl request, void* param){ if(request == IOCTRL_SEEK_POSSIBLE) return 1;return -1;};    
+-    virtual int  GetChunkSize() {return 1;}
++    virtual int  GetChunkSize() {return gNfsConnection.GetMaxReadChunkSize();}
+     
+     virtual bool OpenForWrite(const CURL& url, bool bOverWrite = false);
+     virtual bool Delete(const CURL& url);
+-- 
+2.0.1
+

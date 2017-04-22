@@ -64,7 +64,7 @@ DEPENDS = " \
             zlib \
           "
 
-SRCREV = "fc1619b118f6d503f920a49cf4ac4afcd0dd6b41"
+SRCREV = "eb3a01ac9036598852c04e391efe356a589e6868"
 
 # 'patch' doesn't support binary diffs
 PATCHTOOL = "git"
@@ -82,7 +82,10 @@ SRC_URI = "git://github.com/xbmc/xbmc.git;branch=Krypton \
            file://kodi-rpi-002-avoid-memcpy-on-every-demuxer-packet.patch \
            file://kodi-rpi-003-load-OSD-dialogs-on-startup.patch \
            file://kodi-rpi-004-speedup-thumb-loading.patch \
-           file://ec7fad1340916e916c5e387a09908d73148ab226.patch \
+           file://0006-Increase-CHUNK_SIZE-to-128-KB.patch \
+           file://0007-NFSFile-Return-max-chunksize-possible.patch \
+           file://0008-DVDDemuxFFMPEG-Increase-FFMPEG_FILE_BUFFER_SIZE-to-1.patch \
+           file://0009-DVDDemuxFFmpeg-Store-probe_buffer-on-heap.patch \
           "
 
 inherit autotools-brokensep gettext python-dir

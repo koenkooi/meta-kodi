@@ -1,14 +1,14 @@
-From ec7fad1340916e916c5e387a09908d73148ab226 Mon Sep 17 00:00:00 2001
+From 4d66410f49b523639cf88b1892adfa3abc0d60fc Mon Sep 17 00:00:00 2001
 From: fritsch <fritsch@kodi.tv>
 Date: Sat, 21 Jan 2017 17:59:43 +0100
-Subject: [PATCH] Increase CHUNK_SIZE to 128 KB
+Subject: [PATCH 6/9] Increase CHUNK_SIZE to 128 KB
 
 ---
  xbmc/filesystem/FileCache.cpp | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/xbmc/filesystem/FileCache.cpp b/xbmc/filesystem/FileCache.cpp
-index afea2fe..26598f7 100644
+index 4519266..331960e 100644
 --- a/xbmc/filesystem/FileCache.cpp
 +++ b/xbmc/filesystem/FileCache.cpp
 @@ -43,7 +43,7 @@
@@ -20,3 +20,6 @@ index afea2fe..26598f7 100644
  
  class CWriteRate
  {
+-- 
+2.0.1
+
