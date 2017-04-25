@@ -1,0 +1,44 @@
+From eb27ad28d5171770d27415ace95f4c91f15828bf Mon Sep 17 00:00:00 2001
+From: Awais Belal <awais_belal@mentor.com>
+Date: Wed, 21 Dec 2016 14:32:50 +0500
+Subject: [PATCH] CrossCompile.cmake: adjust build for OE
+
+CMake picks up its values from these environment variables
+in case of native builds and in OE we set these to target
+tools which will be incorrect in this case.
+We specifically need to strip the BUILD_CC variable
+before setting CC through it because OE tends to
+add a space which isn't liked too much by cmake.
+
+Signed-off-by: Awais Belal <awais_belal@mentor.com>
+---
+ cmake/modules/CrossCompile.cmake | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
+
+diff --git a/cmake/modules/CrossCompile.cmake b/cmake/modules/CrossCompile.cmake
+index 9c598a6..cf76fd6 100644
+--- a/cmake/modules/CrossCompile.cmake
++++ b/cmake/modules/CrossCompile.cmake
+@@ -4,6 +4,19 @@ function(llvm_create_cross_target_internal target_name toolchain buildtype)
+     set(LLVM_${target_name}_BUILD "${CMAKE_BINARY_DIR}/${target_name}")
+     set(LLVM_${target_name}_BUILD ${LLVM_${target_name}_BUILD} PARENT_SCOPE)
+     message(STATUS "Setting native build dir to " ${LLVM_${target_name}_BUILD})
++    string(STRIP $ENV{BUILD_CC} build_cc)
++    set(ENV{AR} $ENV{BUILD_AR})
++    set(ENV{ASM} ${build_cc})
++    set(ENV{ASMFLAGS} $ENV{BUILD_CFLAGS})
++    set(ENV{CC} ${build_cc})
++    set(ENV{CFLAGS} $ENV{BUILD_CFLAGS})
++    set(ENV{CXX} $ENV{BUILD_CXX})
++    set(ENV{CXXFLAGS} $ENV{BUILD_CXXFLAGS})
++    set(ENV{CPP} $ENV{BUILD_CPP})
++    set(ENV{CPPFLAGS} $ENV{BUILD_CPPFLAGS})
++    set(ENV{NM} $ENV{BUILD_NM})
++    set(ENV{RANLIB} $ENV{BUILD_RANLIB})
++    set(ENV{LDFLAGS} $ENV{BUILD_LDFLAGS})
+   endif(NOT DEFINED LLVM_${target_name}_BUILD)
+ 
+   if (EXISTS ${LLVM_MAIN_SRC_DIR}/cmake/platforms/${toolchain}.cmake)
+-- 
+1.9.1
+

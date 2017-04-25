@@ -1,0 +1,34 @@
+From 8bddda3652b36619cc8cd916c33d38c9cd41f024 Mon Sep 17 00:00:00 2001
+From: Justin Bogner <mail@justinbogner.com>
+Date: Wed, 21 Dec 2016 21:19:00 +0000
+Subject: [PATCH] cmake: Don't build llvm-config and tblgen concurrently in
+ cross builds
+
+This sets USES_TERMINAL for the native llvm-config build, so that it
+doesn't run at the same time as builds of other native tools (namely,
+tablegen). Without this, if you're very unlucky with the timing it's
+possible to be relinking libSupport as one of the tools is linking,
+causing a spurious failure.
+
+The tablegen build adopted USES_TERMINAL for this same reason in
+r280748.
+
+git-svn-id: https://llvm.org/svn/llvm-project/llvm/trunk@290271 91177308-0d34-0410-b5e6-96231b3b80d8
+---
+ tools/llvm-config/CMakeLists.txt | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/tools/llvm-config/CMakeLists.txt b/tools/llvm-config/CMakeLists.txt
+index 744fa4e..1f5db59b 100644
+--- a/tools/llvm-config/CMakeLists.txt
++++ b/tools/llvm-config/CMakeLists.txt
+@@ -69,7 +69,8 @@ if(CMAKE_CROSSCOMPILING)
+     COMMAND ${CMAKE_COMMAND} --build . --target llvm-config --config $<CONFIGURATION>
+     DEPENDS ${LLVM_NATIVE_BUILD}/CMakeCache.txt
+     WORKING_DIRECTORY ${LLVM_NATIVE_BUILD}
+-    COMMENT "Building native llvm-config...")
++    COMMENT "Building native llvm-config..."
++    USES_TERMINAL)
+   add_custom_target(${project}NativeLLVMConfig DEPENDS ${${project}_LLVM_CONFIG_EXE})
+   add_dependencies(${project}NativeLLVMConfig CONFIGURE_LLVM_NATIVE)
+ 

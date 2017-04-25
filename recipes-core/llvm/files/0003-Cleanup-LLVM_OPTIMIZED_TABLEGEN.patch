@@ -1,0 +1,97 @@
+From dbbdf44025768383566a947cb5ea811929db0e6c Mon Sep 17 00:00:00 2001
+From: Chris Bieneman <beanz@apple.com>
+Date: Tue, 6 Sep 2016 20:27:07 +0000
+Subject: [PATCH] [CMake] Cleanup LLVM_OPTIMIZED_TABLEGEN
+
+This cleanup removes the need for the native support library to have its own target. That target was only needed because makefile builds were tripping over each other if two tablegen targets were building at the same time. This causes problems because the parallel make invocations through CMake can't communicate with each other. This is fixed by invoking make directly instead of through CMake which is how we handle this in External Project invocations.
+
+The other part of the cleanup is to mark the custom commands as USES_TERMINAL. This is a bit of a hack, but we need to ensure that Ninja generators don't invoke multiple tablegen targets in the same build dir in parallel, because that too would be bad.
+
+Marking as USES_TERMINAL does have some downside for Ninja because it results in decreased parallelism, but correct builds are worth the minor loss and LLVM_OPTIMZIED_TABLEGEN is such a huge win, it is worth it.
+
+git-svn-id: https://llvm.org/svn/llvm-project/llvm/trunk@280748 91177308-0d34-0410-b5e6-96231b3b80d8
+---
+ cmake/modules/LLVMExternalProjectUtils.cmake |  8 ++++++--
+ cmake/modules/TableGen.cmake                 | 27 +++++++++++++++------------
+ 2 files changed, 21 insertions(+), 14 deletions(-)
+
+diff --git a/cmake/modules/LLVMExternalProjectUtils.cmake b/cmake/modules/LLVMExternalProjectUtils.cmake
+index efe47e7..f7020fb 100644
+--- a/cmake/modules/LLVMExternalProjectUtils.cmake
++++ b/cmake/modules/LLVMExternalProjectUtils.cmake
+@@ -3,12 +3,16 @@ include(ExternalProject)
+ # llvm_ExternalProject_BuildCmd(out_var target)
+ #   Utility function for constructing command lines for external project targets
+ function(llvm_ExternalProject_BuildCmd out_var target bin_dir)
++  cmake_parse_arguments(ARG "" "CONFIGURATION" "" ${ARGN})
++  if(NOT ARG_CONFIGURATION)
++    set(ARG_CONFIGURATION "$<CONFIGURATION>")
++  endif()
+   if (CMAKE_GENERATOR MATCHES "Make")
+     # Use special command for Makefiles to support parallelism.
+-    set(${out_var} "$(MAKE)" "-C" "${BINARY_DIR}" "${target}" PARENT_SCOPE)
++    set(${out_var} "$(MAKE)" "-C" "${bin_dir}" "${target}" PARENT_SCOPE)
+   else()
+     set(${out_var} ${CMAKE_COMMAND} --build ${bin_dir} --target ${target}
+-                                    --config $<CONFIGURATION> PARENT_SCOPE)
++                                    --config ${ARG_CONFIGURATION} PARENT_SCOPE)
+   endif()
+ endfunction()
+ 
+diff --git a/cmake/modules/TableGen.cmake b/cmake/modules/TableGen.cmake
+index b84fa93..c9cfb37 100644
+--- a/cmake/modules/TableGen.cmake
++++ b/cmake/modules/TableGen.cmake
+@@ -2,6 +2,8 @@
+ # Extra parameters for `tblgen' may come after `ofn' parameter.
+ # Adds the name of the generated file to TABLEGEN_OUTPUT.
+ 
++include(LLVMExternalProjectUtils)
++
+ function(tablegen project ofn)
+   # Validate calling context.
+   foreach(v
+@@ -71,18 +73,15 @@ function(add_public_tablegen_target target)
+ endfunction()
+ 
+ if(LLVM_USE_HOST_TOOLS)
+-  add_custom_command(OUTPUT LIB_LLVMSUPPORT
+-      COMMAND ${CMAKE_COMMAND} --build . --target LLVMSupport --config Release
+-      DEPENDS CONFIGURE_LLVM_NATIVE
+-      WORKING_DIRECTORY ${LLVM_NATIVE_BUILD}
+-      COMMENT "Building libLLVMSupport for native TableGen...")
+-  add_custom_target(NATIVE_LIB_LLVMSUPPORT DEPENDS LIB_LLVMSUPPORT)
+-
++  llvm_ExternalProject_BuildCmd(tblgen_build_cmd LLVMSupport
++    ${LLVM_NATIVE_BUILD}
++    CONFIGURATION Release)
+   add_custom_command(OUTPUT LIB_LLVMTABLEGEN
+-      COMMAND ${CMAKE_COMMAND} --build . --target LLVMTableGen --config Release
++      COMMAND ${tblgen_build_cmd}
+       DEPENDS CONFIGURE_LLVM_NATIVE
+       WORKING_DIRECTORY ${LLVM_NATIVE_BUILD}
+-      COMMENT "Building libLLVMTableGen for native TableGen...")
++      COMMENT "Building libLLVMTableGen for native TableGen..."
++      USES_TERMINAL)
+   add_custom_target(NATIVE_LIB_LLVMTABLEGEN DEPENDS LIB_LLVMTABLEGEN)
+ endif(LLVM_USE_HOST_TOOLS)
+ 
+@@ -123,11 +122,15 @@ macro(add_tablegen target project)
+       endif()
+       set(${project}_TABLEGEN_EXE ${${project}_TABLEGEN_EXE} PARENT_SCOPE)
+ 
++      llvm_ExternalProject_BuildCmd(tblgen_build_cmd ${target}
++                                    ${LLVM_NATIVE_BUILD}
++                                    CONFIGURATION Release)
+       add_custom_command(OUTPUT ${${project}_TABLEGEN_EXE}
+-        COMMAND ${CMAKE_COMMAND} --build . --target ${target} --config Release
+-        DEPENDS ${target} NATIVE_LIB_LLVMSUPPORT NATIVE_LIB_LLVMTABLEGEN
++        COMMAND ${tblgen_build_cmd}
++        DEPENDS ${target} NATIVE_LIB_LLVMTABLEGEN
+         WORKING_DIRECTORY ${LLVM_NATIVE_BUILD}
+-        COMMENT "Building native TableGen...")
++        COMMENT "Building native TableGen..."
++        USES_TERMINAL)
+       add_custom_target(${project}-tablegen-host DEPENDS ${${project}_TABLEGEN_EXE})
+       set(${project}_TABLEGEN_TARGET ${project}-tablegen-host PARENT_SCOPE)
+     endif()
