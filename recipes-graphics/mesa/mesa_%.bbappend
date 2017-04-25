@@ -2,7 +2,7 @@ DEPENDS += "libvdpau"
 
 PROVIDES += "libegl"
 
-MESA_LLVM_RELEASE = "3.7.1"
+MESA_LLVM_RELEASE = "3.9.1"
 
 PACKAGECONFIG_append = " gbm egl gles dri ${MESA_CRYPTO} \
                 ${@bb.utils.contains('DISTRO_FEATURES', 'x11', 'x11', '', d)}\
@@ -24,6 +24,7 @@ PACKAGECONFIG_append_aarch64 = " gallium \
                          ${@bb.utils.contains('DISTRO_FEATURES', 'x11', 'xa', '', d)} \
                        "
 
+EXTRA_OECONF += "ac_cv_path_ac_pt_LLVM_CONFIG=${STAGING_BINDIR_CROSS}/llvm-config"
 
 FILES_${PN}-dbg += "${libdir}/vdpau/.debug"
 FILES_${PN}-dev += "${libdir}/vdpau/*.so"
