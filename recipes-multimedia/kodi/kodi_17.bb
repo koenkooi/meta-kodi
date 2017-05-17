@@ -12,6 +12,7 @@ DEPENDS = " \
             jsonschemabuilder-native \
             nasm-native \
             swig-native \
+            unzip-native \
             yasm-native \
             zip-native \
             avahi \
@@ -64,7 +65,7 @@ DEPENDS = " \
             zlib \
           "
 
-SRCREV = "eb3a01ac9036598852c04e391efe356a589e6868"
+SRCREV = "a5f98211437161878dd3e191de8729927a0cc094"
 
 # 'patch' doesn't support binary diffs
 PATCHTOOL = "git"
@@ -86,6 +87,7 @@ SRC_URI = "git://github.com/xbmc/xbmc.git;branch=Krypton \
            file://0007-NFSFile-Return-max-chunksize-possible.patch \
            file://0008-DVDDemuxFFMPEG-Increase-FFMPEG_FILE_BUFFER_SIZE-to-1.patch \
            file://0009-DVDDemuxFFmpeg-Store-probe_buffer-on-heap.patch \
+           file://0001-smbclient-cleanup-smbclient-configuration.patch \
           "
 
 inherit autotools-brokensep gettext python-dir
