@@ -65,12 +65,12 @@ DEPENDS = " \
             zlib \
           "
 
-SRCREV = "a5f98211437161878dd3e191de8729927a0cc094"
+SRCREV = "4f53fb5bf524ce6a0c226677bbb052aa7d10a35b"
 
 # 'patch' doesn't support binary diffs
 PATCHTOOL = "git"
 
-PV = "17.1+gitr${SRCPV}"
+PV = "17.2+gitr${SRCPV}"
 SRC_URI = "git://github.com/xbmc/xbmc.git;branch=Krypton \
            file://0001-library-tvshows-switch-genre-and-recently-added.patch \
            file://0002-library-movies-switch-genre-and-recently-added.patch \
@@ -88,6 +88,8 @@ SRC_URI = "git://github.com/xbmc/xbmc.git;branch=Krypton \
            file://0008-DVDDemuxFFMPEG-Increase-FFMPEG_FILE_BUFFER_SIZE-to-1.patch \
            file://0009-DVDDemuxFFmpeg-Store-probe_buffer-on-heap.patch \
            file://0001-smbclient-cleanup-smbclient-configuration.patch \
+           file://0001-SMBFile-Use-1MB-chunks.patch \
+           file://0001-SMBFile-Remove-year-old-workaround.patch \
           "
 
 inherit autotools-brokensep gettext python-dir
