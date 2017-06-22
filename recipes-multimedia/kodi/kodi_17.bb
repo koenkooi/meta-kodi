@@ -65,12 +65,12 @@ DEPENDS = " \
             zlib \
           "
 
-SRCREV = "4f53fb5bf524ce6a0c226677bbb052aa7d10a35b"
+SRCREV = "a234aa0cb7aaef3c417a8a3cf9712f3360c0c2ae"
 
 # 'patch' doesn't support binary diffs
 PATCHTOOL = "git"
 
-PV = "17.2+gitr${SRCPV}"
+PV = "17.3+gitr${SRCPV}"
 SRC_URI = "git://github.com/xbmc/xbmc.git;branch=Krypton \
            file://0001-library-tvshows-switch-genre-and-recently-added.patch \
            file://0002-library-movies-switch-genre-and-recently-added.patch \
