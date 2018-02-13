@@ -13,7 +13,7 @@ DEPENDS = " \
             giflib \
           "
 
-SRCREV = "30fc7ec1640ce6b28a6506b612b876ec1b6b7b03"
+SRCREV = "cd02e6c4fe0f6486b967049d697ce086b1afcc56"
 
 # 'patch' doesn't support binary diffs
 PATCHTOOL = "git"
