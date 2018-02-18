@@ -2,13 +2,14 @@ DEPENDS += "libvdpau"
 
 PROVIDES += "libegl"
 
-PACKAGECONFIG_append = " gbm egl gles dri ${MESA_CRYPTO} \
+PACKAGECONFIG_x86 = " osmesa opengl dri3 xa r600 gallium gallium-llvm "
+PACKAGECONFIG_x86-64 = " osmesa opengl dri3 xa r600 gallium gallium-llvm "
+
+PACKAGECONFIG_append = " gbm egl gles dri \
                 ${@bb.utils.contains('DISTRO_FEATURES', 'x11', 'x11', '', d)}\
                 ${@bb.utils.contains('DISTRO_FEATURES', 'wayland', 'wayland', '', d)}\
                 " 
 
-PACKAGECONFIG_x86 = " egl gles gbm dri dri3 x11 xa r600 gallium gallium-llvm "
-PACKAGECONFIG_x86-64 = " egl gles gbm dri dri3 x11 xa r600 gallium gallium-llvm "
 
 GALLIUMDRIVERS_append_armv7a = ",freedreno"
 GALLIUMDRIVERS_append_aarch64 = ",freedreno"
