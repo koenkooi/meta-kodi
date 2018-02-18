@@ -73,8 +73,8 @@ PATCHTOOL = "git"
 
 PV = "18.0+gitr${SRCPV}"
 SRC_URI = "git://github.com/xbmc/xbmc.git;protocol=https \
+           file://0001-estuary-move-recently-added-entries-to-the-top-in-ho.patch \
           "
-
 
 S = "${WORKDIR}/git"
 
