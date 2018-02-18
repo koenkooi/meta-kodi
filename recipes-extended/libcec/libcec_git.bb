@@ -23,8 +23,9 @@ inherit cmake pkgconfig
 EXTRA_OECMAKE = "-DCMAKE_INSTALL_LIBDIR=${libdir} -DCMAKE_INSTALL_LIBDIR_NOARCH=${libdir}"
 
 # Create the wrapper for python3
-PACKAGES += "python3-${BPN}"
-FILES_python3-${BPN} = "${libdir}/python3*"
+PACKAGES =+ "python3-${BPN}"
+FILES_python3-${BPN} = "${libdir}/python3* ${bindir}/py*"
+RDEPENDS_python3-${BPN} += "python"
 
 # cec-client and xbmc need the .so present to work :(
 FILES_${PN} += "${libdir}/*.so"
