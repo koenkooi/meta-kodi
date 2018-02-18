@@ -25,7 +25,6 @@ LIC_FILES_CHKSUM = "file://COPYING.GPLv2;md5=b234ee4d69f5fce4486a80fdaf4a4263 \
 
 SRC_URI = "https://www.ffmpeg.org/releases/${BP}.tar.xz \
            file://mips64_cpu_detection.patch \
-           file://0001-avcodec-v4l2_m2m-fix-races-around-freeing-data-on-cl.patch \
            file://0002-libavcodec-v4l2_m2m_dec-output-AVDRMFrameDescriptor.patch \
            "
 SRC_URI[md5sum] = "cbf4ead227fcedddf54c86013705a988"
