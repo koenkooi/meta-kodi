@@ -4,20 +4,27 @@ HOMEPAGE = "http://libcec.pulse-eight.com/"
 LICENSE = "GPLv2+"
 LIC_FILES_CHKSUM = "file://COPYING;md5=e61fd86f9c947b430126181da2c6c715"
 
-DEPENDS = "p8platform udev lockdev"
+DEPENDS = "p8platform udev lockdev ncurses swig-native python3"
 
-PV = "4.0.0.2"
+DEPENDS += "${@bb.utils.contains('DISTRO_FEATURES', 'x11', 'libx11 libxrandr', '', d)}"
+DEPENDS_append_rpi = "${@bb.utils.contains('MACHINE_FEATURES', 'vc4graphics', '', ' userland', d)}"
 
-SRCREV = "481dd826235adc76d6b9046ff175d88741445d6d"
-SRC_URI = "git://github.com/Pulse-Eight/libcec.git"
+PV = "4.0.2+git${SRCPV}"
+
+SRCREV = "d54093a548a29756dfe2b2bf66eb156421465788"
+SRC_URI = "git://github.com/Pulse-Eight/libcec.git;branch=release \
+           file://0001-Add-Linux-CEC-Adapter.patch \
+          "
 
 S = "${WORKDIR}/git"
 
 inherit cmake pkgconfig
 
-# Disable python wrapper, it doesn't have crosscompiles
-EXTRA_OECMAKE = "-DCMAKE_INSTALL_LIBDIR=${libdir} -DCMAKE_INSTALL_LIBDIR_NOARCH=${libdir} \
-                 -DSKIP_PYTHON_WRAPPER=1"
+EXTRA_OECMAKE = "-DCMAKE_INSTALL_LIBDIR=${libdir} -DCMAKE_INSTALL_LIBDIR_NOARCH=${libdir}"
+
+# Create the wrapper for python3
+PACKAGES += "python3-${BPN}"
+FILES_python3-${BPN} = "${libdir}/python3*"
 
 # cec-client and xbmc need the .so present to work :(
 FILES_${PN} += "${libdir}/*.so"
