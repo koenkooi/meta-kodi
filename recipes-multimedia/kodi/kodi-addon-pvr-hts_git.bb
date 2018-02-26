@@ -9,12 +9,12 @@ DEPENDS = " \
             kodi-platform \
           "
 
-SRCREV_pvrhts = "33b8487db3381435efc8b8f0f6c92e8a87d491bf"
+SRCREV_pvrhts = "095784b3190ee36abdc0001f267dbbd2db29ca2e"
 
 SRCREV_FORMAT = "pvrhts"
 
-PV = "3.4.20+gitr${SRCPV}"
-SRC_URI = "git://github.com/kodi-pvr/pvr.hts.git;branch=Krypton;destsuffix=pvr.hts;name=pvrhts \
+PV = "4.2.13+gitr${SRCPV}"
+SRC_URI = "git://github.com/kodi-pvr/pvr.hts.git;branch=master;destsuffix=pvr.hts;name=pvrhts \
           "
 
 inherit cmake pkgconfig gettext
@@ -26,18 +26,11 @@ EXTRA_OECMAKE = " \
 	  -DADDON_SRC_PREFIX=${WORKDIR}/git \
 	  -DCMAKE_BUILD_TYPE=Debug \
 	  -DCMAKE_INSTALL_PREFIX=${datadir}/kodi/addons \
-          -DCMAKE_MODULE_PATH=${STAGING_DIR_HOST}${libdir}/kodi \
+          -DKODI_INCLUDE_DIR=${STAGING_INCDIR}/kodi \
+          -DCMAKE_MODULE_PATH='${STAGING_DIR_HOST}${libdir}/kodi;${STAGING_DIR_HOST}${datadir}/kodi/cmake' \
           -DCMAKE_PREFIX_PATH=${STAGING_DIR_HOST}${prefix} \
           -DPACKAGE_ZIP=1 \
         "
-
-do_compile_prepend() {
-	sed -i -e 's:I/usr/include:I${STAGING_INCDIR}:g' \
-	       -e 's:-pipe:${HOST_CC_ARCH} ${TOOLCHAIN_OPTIONS} -pipe:g' \
-	          ${B}/CMakeFiles/*/flags.make
-	sed -i -e 's:-pipe:${HOST_CC_ARCH} ${TOOLCHAIN_OPTIONS} -pipe:g'\
-	          ${B}/CMakeFiles/*/link.txt
-}
 
 # Make zip package for manual installation
 do_install_append() {
