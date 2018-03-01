@@ -22,6 +22,7 @@ OECMAKE_GENERATOR="Unix Makefiles"
 EXTRA_OECMAKE = " -DCMAKE_INSTALL_PREFIX_TOOLCHAIN=${STAGING_DIR_HOST}${prefix} \
                   -DCMAKE_INSTALL_LIBDIR=${libdir} \
                   -DCMAKE_INSTALL_LIBDIR_NOARCH=${libdir} \
+                  -DKODI_INCLUDE_DIR=${STAGING_INCDIR}/kodi \
                   -DCMAKE_MODULE_PATH='${STAGING_DIR_HOST}${libdir}/kodi;${STAGING_DIR_HOST}${datadir}/kodi/cmake' \
                   -DCMAKE_PREFIX_PATH=${STAGING_DIR_HOST}${prefix} \
                 "
