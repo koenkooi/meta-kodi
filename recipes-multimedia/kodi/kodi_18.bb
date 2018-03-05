@@ -5,7 +5,7 @@ LIC_FILES_CHKSUM = "file://LICENSE.GPL;md5=930e2a5f63425d8dd72dbd7391c43c46"
 
 FILESPATH =. "${FILE_DIRNAME}/kodi-18:"
 
-inherit cmake gettext python-dir pythonnative
+inherit cmake gettext python-dir pythonnative systemd
 
 DEPENDS += " \
             libfmt \
@@ -66,7 +66,7 @@ DEPENDS += " \
             zlib \
           "
 
-SRCREV = "54b1d5a91092e81df7509c882568f68f5bece7a7"
+SRCREV = "3c3a4e9e023384aa06c23c028d1407742f7a9e3e"
 
 # 'patch' doesn't support binary diffs
 PATCHTOOL = "git"
@@ -74,6 +74,8 @@ PATCHTOOL = "git"
 PV = "18.0+gitr${SRCPV}"
 SRC_URI = "git://github.com/xbmc/xbmc.git;protocol=https \
            file://0001-estuary-move-recently-added-entries-to-the-top-in-ho.patch \
+           file://kodi.service \
+           file://kodi-x11.service \
           "
 
 S = "${WORKDIR}/git"
@@ -143,16 +145,20 @@ export STAGING_LIBDIR
 export STAGING_INCDIR
 export PYTHON_DIR
 
-do_compile_prepend() {
-    for i in $(find . -name "Makefile") ; do
-        sed -i -e 's:I/usr/include:I${STAGING_INCDIR}:g' $i
-    done
+do_install_append() {
+	install -d ${D}/lib/systemd/system
 
-    for i in $(find . -name "*.mak*" -o    -name "Makefile") ; do
-        sed -i -e 's:I/usr/include:I${STAGING_INCDIR}:g' -e 's:-rpath \$(libdir):-rpath ${libdir}:g' $i
-    done
+	if [ -e ${D}${libdir}/kodi/kodi-gbm ] ; then
+		install -m 0644 ${WORKDIR}/kodi.service ${D}/lib/systemd/system/kodi.service
+	else
+		install -m 0644 ${WORKDIR}/kodi-x11.service ${D}/lib/systemd/system/kodi.service
+
+	fi
 }
 
+
+SYSTEMD_PACKAGES = "${PN}"
+SYSTEMD_SERVICE_${PN} = "kodi.service"
 INSANE_SKIP_${PN} = "rpaths"
 
 FILES_${PN} += "${datadir}/xsessions ${datadir}/icons ${libdir}/xbmc ${datadir}/xbmc"
