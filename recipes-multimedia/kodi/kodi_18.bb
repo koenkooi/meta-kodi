@@ -35,7 +35,6 @@ DEPENDS += " \
             fontconfig \
             fribidi \
             giflib \
-            jasper \
             libass \
             libcdio \
             libcec \
@@ -44,8 +43,8 @@ DEPENDS += " \
             libmad \
             libmicrohttpd \
             libmms \
-            libmms \
             libmodplug \
+            libnfs \
             libpcre \
             libplist \
             libsamplerate0 \
