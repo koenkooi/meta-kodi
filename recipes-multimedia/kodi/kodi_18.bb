@@ -65,7 +65,7 @@ DEPENDS += " \
             zlib \
           "
 
-SRCREV = "a38bbd45e375e924a8ef00c32bf119b062dcd249"
+SRCREV = "d6910ff8d733033847b4d373efda35823a9eb6e8"
 
 # 'patch' doesn't support binary diffs
 PATCHTOOL = "git"
@@ -90,7 +90,7 @@ ACCEL_x86-64 = "vaapi vdpau"
 WINDOWSYSTEM ?= "x11"
 WINDOWSYSTEM_aarch64 = "gbm"
 
-PACKAGECONFIG ??= "${ACCEL} ${WINDOWSYSTEM}"
+PACKAGECONFIG ??= "${ACCEL} ${WINDOWSYSTEM} pulseaudio lcms"
 
 # Core windowing system choices
 
