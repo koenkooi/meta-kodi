@@ -8,6 +8,8 @@ DEPENDS += "zip-native \
 
 inherit cmake pkgconfig gettext
 
+ASNEEDED = ""
+
 EXTRA_OECMAKE = " \
 	  -DADDONS_TO_BUILD=inputstream.adaptive \
 	  -DADDON_SRC_PREFIX=${WORKDIR}/git \
