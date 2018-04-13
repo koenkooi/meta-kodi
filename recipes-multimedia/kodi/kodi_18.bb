@@ -65,7 +65,7 @@ DEPENDS += " \
             zlib \
           "
 
-SRCREV = "d6910ff8d733033847b4d373efda35823a9eb6e8"
+SRCREV = "294d6a2754d2a13a3149a4e8398939de57fc3dca"
 
 # 'patch' doesn't support binary diffs
 PATCHTOOL = "git"
@@ -87,8 +87,8 @@ ACCEL ?= ""
 ACCEL_x86 = "vaapi vdpau"
 ACCEL_x86-64 = "vaapi vdpau"
 
-WINDOWSYSTEM ?= "x11"
-WINDOWSYSTEM_aarch64 = "gbm"
+# Default to GBM everywhere, sucks to be nvidia
+WINDOWSYSTEM ?= "gbm"
 
 PACKAGECONFIG ??= "${ACCEL} ${WINDOWSYSTEM} pulseaudio lcms"
 
@@ -166,6 +166,9 @@ FILES_${PN}-dbg += "${libdir}/kodi/.debug ${libdir}/kodi/*/.debug ${libdir}/kodi
 # kodi uses some kind of dlopen() method for libcec so we need to add it manually
 # OpenGL builds need glxinfo, that's in mesa-demos
 RRECOMMENDS_${PN}_append = " libcec \
+                             libcurl \
+                             libnfs \
+                             ${@bb.utils.contains('PACKAGECONFIG', 'x11', 'xdyinfo xrandr xinit mesa-demos', '', d)} \
                              python \
                              python-ctypes \
                              python-lang \
@@ -179,10 +182,6 @@ RRECOMMENDS_${PN}_append = " libcec \
                              python-sqlite3 \
                              python-compression \
                              python-xmlrpc \
-                             libcurl \
-                             xdpyinfo \
-                             xrandr \
-                             ${@bb.utils.contains('PACKAGECONFIG', 'opengl', 'mesa-demos', '', d)} \
                              tzdata-africa \
                              tzdata-americas \
                              tzdata-antarctica \
