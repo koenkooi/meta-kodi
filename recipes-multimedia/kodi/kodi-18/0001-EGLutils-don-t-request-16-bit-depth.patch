@@ -1,0 +1,28 @@
+From b66dcb6788aecfc5f9ef5d3e258a49075fd4688a Mon Sep 17 00:00:00 2001
+From: Koen Kooi <koen@dominion.thruhere.net>
+Date: Fri, 20 Apr 2018 09:22:40 +0200
+Subject: [PATCH] EGLutils: don't request 16 bit depth
+
+aka "Make it work with lima". Inspired by
+https://github.com/superna9999/meta-meson/blob/topic/mesa-lima/recipes-benchmark/glmark2/files/0001-Make-it-run-with-Lima.patch
+
+Signed-off-by: Koen Kooi <koen@dominion.thruhere.net>
+---
+ xbmc/utils/EGLUtils.cpp | 1 -
+ 1 file changed, 1 deletion(-)
+
+diff --git a/xbmc/utils/EGLUtils.cpp b/xbmc/utils/EGLUtils.cpp
+index 723f7e9..c9263ea 100644
+--- a/xbmc/utils/EGLUtils.cpp
++++ b/xbmc/utils/EGLUtils.cpp
+@@ -94,7 +94,6 @@ bool CEGLContextUtils::CreateDisplay(EGLDisplay display,
+     EGL_GREEN_SIZE,      8,
+     EGL_BLUE_SIZE,       8,
+     EGL_ALPHA_SIZE,      8,
+-    EGL_DEPTH_SIZE,     16,
+     EGL_STENCIL_SIZE,    0,
+     EGL_SAMPLE_BUFFERS,  0,
+     EGL_SAMPLES,         0,
+-- 
+2.0.1
+

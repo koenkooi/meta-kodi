@@ -40,6 +40,7 @@ DEPENDS += " \
             libcec \
             libdvdcss \
             libdvdread \
+            libinput \
             libmad \
             libmicrohttpd \
             libmms \
@@ -65,7 +66,7 @@ DEPENDS += " \
             zlib \
           "
 
-SRCREV = "294d6a2754d2a13a3149a4e8398939de57fc3dca"
+SRCREV = "2f3e809e2350e13f95e023ca35666cf62a035e34"
 
 # 'patch' doesn't support binary diffs
 PATCHTOOL = "git"
@@ -73,6 +74,7 @@ PATCHTOOL = "git"
 PV = "18.0+gitr${SRCPV}"
 SRC_URI = "git://github.com/xbmc/xbmc.git;protocol=https \
            file://0001-estuary-move-recently-added-entries-to-the-top-in-ho.patch \
+           file://0001-EGLutils-don-t-request-16-bit-depth.patch \
            file://kodi.service \
            file://kodi-x11.service \
           "
@@ -98,7 +100,7 @@ PACKAGECONFIG[x11] = "-DCORE_PLATFORM_NAME=x11,,libxinerama libxmu libxrandr lib
 PACKAGECONFIG[gbm] = "-DCORE_PLATFORM_NAME=gbm,,"
 PACKAGECONFIG[raspberrypi] = "-DCORE_PLATFORM_NAME=rbpi,,userland"
 PACKAGECONFIG[amlogic] = "-DCORE_PLATFORM_NAME=aml,,"
-PACKAGECONFIG[wayland] = "-DCORE_PLATFORM_NAME=wayland,,wayland"
+PACKAGECONFIG[wayland] = "-DCORE_PLATFORM_NAME=wayland -DWAYLAND_RENDER_SYSTEM=gles,,wayland"
 
 PACKAGECONFIG[vaapi] = "-DENABLE_VAAPI=ON,-DENABLE_VAAPI=OFF,libva"
 PACKAGECONFIG[vdpau] = "-DENABLE_VDPAU=ON,-DENABLE_VDPAU=OFF,libvdpau"
