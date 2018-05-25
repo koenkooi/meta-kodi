@@ -66,7 +66,7 @@ DEPENDS += " \
             zlib \
           "
 
-SRCREV = "2f3e809e2350e13f95e023ca35666cf62a035e34"
+SRCREV = "c49d783988a6c1c3adaabfe1425f42e85d3a5ef1"
 
 # 'patch' doesn't support binary diffs
 PATCHTOOL = "git"
@@ -75,6 +75,10 @@ PV = "18.0+gitr${SRCPV}"
 SRC_URI = "git://github.com/xbmc/xbmc.git;protocol=https \
            file://0001-estuary-move-recently-added-entries-to-the-top-in-ho.patch \
            file://0001-EGLutils-don-t-request-16-bit-depth.patch \
+           file://0001-gbm-select-valid-connector.patch \
+           file://0002-kodi.sh-set-mesa-debug.patch \
+           file://baba4e1d8517a9ab2c473eb4dbea1ba7ffc3aa74.patch \
+           file://amlogic-atomic-quirks.patch \
            file://kodi.service \
            file://kodi-x11.service \
           "
@@ -162,7 +166,7 @@ SYSTEMD_PACKAGES = "${PN}"
 SYSTEMD_SERVICE_${PN} = "kodi.service"
 INSANE_SKIP_${PN} = "rpaths"
 
-FILES_${PN} += "${datadir}/xsessions ${datadir}/icons ${libdir}/xbmc ${datadir}/xbmc"
+FILES_${PN} += "${datadir}/xsessions ${datadir}/icons ${libdir}/xbmc ${datadir}/xbmc ${libdir}/firewalld"
 FILES_${PN}-dbg += "${libdir}/kodi/.debug ${libdir}/kodi/*/.debug ${libdir}/kodi/*/*/.debug ${libdir}/kodi/*/*/*/.debug"
 
 # kodi uses some kind of dlopen() method for libcec so we need to add it manually

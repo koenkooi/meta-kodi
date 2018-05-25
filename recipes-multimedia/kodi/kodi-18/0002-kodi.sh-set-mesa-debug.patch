@@ -1,0 +1,28 @@
+From c936dd2b98e42e75ccb137de9c3915ee68d64da8 Mon Sep 17 00:00:00 2001
+From: Koen Kooi <koen.kooi@linaro.org>
+Date: Sun, 22 Apr 2018 12:43:47 +0200
+Subject: [PATCH 2/2] kodi.sh: set mesa debug
+
+Signed-off-by: Koen Kooi <koen.kooi@linaro.org>
+---
+ tools/Linux/kodi.sh.in | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/tools/Linux/kodi.sh.in b/tools/Linux/kodi.sh.in
+index 5e5360c..dc6e424 100644
+--- a/tools/Linux/kodi.sh.in
++++ b/tools/Linux/kodi.sh.in
+@@ -18,6 +18,10 @@
+ #  the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
+ #  http://www.gnu.org/copyleft/gpl.html
+ 
++export MESA_DEBUG=1
++export EGL_LOG_LEVEL="debug"
++export EGL_PLATFORM="drm"
++
+ APP=@APP_NAME@
+ bin_name=@APP_NAME_LC@
+ SAVED_ARGS="$@"
+-- 
+2.9.5
+

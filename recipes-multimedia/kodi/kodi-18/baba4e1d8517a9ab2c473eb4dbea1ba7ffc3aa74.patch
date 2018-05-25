@@ -1,0 +1,23 @@
+From e0de5ffad341d1a0080374336d503fff89c5114c Mon Sep 17 00:00:00 2001
+From: Lorenz Brun <lorenz@dolansoft.org>
+Date: Wed, 9 May 2018 13:15:27 +0200
+Subject: [PATCH] LinuxRendererGLES: Fixed texture type for Mesa 18
+ compatibility
+
+---
+ xbmc/cores/VideoPlayer/VideoRenderers/LinuxRendererGLES.cpp | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/xbmc/cores/VideoPlayer/VideoRenderers/LinuxRendererGLES.cpp b/xbmc/cores/VideoPlayer/VideoRenderers/LinuxRendererGLES.cpp
+index 90f3b9bd4b88..fb0706aeefe9 100644
+--- a/xbmc/cores/VideoPlayer/VideoRenderers/LinuxRendererGLES.cpp
++++ b/xbmc/cores/VideoPlayer/VideoRenderers/LinuxRendererGLES.cpp
+@@ -813,7 +813,7 @@ void CLinuxRendererGLES::RenderToFBO(int index, int field, bool weave /*= false*
+       CLog::Log(LOGERROR, "GL: Error initializing FBO");
+       return;
+     }
+-    if (!m_fbo.fbo.CreateAndBindToTexture(GL_TEXTURE_2D, m_sourceWidth, m_sourceHeight, GL_RGBA, GL_SHORT))
++    if (!m_fbo.fbo.CreateAndBindToTexture(GL_TEXTURE_2D, m_sourceWidth, m_sourceHeight, GL_RGBA))
+     {
+       CLog::Log(LOGERROR, "GL: Error creating texture and binding to FBO");
+       return;
