@@ -1,11 +1,13 @@
 SUMMARY = "NFS client library"
 
-LICENSE = "LGPLv2.1"
-LIC_FILES_CHKSUM = "file://COPYING;md5=0019ace2726c6f181791a9ac04c7ac6a"
+LICENSE = "LGPLv2.1+GPLv3"
+LIC_FILES_CHKSUM = "file://COPYING;md5=825301ba17efc9d188ee0abd4b924ada"
 
 PV = "2.0.0+git"
-SRCREV = "54405d994ef9275fe7552f43c12bf2d39c0d9ec9"
-SRC_URI = "git://github.com/sahlberg/libnfs.git;protocol=https"
+SRCREV = "6a33413b0f684327e1441f5ec5c4493293009d53"
+SRC_URI = "git://github.com/sahlberg/libnfs.git;protocol=https \
+           file://0001-include-sys-time.h-to-fix-musl-build.patch \
+          "
 
 S = "${WORKDIR}/git"
 
