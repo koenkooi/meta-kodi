@@ -23,10 +23,14 @@ LIC_FILES_CHKSUM = "file://COPYING.GPLv2;md5=b234ee4d69f5fce4486a80fdaf4a4263 \
                     file://COPYING.LGPLv2.1;md5=bd7a443320af8c812e4c18d1b79df004 \
                     file://COPYING.LGPLv3;md5=e6a600fd5e1d9cbde2d983680233ad02"
 
-SRCREV = "a768c0a3e1fa29eddc7dd348012b3093e476c94e"
+SRCREV = "e049f7c24fc6aa5fc925f860e2ad940a75cfd84f"
 SRC_URI = "git://github.com/FFmpeg/FFmpeg.git;protocol=https;branch=release/4.0 \
-           file://0001-v4l2_m2m_dec-fix-indentation-and-add-M2MDEC_CLASS.patch \
-           file://0002-libavcodec-v4l2_m2m_dec-output-AVDRMFrameDescriptor.patch \
+           file://0001-libavcodec-v4l2m2m-fix-indentation-and-add-M2MDEC_CL.patch \
+           file://0002-libavcodec-v4l2m2m-output-AVDRMFrameDescriptor.patch \
+           file://0003-libavcodec-v4l2m2m-adjust-formatting.patch \
+           file://0004-libavcodec-v4l2m2m-fix-error-handling-during-buffer-.patch \
+           file://0005-libavcodec-v4l2m2m-use-get_format-callback-from-appl.patch \
+           file://0006-libavcodec-v4l2m2m-allow-using-multiplane-formats.patch \
            "
 
 S = "${WORKDIR}/git"
