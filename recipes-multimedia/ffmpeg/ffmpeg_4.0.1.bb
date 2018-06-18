@@ -31,6 +31,7 @@ SRC_URI = "git://github.com/FFmpeg/FFmpeg.git;protocol=https;branch=release/4.0 
            file://0004-libavcodec-v4l2m2m-fix-error-handling-during-buffer-.patch \
            file://0005-libavcodec-v4l2m2m-use-get_format-callback-from-appl.patch \
            file://0006-libavcodec-v4l2m2m-allow-using-multiplane-formats.patch \
+           file://0007-v4l2-fix-memleak.patch \
            "
 
 S = "${WORKDIR}/git"
