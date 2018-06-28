@@ -66,7 +66,7 @@ DEPENDS += " \
             zlib \
           "
 
-SRCREV = "c49d783988a6c1c3adaabfe1425f42e85d3a5ef1"
+SRCREV = "2ab16beeeaf67e3b8dca703d96615bd80aca7c35"
 
 # 'patch' doesn't support binary diffs
 PATCHTOOL = "git"
@@ -78,7 +78,6 @@ SRC_URI = "git://github.com/xbmc/xbmc.git;protocol=https \
            file://0001-gbm-select-valid-connector.patch \
            file://0002-kodi.sh-set-mesa-debug.patch \
            file://baba4e1d8517a9ab2c473eb4dbea1ba7ffc3aa74.patch \
-           file://amlogic-atomic-quirks.patch \
            file://kodi.service \
            file://kodi-x11.service \
           "
@@ -104,7 +103,7 @@ PACKAGECONFIG[x11] = "-DCORE_PLATFORM_NAME=x11,,libxinerama libxmu libxrandr lib
 PACKAGECONFIG[gbm] = "-DCORE_PLATFORM_NAME=gbm,,"
 PACKAGECONFIG[raspberrypi] = "-DCORE_PLATFORM_NAME=rbpi,,userland"
 PACKAGECONFIG[amlogic] = "-DCORE_PLATFORM_NAME=aml,,"
-PACKAGECONFIG[wayland] = "-DCORE_PLATFORM_NAME=wayland -DWAYLAND_RENDER_SYSTEM=gles,,wayland"
+PACKAGECONFIG[wayland] = "-DCORE_PLATFORM_NAME=wayland -DWAYLAND_RENDER_SYSTEM=gles,,wayland waylandpp"
 
 PACKAGECONFIG[vaapi] = "-DENABLE_VAAPI=ON,-DENABLE_VAAPI=OFF,libva"
 PACKAGECONFIG[vdpau] = "-DENABLE_VDPAU=ON,-DENABLE_VDPAU=OFF,libvdpau"
