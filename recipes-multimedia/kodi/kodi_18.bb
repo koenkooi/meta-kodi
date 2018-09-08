@@ -1,7 +1,7 @@
 SUMMARY = "Kodi Media Center"
 
 LICENSE = "GPLv2"
-LIC_FILES_CHKSUM = "file://LICENSE.GPL;md5=930e2a5f63425d8dd72dbd7391c43c46"
+LIC_FILES_CHKSUM = "file://LICENSE.md;md5=7b423f1c9388eae123332e372451a4f7"
 
 FILESPATH =. "${FILE_DIRNAME}/kodi-18:"
 
@@ -9,6 +9,8 @@ inherit cmake gettext python-dir pythonnative systemd
 
 DEPENDS += " \
             libfmt \
+            flatbuffers flatbuffers-native \
+            fstrcmp \
             rapidjson \
             crossguid \
             texturepacker-native \
@@ -66,7 +68,7 @@ DEPENDS += " \
             zlib \
           "
 
-SRCREV = "2ab16beeeaf67e3b8dca703d96615bd80aca7c35"
+SRCREV = "f21b477993cae9f59f77b8798a1390159863f3f7"
 
 # 'patch' doesn't support binary diffs
 PATCHTOOL = "git"
@@ -74,10 +76,8 @@ PATCHTOOL = "git"
 PV = "18.0+gitr${SRCPV}"
 SRC_URI = "git://github.com/xbmc/xbmc.git;protocol=https \
            file://0001-estuary-move-recently-added-entries-to-the-top-in-ho.patch \
-           file://0001-EGLutils-don-t-request-16-bit-depth.patch \
-           file://0001-gbm-select-valid-connector.patch \
            file://0002-kodi.sh-set-mesa-debug.patch \
-           file://baba4e1d8517a9ab2c473eb4dbea1ba7ffc3aa74.patch \
+           file://flatbuffers.patch \
            file://kodi.service \
            file://kodi-x11.service \
           "
@@ -100,7 +100,7 @@ PACKAGECONFIG ??= "${ACCEL} ${WINDOWSYSTEM} pulseaudio lcms"
 # Core windowing system choices
 
 PACKAGECONFIG[x11] = "-DCORE_PLATFORM_NAME=x11,,libxinerama libxmu libxrandr libxtst glew"
-PACKAGECONFIG[gbm] = "-DCORE_PLATFORM_NAME=gbm,,"
+PACKAGECONFIG[gbm] = "-DCORE_PLATFORM_NAME=gbm -DGBM_RENDER_SYSTEM=gles,,"
 PACKAGECONFIG[raspberrypi] = "-DCORE_PLATFORM_NAME=rbpi,,userland"
 PACKAGECONFIG[amlogic] = "-DCORE_PLATFORM_NAME=aml,,"
 PACKAGECONFIG[wayland] = "-DCORE_PLATFORM_NAME=wayland -DWAYLAND_RENDER_SYSTEM=gles,,wayland waylandpp"
@@ -117,6 +117,7 @@ EXTRA_OECMAKE = " \
     -DNATIVEPREFIX=${STAGING_DIR_NATIVE}${prefix} \
     -DJava_JAVA_EXECUTABLE=/usr/bin/java \
     -DWITH_TEXTUREPACKER=${STAGING_BINDIR_NATIVE}/TexturePacker \
+    -DENABLE_INTERNAL_FSTRCMP=0 \
     \
     -DENABLE_LDGOLD=ON \
     -DENABLE_STATIC_LIBS=FALSE \
