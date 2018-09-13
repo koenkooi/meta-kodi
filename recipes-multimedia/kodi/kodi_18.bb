@@ -68,7 +68,8 @@ DEPENDS += " \
             zlib \
           "
 
-SRCREV = "f21b477993cae9f59f77b8798a1390159863f3f7"
+SRCREV = "ed0618f35b5abf176abdbd4a8542b675414e9e35"
+
 
 # 'patch' doesn't support binary diffs
 PATCHTOOL = "git"
@@ -78,7 +79,6 @@ SRC_URI = "git://github.com/xbmc/xbmc.git;protocol=https \
            file://0001-estuary-move-recently-added-entries-to-the-top-in-ho.patch \
            file://0002-kodi.sh-set-mesa-debug.patch \
            file://flatbuffers.patch \
-           file://kodi-999-PR14393.patch \
            file://kodi.service \
            file://kodi-x11.service \
           "
@@ -122,6 +122,7 @@ EXTRA_OECMAKE = " \
     \
     -DENABLE_LDGOLD=ON \
     -DENABLE_STATIC_LIBS=FALSE \
+    -DCMAKE_NM='${NM}' \
     -DUSE_LTO=${@oe.utils.cpu_count()} \
     \
     -DFFMPEG_PATH=${STAGING_DIR_TARGET} \
@@ -139,7 +140,7 @@ EXTRA_OECMAKE = " \
 "
 
 # OECMAKE_GENERATOR="Unix Makefiles"
-# PARALLEL_MAKE = ""
+#PARALLEL_MAKE = " "
 
 FULL_OPTIMIZATION_armv7a = "-fexpensive-optimizations -fomit-frame-pointer -O4 -ffast-math"
 BUILD_OPTIMIZATION = "${FULL_OPTIMIZATION}"
@@ -150,6 +151,17 @@ export BUILD_SYS
 export STAGING_LIBDIR
 export STAGING_INCDIR
 export PYTHON_DIR
+
+export TARGET_PREFIX
+
+do_configure_prepend() {
+	# Ensure 'nm' can find the lto plugins 
+	liblto=$(find ${STAGING_DIR_NATIVE} -name "liblto_plugin.so.0.0.0")
+	mkdir -p ${STAGING_LIBDIR_NATIVE}/bfd-plugins
+	ln -sf $liblto ${STAGING_LIBDIR_NATIVE}/bfd-plugins/liblto_plugin.so
+
+	sed -i -e 's:CMAKE_NM}:}${TARGET_PREFIX}gcc-nm:' ${S}/xbmc/cores/DllLoader/exports/CMakeLists.txt
+}
 
 do_install_append() {
 	install -d ${D}/lib/systemd/system
