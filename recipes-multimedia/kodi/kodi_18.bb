@@ -68,7 +68,7 @@ DEPENDS += " \
             zlib \
           "
 
-SRCREV = "ed0618f35b5abf176abdbd4a8542b675414e9e35"
+SRCREV = "b5da899aae6383877eb9eba92918ce59fbe24395"
 
 
 # 'patch' doesn't support binary diffs
@@ -79,6 +79,7 @@ SRC_URI = "git://github.com/xbmc/xbmc.git;protocol=https \
            file://0001-estuary-move-recently-added-entries-to-the-top-in-ho.patch \
            file://0002-kodi.sh-set-mesa-debug.patch \
            file://flatbuffers.patch \
+           file://14422.patch \
            file://kodi.service \
            file://kodi-x11.service \
           "
