@@ -211,6 +211,7 @@ RRECOMMENDS_${PN}_append = " libcec \
                              tzdata-australia \
                              tzdata-europe \
                              tzdata-pacific \
+                             xkeyboard-config \
                            "
 RRECOMMENDS_${PN}_append_libc-glibc = " glibc-charmap-ibm850 \
                                         glibc-gconv-ibm850 \

@@ -1,35 +1,20 @@
-From d004983824c92bb755c9e89da6b582b7b65e0dee Mon Sep 17 00:00:00 2001
+From 320afc5427791e81feacdfc7375a654036ee418f Mon Sep 17 00:00:00 2001
 From: Neil Armstrong <narmstrong@baylibre.com>
 Date: Wed, 12 Sep 2018 14:26:10 +0000
 Subject: [PATCH 1/3] utils: Add CPU SoC information
 
 Add a new line in GUIWindowSystemInfo to display the actual
-SoC (System-On-Chip) used on the system, it defaults to N/A
-and the test has been updated to also cover it.
+SoC (System-On-Chip) used on the system only if the information
+is available, otherwise it's not showed.
 
 Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
 ---
- xbmc/utils/CPUInfo.cpp               | 2 ++
  xbmc/utils/CPUInfo.h                 | 3 +++
- xbmc/utils/SystemInfo.cpp            | 5 +++++
+ xbmc/utils/SystemInfo.cpp            | 7 +++++++
  xbmc/utils/SystemInfo.h              | 1 +
- xbmc/utils/test/TestCPUInfo.cpp      | 6 ++++++
- xbmc/windows/GUIWindowSystemInfo.cpp | 1 +
- 6 files changed, 18 insertions(+)
+ xbmc/windows/GUIWindowSystemInfo.cpp | 2 ++
+ 4 files changed, 13 insertions(+)
 
-diff --git a/xbmc/utils/CPUInfo.cpp b/xbmc/utils/CPUInfo.cpp
-index cb4658464c4e..24cf8a5e70d3 100644
---- a/xbmc/utils/CPUInfo.cpp
-+++ b/xbmc/utils/CPUInfo.cpp
-@@ -451,6 +451,8 @@ CCPUInfo::CCPUInfo(void)
-   /* Set some default for empty string variables */
-   if (m_cpuBogoMips.empty())
-     m_cpuBogoMips = "N/A";
-+  if (m_cpuSoC.empty())
-+    m_cpuSoC = "N/A";
-   if (m_cpuHardware.empty())
-     m_cpuHardware = "N/A";
-   if (m_cpuRevision.empty())
 diff --git a/xbmc/utils/CPUInfo.h b/xbmc/utils/CPUInfo.h
 index 9cde6c2f4f9f..fa99213d1303 100644
 --- a/xbmc/utils/CPUInfo.h
@@ -59,16 +44,18 @@ index 9cde6c2f4f9f..fa99213d1303 100644
    std::string  m_cpuRevision;
    std::string  m_cpuSerial;
 diff --git a/xbmc/utils/SystemInfo.cpp b/xbmc/utils/SystemInfo.cpp
-index c8bd4e2dff0f..4eb995528f7d 100644
+index c8bd4e2dff0f..209940faf1c1 100644
 --- a/xbmc/utils/SystemInfo.cpp
 +++ b/xbmc/utils/SystemInfo.cpp
-@@ -498,6 +498,11 @@ std::string CSysInfo::GetCPUBogoMips()
+@@ -498,6 +498,13 @@ std::string CSysInfo::GetCPUBogoMips()
    return "BogoMips: " + g_cpuInfo.getCPUBogoMips();
  }
  
 +std::string CSysInfo::GetCPUSoC()
 +{
-+  return "SoC: " + g_cpuInfo.getCPUSoC();
++  if (!g_cpuInfo.getCPUSoC().empty())
++    return "SoC: " + g_cpuInfo.getCPUSoC();
++  return "";
 +}
 +
  std::string CSysInfo::GetCPUHardware()
@@ -86,37 +73,21 @@ index bda348af4ed3..bc165de3ccda 100644
    std::string GetCPUHardware();
    std::string GetCPURevision();
    std::string GetCPUSerial();
-diff --git a/xbmc/utils/test/TestCPUInfo.cpp b/xbmc/utils/test/TestCPUInfo.cpp
-index 821094f51fb8..81e23802e09c 100644
---- a/xbmc/utils/test/TestCPUInfo.cpp
-+++ b/xbmc/utils/test/TestCPUInfo.cpp
-@@ -83,6 +83,12 @@ TEST(TestCPUInfo, getCPUBogoMips)
-   EXPECT_STRNE("", s.c_str());
- }
- 
-+TEST(TestCPUInfo, getCPUSoC)
-+{
-+  std::string s = g_cpuInfo.getCPUSoC();
-+  EXPECT_STRNE("", s.c_str());
-+}
-+
- TEST(TestCPUInfo, getCPUHardware)
- {
-   std::string s = g_cpuInfo.getCPUHardware();
 diff --git a/xbmc/windows/GUIWindowSystemInfo.cpp b/xbmc/windows/GUIWindowSystemInfo.cpp
-index 83ab46b3c908..1a49f920063c 100644
+index 83ab46b3c908..3bde0c918103 100644
 --- a/xbmc/windows/GUIWindowSystemInfo.cpp
 +++ b/xbmc/windows/GUIWindowSystemInfo.cpp
-@@ -147,6 +147,7 @@ void CGUIWindowSystemInfo::FrameMove()
+@@ -147,6 +147,8 @@ void CGUIWindowSystemInfo::FrameMove()
      SET_CONTROL_LABEL(i++, g_sysinfo.GetCPUModel());
  #if defined(__arm__) && defined(TARGET_LINUX)
      SET_CONTROL_LABEL(i++, g_sysinfo.GetCPUBogoMips());
-+    SET_CONTROL_LABEL(i++, g_sysinfo.GetCPUSoC());
++    if (!g_sysinfo.GetCPUSoC().empty())
++      SET_CONTROL_LABEL(i++, g_sysinfo.GetCPUSoC());
      SET_CONTROL_LABEL(i++, g_sysinfo.GetCPUHardware());
      SET_CONTROL_LABEL(i++, g_sysinfo.GetCPURevision());
      SET_CONTROL_LABEL(i++, g_sysinfo.GetCPUSerial());
 
-From 481de45b764747b962f3ec3cf7f98d697881b187 Mon Sep 17 00:00:00 2001
+From fb9303eb0e9508346229f37c45ed8ed719e7eab1 Mon Sep 17 00:00:00 2001
 From: Neil Armstrong <narmstrong@baylibre.com>
 Date: Tue, 11 Sep 2018 09:34:59 +0000
 Subject: [PATCH 2/3] utils: SystemInfo: Use sysfs-devices-soc on Linux if
@@ -133,7 +104,7 @@ Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
  1 file changed, 18 insertions(+)
 
 diff --git a/xbmc/utils/SystemInfo.cpp b/xbmc/utils/SystemInfo.cpp
-index 4eb995528f7d..429cf7ff3c73 100644
+index 209940faf1c1..0963cc08fba3 100644
 --- a/xbmc/utils/SystemInfo.cpp
 +++ b/xbmc/utils/SystemInfo.cpp
 @@ -27,6 +27,7 @@
@@ -144,7 +115,7 @@ index 4eb995528f7d..429cf7ff3c73 100644
  
  #ifdef TARGET_WINDOWS
  #include "dwmapi.h"
-@@ -769,6 +770,20 @@ std::string CSysInfo::GetManufacturerName(void)
+@@ -771,6 +772,20 @@ std::string CSysInfo::GetManufacturerName(void)
      auto eas = EasClientDeviceInformation();
      auto manufacturer = eas.SystemManufacturer();
      g_charsetConverter.wToUTF8(std::wstring(manufacturer.c_str()), manufName);
@@ -165,7 +136,7 @@ index 4eb995528f7d..429cf7ff3c73 100644
  #elif defined(TARGET_WINDOWS)
      // We just don't care, might be useful on embedded
  #endif
-@@ -802,6 +817,9 @@ std::string CSysInfo::GetModelName(void)
+@@ -804,6 +819,9 @@ std::string CSysInfo::GetModelName(void)
      auto eas = EasClientDeviceInformation();
      auto manufacturer = eas.SystemProductName();
      g_charsetConverter.wToUTF8(std::wstring(manufacturer.c_str()), modelName);
@@ -176,7 +147,7 @@ index 4eb995528f7d..429cf7ff3c73 100644
      // We just don't care, might be useful on embedded
  #endif
 
-From c14da21e19c659cd61381e4c371f8fb518a8aeec Mon Sep 17 00:00:00 2001
+From 331a706b59753d372116ff933589caf988548012 Mon Sep 17 00:00:00 2001
 From: Neil Armstrong <narmstrong@baylibre.com>
 Date: Tue, 11 Sep 2018 13:22:13 +0000
 Subject: [PATCH 3/3] utils: CPUInfo: use sysfs-devices-soc to gather more
@@ -193,7 +164,7 @@ Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
  1 file changed, 16 insertions(+)
 
 diff --git a/xbmc/utils/CPUInfo.cpp b/xbmc/utils/CPUInfo.cpp
-index 24cf8a5e70d3..5b72c89a71dd 100644
+index cb4658464c4e..599186451aeb 100644
 --- a/xbmc/utils/CPUInfo.cpp
 +++ b/xbmc/utils/CPUInfo.cpp
 @@ -10,6 +10,7 @@
