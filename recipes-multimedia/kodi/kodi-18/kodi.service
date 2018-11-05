@@ -2,9 +2,18 @@
 Description=Kodi media thing
 
 [Service]
+StandardInput=tty
+TTYPath=/dev/tty1
+
+Environment=__GL_YIELD=USLEEP
+Environment=DISPLAY=:0.0
+Environment=WAYLAND_DISPLAY=wayland-0
+Environment=SDL_MOUSE_RELATIVE=0
+
 User=root
 Type=simple
 SuccessExitStatus=0 1
+
 IOSchedulingClass=realtime
 IOSchedulingPriority=0
 

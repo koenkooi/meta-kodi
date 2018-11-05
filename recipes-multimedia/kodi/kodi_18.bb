@@ -68,7 +68,7 @@ DEPENDS += " \
             zlib \
           "
 
-SRCREV = "b5da899aae6383877eb9eba92918ce59fbe24395"
+SRCREV = "4419febe1a1e47afcb2528c7e3ea87dd4b92f64e"
 
 
 # 'patch' doesn't support binary diffs
@@ -79,7 +79,7 @@ SRC_URI = "git://github.com/xbmc/xbmc.git;protocol=https \
            file://0001-estuary-move-recently-added-entries-to-the-top-in-ho.patch \
            file://0002-kodi.sh-set-mesa-debug.patch \
            file://flatbuffers.patch \
-           file://14422.patch \
+           file://14785.patch \
            file://kodi.service \
            file://kodi-x11.service \
           "
@@ -137,7 +137,7 @@ EXTRA_OECMAKE = " \
     -DENABLE_OPTICAL=OFF \
     -DENABLE_DVDCSS=OFF \
     -DENABLE_DEBUGFISSION=OFF \
-    -DCMAKE_BUILD_TYPE=Release \
+    -DCMAKE_BUILD_TYPE=RelWithDebInfo \
 "
 
 # OECMAKE_GENERATOR="Unix Makefiles"
