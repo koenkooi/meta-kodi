@@ -29,9 +29,8 @@ SRC_URI = "git://github.com/FFmpeg/FFmpeg.git;protocol=https;branch=release/4.0 
            file://0002-libavcodec-v4l2m2m-output-AVDRMFrameDescriptor.patch \
            file://0003-libavcodec-v4l2m2m-adjust-formatting.patch \
            file://0004-libavcodec-v4l2m2m-fix-error-handling-during-buffer-.patch \
-           file://0005-libavcodec-v4l2m2m-use-get_format-callback-from-appl.patch \
-           file://0006-libavcodec-v4l2m2m-allow-using-multiplane-formats.patch \
-           file://0007-v4l2-fix-memleak.patch \
+           file://0005-libavcodec-v4l2m2m-make-sure-to-unref-avpkt.patch \
+           file://0006-avcodec-v4l2_context-set-frame-SAR-using-VIDIOC_CROP.patch \
            "
 
 S = "${WORKDIR}/git"

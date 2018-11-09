@@ -1,0 +1,32 @@
+From 2a0778c1a2ce5297e177f516f3ba471c0397efaf Mon Sep 17 00:00:00 2001
+From: Lukas Rusak <lorusak@gmail.com>
+Date: Sun, 17 Jun 2018 22:56:37 -0700
+Subject: [PATCH 5/6] libavcodec: v4l2m2m: make sure to unref avpkt
+
+---
+ libavcodec/v4l2_m2m_dec.c | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/libavcodec/v4l2_m2m_dec.c b/libavcodec/v4l2_m2m_dec.c
+index d524fd2..2cf7e1d 100644
+--- a/libavcodec/v4l2_m2m_dec.c
++++ b/libavcodec/v4l2_m2m_dec.c
+@@ -156,6 +156,7 @@ static int v4l2_receive_frame(AVCodecContext *avctx, AVFrame *frame)
+     if (avpkt.size) {
+         ret = v4l2_try_start(avctx);
+         if (ret) {
++            av_packet_unref(&avpkt);
+             /* cant recover */
+             if (ret == AVERROR(ENOMEM))
+                 return ret;
+@@ -165,6 +166,7 @@ static int v4l2_receive_frame(AVCodecContext *avctx, AVFrame *frame)
+     }
+ 
+ dequeue:
++    av_packet_unref(&avpkt);
+     return ff_v4l2_context_dequeue_frame(capture, frame);
+ }
+ 
+-- 
+2.0.1
+

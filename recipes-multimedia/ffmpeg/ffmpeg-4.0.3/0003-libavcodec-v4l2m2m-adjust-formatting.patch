@@ -1,4 +1,4 @@
-From a63436c031253a96eea827be194ff5a611728598 Mon Sep 17 00:00:00 2001
+From c952e5b0878fcb0ecf5d187a6616a9dbe57e95fc Mon Sep 17 00:00:00 2001
 From: Lukas Rusak <lorusak@gmail.com>
 Date: Tue, 8 May 2018 22:40:23 -0700
 Subject: [PATCH 3/6] libavcodec: v4l2m2m: adjust formatting
@@ -9,10 +9,10 @@ Subject: [PATCH 3/6] libavcodec: v4l2m2m: adjust formatting
  2 files changed, 15 insertions(+), 9 deletions(-)
 
 diff --git a/libavcodec/v4l2_buffers.c b/libavcodec/v4l2_buffers.c
-index 0d99a8b..a14c5ab 100644
+index e5c46ac..897c3c4 100644
 --- a/libavcodec/v4l2_buffers.c
 +++ b/libavcodec/v4l2_buffers.c
-@@ -389,7 +389,8 @@ static int v4l2_bufref_to_buf(V4L2Buffer *out, int plane, const uint8_t* data, i
+@@ -401,7 +401,8 @@ static int v4l2_bufref_to_buf(V4L2Buffer *out, int plane, const uint8_t* data, i
      bytesused = FFMIN(size, out->plane_info[plane].length);
      length = out->plane_info[plane].length;
  
@@ -22,7 +22,7 @@ index 0d99a8b..a14c5ab 100644
  
      if (V4L2_TYPE_IS_MULTIPLANAR(out->buf.type)) {
          out->planes[plane].bytesused = bytesused;
-@@ -413,7 +414,10 @@ int ff_v4l2_buffer_avframe_to_buf(const AVFrame *frame, V4L2Buffer* out)
+@@ -425,7 +426,10 @@ int ff_v4l2_buffer_avframe_to_buf(const AVFrame *frame, V4L2Buffer* out)
      int i, ret;
  
      for(i = 0; i < out->num_planes; i++) {
@@ -34,7 +34,7 @@ index 0d99a8b..a14c5ab 100644
          if (ret)
              return ret;
      }
-@@ -468,8 +472,8 @@ int ff_v4l2_buffer_buf_to_avframe(AVFrame *frame, V4L2Buffer *avbuf)
+@@ -480,8 +484,8 @@ int ff_v4l2_buffer_buf_to_avframe(AVFrame *frame, V4L2Buffer *avbuf)
      /* 2. get frame information */
      frame->key_frame = !!(avbuf->buf.flags & V4L2_BUF_FLAG_KEYFRAME);
      frame->color_primaries = v4l2_get_color_primaries(avbuf);
@@ -44,7 +44,7 @@ index 0d99a8b..a14c5ab 100644
      frame->color_trc = v4l2_get_color_trc(avbuf);
      frame->pts = v4l2_get_pts(avbuf);
  
-@@ -495,7 +499,8 @@ int ff_v4l2_buffer_buf_to_avpkt(AVPacket *pkt, V4L2Buffer *avbuf)
+@@ -507,7 +511,8 @@ int ff_v4l2_buffer_buf_to_avpkt(AVPacket *pkt, V4L2Buffer *avbuf)
      if (ret)
          return ret;
  
@@ -54,7 +54,7 @@ index 0d99a8b..a14c5ab 100644
      pkt->data = pkt->buf->data;
  
      if (avbuf->buf.flags & V4L2_BUF_FLAG_KEYFRAME)
-@@ -551,6 +556,7 @@ int ff_v4l2_buffer_initialize(V4L2Buffer* avbuf, int index)
+@@ -563,6 +568,7 @@ int ff_v4l2_buffer_initialize(V4L2Buffer* avbuf, int index)
              /* in MP, the V4L2 API states that buf.length means num_planes */
              if (avbuf->num_planes >= avbuf->buf.length)
                  break;
@@ -62,7 +62,7 @@ index 0d99a8b..a14c5ab 100644
              if (avbuf->buf.m.planes[avbuf->num_planes].length)
                  avbuf->num_planes++;
          }
-@@ -567,12 +573,14 @@ int ff_v4l2_buffer_initialize(V4L2Buffer* avbuf, int index)
+@@ -579,12 +585,14 @@ int ff_v4l2_buffer_initialize(V4L2Buffer* avbuf, int index)
              avbuf->plane_info[i].length = avbuf->buf.m.planes[i].length;
              avbuf->plane_info[i].mm_addr = mmap(NULL, avbuf->buf.m.planes[i].length,
                                             PROT_READ | PROT_WRITE, MAP_SHARED,
@@ -79,7 +79,7 @@ index 0d99a8b..a14c5ab 100644
          }
  
          if (avbuf->plane_info[i].mm_addr == MAP_FAILED)
-@@ -582,9 +590,8 @@ int ff_v4l2_buffer_initialize(V4L2Buffer* avbuf, int index)
+@@ -594,9 +602,8 @@ int ff_v4l2_buffer_initialize(V4L2Buffer* avbuf, int index)
      avbuf->status = V4L2BUF_AVAILABLE;
  
      if (V4L2_TYPE_IS_MULTIPLANAR(ctx->type)) {

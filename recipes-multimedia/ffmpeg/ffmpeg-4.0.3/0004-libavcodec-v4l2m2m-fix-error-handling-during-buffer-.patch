@@ -1,4 +1,4 @@
-From 9061841c75c76f8a50a405971f3f4a8238a38772 Mon Sep 17 00:00:00 2001
+From d24d98271bb62ad75211174c4ed79398b462985f Mon Sep 17 00:00:00 2001
 From: Jorge Ramirez-Ortiz <jramirez@baylibre.com>
 Date: Sun, 6 May 2018 19:56:30 +0200
 Subject: [PATCH 4/6] libavcodec: v4l2m2m: fix error handling during buffer
@@ -53,7 +53,7 @@ index 9457fad..fd3161c 100644
 +    return ret;
  }
 diff --git a/libavcodec/v4l2_m2m_dec.c b/libavcodec/v4l2_m2m_dec.c
-index 2b33bad..1bfd11e 100644
+index 7f41e3b..d524fd2 100644
 --- a/libavcodec/v4l2_m2m_dec.c
 +++ b/libavcodec/v4l2_m2m_dec.c
 @@ -92,8 +92,8 @@ static int v4l2_try_start(AVCodecContext *avctx)

@@ -1,19 +1,19 @@
-From 70bd848cc7799bdc7b493defa533ffc86e40a5bf Mon Sep 17 00:00:00 2001
+From 7a50991c091022724ed2a49ed60f227e91377fea Mon Sep 17 00:00:00 2001
 From: Lukas Rusak <lorusak@gmail.com>
 Date: Tue, 24 Apr 2018 23:00:23 -0700
 Subject: [PATCH 2/6] libavcodec: v4l2m2m: output AVDRMFrameDescriptor
 
 ---
- libavcodec/v4l2_buffers.c | 204 ++++++++++++++++++++++++++++++++++++++--------
+ libavcodec/v4l2_buffers.c | 216 +++++++++++++++++++++++++++++++++++++++-------
  libavcodec/v4l2_buffers.h |   4 +
  libavcodec/v4l2_context.c |  40 ++++++++-
  libavcodec/v4l2_m2m.c     |   4 +-
  libavcodec/v4l2_m2m.h     |   3 +
- libavcodec/v4l2_m2m_dec.c |  23 ++++++
- 6 files changed, 241 insertions(+), 37 deletions(-)
+ libavcodec/v4l2_m2m_dec.c |  23 +++++
+ 6 files changed, 253 insertions(+), 37 deletions(-)
 
 diff --git a/libavcodec/v4l2_buffers.c b/libavcodec/v4l2_buffers.c
-index aef911f..0d99a8b 100644
+index aef911f..e5c46ac 100644
 --- a/libavcodec/v4l2_buffers.c
 +++ b/libavcodec/v4l2_buffers.c
 @@ -21,6 +21,7 @@
@@ -32,7 +32,7 @@ index aef911f..0d99a8b 100644
  #include "v4l2_context.h"
  #include "v4l2_buffers.h"
  #include "v4l2_m2m.h"
-@@ -203,7 +205,65 @@ static enum AVColorTransferCharacteristic v4l2_get_color_trc(V4L2Buffer *buf)
+@@ -203,7 +205,79 @@ static enum AVColorTransferCharacteristic v4l2_get_color_trc(V4L2Buffer *buf)
      return AVCOL_TRC_UNSPECIFIED;
  }
  
@@ -43,52 +43,66 @@ index aef911f..0d99a8b 100644
 +    AVDRMLayerDescriptor *layer;
 +
 +    /* fill the DRM frame descriptor */
-+    drm_desc->nb_objects = 1;
++    drm_desc->nb_objects = avbuf->num_planes;
 +    drm_desc->nb_layers = 1;
 +
 +    layer = &drm_desc->layers[0];
-+    layer->planes[0].object_index = 0;
-+    layer->planes[0].offset = 0;
-+    layer->planes[0].pitch = avbuf->plane_info[0].bytesperline;
++    layer->nb_planes = avbuf->num_planes;
++
++    for (int i = 0; i < avbuf->num_planes; i++) {
++        layer->planes[i].object_index = i;
++        layer->planes[i].offset = 0;
++        layer->planes[i].pitch = avbuf->plane_info[i].bytesperline;
++    }
 +
 +    switch (avbuf->context->av_pix_fmt) {
++    case AV_PIX_FMT_YUYV422:
++
++        layer->format = DRM_FORMAT_YUYV;
++        layer->nb_planes = 1;
++
++        break;
++
 +    case AV_PIX_FMT_NV12:
 +    case AV_PIX_FMT_NV21:
++
++        layer->format = avbuf->context->av_pix_fmt == AV_PIX_FMT_NV12 ?
++            DRM_FORMAT_NV12 : DRM_FORMAT_NV21;
 +
 +        if (avbuf->num_planes > 1)
 +            break;
 +
-+        layer->format = avbuf->context->av_pix_fmt == AV_PIX_FMT_NV12 ?
-+            DRM_FORMAT_NV12 : DRM_FORMAT_NV21;
 +        layer->nb_planes = 2;
 +
 +        layer->planes[1].object_index = 0;
 +        layer->planes[1].offset = avbuf->plane_info[0].bytesperline *
-+            avbuf->context->format.fmt.pix_mp.height;
++            avbuf->context->format.fmt.pix.height;
 +        layer->planes[1].pitch = avbuf->plane_info[0].bytesperline;
 +        break;
 +
 +    case AV_PIX_FMT_YUV420P:
 +
++        layer->format = DRM_FORMAT_YUV420;
++
 +        if (avbuf->num_planes > 1)
 +            break;
 +
-+        layer->format = DRM_FORMAT_YUV420;
 +        layer->nb_planes = 3;
 +
 +        layer->planes[1].object_index = 0;
 +        layer->planes[1].offset = avbuf->plane_info[0].bytesperline *
-+            avbuf->context->format.fmt.pix_mp.height;
++            avbuf->context->format.fmt.pix.height;
 +        layer->planes[1].pitch = avbuf->plane_info[0].bytesperline >> 1;
 +
 +        layer->planes[2].object_index = 0;
 +        layer->planes[2].offset = layer->planes[1].offset +
 +            ((avbuf->plane_info[0].bytesperline *
-+              avbuf->context->format.fmt.pix_mp.height) >> 2);
++              avbuf->context->format.fmt.pix.height) >> 2);
 +        layer->planes[2].pitch = avbuf->plane_info[0].bytesperline >> 1;
 +        break;
 +
 +    default:
++        drm_desc->nb_layers = 0;
 +        break;
 +    }
 +
@@ -99,7 +113,7 @@ index aef911f..0d99a8b 100644
  {
      V4L2Buffer* avbuf = opaque;
      V4L2m2mContext *s = buf_to_m2mctx(avbuf);
-@@ -227,27 +287,49 @@ static void v4l2_free_buffer(void *opaque, uint8_t *unused)
+@@ -227,27 +301,47 @@ static void v4l2_free_buffer(void *opaque, uint8_t *unused)
      }
  }
  
@@ -129,12 +143,10 @@ index aef911f..0d99a8b 100644
 +            return AVERROR(errno);
 +
 +        if (V4L2_TYPE_IS_MULTIPLANAR(avbuf->buf.type)) {
-+            avbuf->buf.m.planes[i].m.fd = expbuf.fd;
 +            /* drm frame */
 +            avbuf->drm_frame.objects[i].size = avbuf->buf.m.planes[i].length;
 +            avbuf->drm_frame.objects[i].fd = expbuf.fd;
 +        } else {
-+            avbuf->buf.m.fd = expbuf.fd;
 +            /* drm frame */
 +            avbuf->drm_frame.objects[0].size = avbuf->buf.length;
 +            avbuf->drm_frame.objects[0].fd = expbuf.fd;
@@ -161,7 +173,7 @@ index aef911f..0d99a8b 100644
          in->context_refcount = 1;
      }
  
-@@ -257,6 +339,46 @@ static int v4l2_buf_to_bufref(V4L2Buffer *in, int plane, AVBufferRef **buf)
+@@ -257,6 +351,46 @@ static int v4l2_buf_to_bufref(V4L2Buffer *in, int plane, AVBufferRef **buf)
      return 0;
  }
  
@@ -208,7 +220,7 @@ index aef911f..0d99a8b 100644
  static int v4l2_bufref_to_buf(V4L2Buffer *out, int plane, const uint8_t* data, int size, AVBufferRef* bref)
  {
      unsigned int bytesused, length;
-@@ -308,31 +430,43 @@ int ff_v4l2_buffer_buf_to_avframe(AVFrame *frame, V4L2Buffer *avbuf)
+@@ -308,31 +442,43 @@ int ff_v4l2_buffer_buf_to_avframe(AVFrame *frame, V4L2Buffer *avbuf)
  
      av_frame_unref(frame);
  
@@ -249,7 +261,7 @@ index aef911f..0d99a8b 100644
 +            frame->linesize[1] = avbuf->plane_info[0].bytesperline;
 +            frame->data[1] = frame->buf[0]->data +
 +                avbuf->plane_info[0].bytesperline *
-+                avbuf->context->format.fmt.pix_mp.height;
++                avbuf->context->format.fmt.pix.height;
              break;
 -        frame->linesize[1] = avbuf->plane_info[0].bytesperline;
 -        frame->data[1] = frame->buf[0]->data + avbuf->plane_info[0].bytesperline * avbuf->context->format.fmt.pix_mp.height;
@@ -268,7 +280,7 @@ index aef911f..0d99a8b 100644
      frame->color_primaries = v4l2_get_color_primaries(avbuf);
      frame->colorspace = v4l2_get_color_space(avbuf);
      frame->color_range = v4l2_get_color_range(avbuf);
-@@ -447,9 +581,6 @@ int ff_v4l2_buffer_initialize(V4L2Buffer* avbuf, int index)
+@@ -447,9 +593,6 @@ int ff_v4l2_buffer_initialize(V4L2Buffer* avbuf, int index)
  
      avbuf->status = V4L2BUF_AVAILABLE;
  
@@ -278,7 +290,7 @@ index aef911f..0d99a8b 100644
      if (V4L2_TYPE_IS_MULTIPLANAR(ctx->type)) {
          avbuf->buf.m.planes = avbuf->planes;
          avbuf->buf.length   = avbuf->num_planes;
-@@ -459,6 +590,15 @@ int ff_v4l2_buffer_initialize(V4L2Buffer* avbuf, int index)
+@@ -459,6 +602,15 @@ int ff_v4l2_buffer_initialize(V4L2Buffer* avbuf, int index)
          avbuf->buf.length    = avbuf->planes[0].length;
      }
  
@@ -409,7 +421,7 @@ index 452bf0d..9ac5a24 100644
  
  typedef struct V4L2m2mPriv
 diff --git a/libavcodec/v4l2_m2m_dec.c b/libavcodec/v4l2_m2m_dec.c
-index ed5193e..2b33bad 100644
+index ed5193e..7f41e3b 100644
 --- a/libavcodec/v4l2_m2m_dec.c
 +++ b/libavcodec/v4l2_m2m_dec.c
 @@ -23,12 +23,18 @@
@@ -441,7 +453,7 @@ index ed5193e..2b33bad 100644
 +     *   - the DRM frame format is passed in the DRM frame descriptor layer.
 +     *       check the v4l2_get_drm_frame function.
 +     */
-+    if (avctx->pix_fmt == AV_PIX_FMT_DRM_PRIME)
++    if (ff_get_format(avctx, avctx->codec->pix_fmts) == AV_PIX_FMT_DRM_PRIME)
 +        s->output_drm = 1;
 +
      ret = ff_v4l2_m2m_codec_init(avctx);

@@ -1,4 +1,4 @@
-From 3ca68396b4825971e582bb1dbe40b8724e165696 Mon Sep 17 00:00:00 2001
+From c5524b8b68c57c61f773df9a6fef12910c6b6423 Mon Sep 17 00:00:00 2001
 From: Lukas Rusak <lorusak@gmail.com>
 Date: Tue, 24 Apr 2018 22:48:23 -0700
 Subject: [PATCH 1/6] libavcodec: v4l2m2m: fix indentation and add M2MDEC_CLASS
