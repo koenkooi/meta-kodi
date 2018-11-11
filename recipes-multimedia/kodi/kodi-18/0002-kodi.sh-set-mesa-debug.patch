@@ -16,8 +16,8 @@ index 5e5360c..dc6e424 100644
  #  the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  #  http://www.gnu.org/copyleft/gpl.html
  
-+export MESA_DEBUG=1
-+export EGL_LOG_LEVEL="debug"
++
++
 +export EGL_PLATFORM="drm"
 +
  APP=@APP_NAME@

@@ -1,0 +1,15 @@
+diff --git a/xbmc/cores/VideoPlayer/VideoRenderers/HwDecRender/VideoLayerBridgeDRMPRIME.cpp b/xbmc/cores/VideoPlayer/VideoRenderers/HwDecRender/VideoLayerBridgeDRMPRIME.cpp
+index e1cc7a28b7..dc5fc1f315 100644
+--- a/xbmc/cores/VideoPlayer/VideoRenderers/HwDecRender/VideoLayerBridgeDRMPRIME.cpp
++++ b/xbmc/cores/VideoPlayer/VideoRenderers/HwDecRender/VideoLayerBridgeDRMPRIME.cpp
+@@ -100,7 +100,9 @@ bool CVideoLayerBridgeDRMPRIME::Map(CVideoBufferDRMPRIME* buffer)
+                                    handles, pitches, offsets, modifier, &buffer->m_fb_id, flags);
+   if (ret < 0)
+   {
+-    CLog::Log(LOGERROR, "CVideoLayerBridgeDRMPRIME::%s - failed to add fb %d, ret = %d", __FUNCTION__, buffer->m_fb_id, ret);
++    CLog::Log(LOGERROR, "CVideoLayerBridgeDRMPRIME::{} - failed to add fb, ret={} width={} height={} format={} flags={}", __FUNCTION__, ret, buffer->GetWidth(), buffer->GetHeight(), layer->format, flags);
++    for (int plane = 0; plane < layer->nb_planes; plane++)
++      CLog::Log(LOGERROR, "CVideoLayerBridgeDRMPRIME::{} - plane={} handle={} pitch={} offset={} modifier={}", __FUNCTION__, plane, handles[plane], pitches[plane], offsets[plane], modifier[plane]);
+     return false;
+   }
+ 

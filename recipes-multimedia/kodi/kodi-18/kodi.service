@@ -2,8 +2,6 @@
 Description=Kodi media thing
 
 [Service]
-StandardInput=tty
-TTYPath=/dev/tty1
 
 Environment=__GL_YIELD=USLEEP
 Environment=DISPLAY=:0.0

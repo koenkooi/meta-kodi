@@ -68,7 +68,7 @@ DEPENDS += " \
             zlib \
           "
 
-SRCREV = "4419febe1a1e47afcb2528c7e3ea87dd4b92f64e"
+SRCREV = "2762a102b16f101390479f4e3882cff647afff2f"
 
 
 # 'patch' doesn't support binary diffs
@@ -79,7 +79,6 @@ SRC_URI = "git://github.com/xbmc/xbmc.git;protocol=https \
            file://0001-estuary-move-recently-added-entries-to-the-top-in-ho.patch \
            file://0002-kodi.sh-set-mesa-debug.patch \
            file://flatbuffers.patch \
-           file://14785.patch \
            file://kodi.service \
            file://kodi-x11.service \
           "
@@ -215,6 +214,8 @@ RRECOMMENDS_${PN}_append = " libcec \
                            "
 RRECOMMENDS_${PN}_append_libc-glibc = " glibc-charmap-ibm850 \
                                         glibc-gconv-ibm850 \
+                                        glibc-charmap-ibm437 \
+                                        glibc-gconv-ibm437 \
 					glibc-gconv-unicode \
                                         glibc-gconv-utf-32 \
 					glibc-charmap-utf-8 \
