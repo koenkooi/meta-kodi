@@ -31,6 +31,7 @@ SRC_URI = "git://github.com/FFmpeg/FFmpeg.git;protocol=https;branch=release/4.0 
            file://0004-libavcodec-v4l2m2m-fix-error-handling-during-buffer-.patch \
            file://0005-libavcodec-v4l2m2m-make-sure-to-unref-avpkt.patch \
            file://0006-avcodec-v4l2_context-set-frame-SAR-using-VIDIOC_CROP.patch \
+           file://0007-v4l2-use-less-buffers.patch \
            "
 
 S = "${WORKDIR}/git"

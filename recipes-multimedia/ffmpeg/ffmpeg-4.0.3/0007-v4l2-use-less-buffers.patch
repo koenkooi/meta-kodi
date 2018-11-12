@@ -1,0 +1,25 @@
+From 237cff1c25a2a7d22253d420b959b98f3d479abb Mon Sep 17 00:00:00 2001
+From: Koen Kooi <koen@dominion.thruhere.net>
+Date: Mon, 12 Nov 2018 12:51:42 +0100
+Subject: [PATCH 7/7] v4l2: use less buffers
+
+---
+ libavcodec/v4l2_m2m.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/libavcodec/v4l2_m2m.h b/libavcodec/v4l2_m2m.h
+index 9ac5a24..83c4479 100644
+--- a/libavcodec/v4l2_m2m.h
++++ b/libavcodec/v4l2_m2m.h
+@@ -38,7 +38,7 @@
+ 
+ #define V4L_M2M_DEFAULT_OPTS \
+     { "num_output_buffers", "Number of buffers in the output context",\
+-        OFFSET(num_output_buffers), AV_OPT_TYPE_INT, { .i64 = 16 }, 6, INT_MAX, FLAGS }
++        OFFSET(num_output_buffers), AV_OPT_TYPE_INT, { .i64 = 2 }, 1, INT_MAX, FLAGS }
+ 
+ typedef struct V4L2m2mContext {
+     char devname[PATH_MAX];
+-- 
+2.0.1
+
