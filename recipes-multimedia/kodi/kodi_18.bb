@@ -68,7 +68,7 @@ DEPENDS += " \
             zlib \
           "
 
-SRCREV = "2762a102b16f101390479f4e3882cff647afff2f"
+SRCREV = "fce4d884b87bc7371a046f4bed1ec21fcc8355a2"
 
 
 # 'patch' doesn't support binary diffs
@@ -118,6 +118,7 @@ EXTRA_OECMAKE = " \
     -DNATIVEPREFIX=${STAGING_DIR_NATIVE}${prefix} \
     -DJava_JAVA_EXECUTABLE=/usr/bin/java \
     -DWITH_TEXTUREPACKER=${STAGING_BINDIR_NATIVE}/TexturePacker \
+    -DWITH_JSONSCHEMABUILDER=${STAGING_BINDIR_NATIVE}/JsonSchemaBuilder \
     -DENABLE_INTERNAL_FSTRCMP=0 \
     \
     -DENABLE_LDGOLD=ON \
