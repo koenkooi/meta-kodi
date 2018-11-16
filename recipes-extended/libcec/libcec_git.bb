@@ -20,7 +20,7 @@ S = "${WORKDIR}/git"
 
 inherit cmake pkgconfig
 
-EXTRA_OECMAKE = "-DCMAKE_INSTALL_LIBDIR=${libdir} -DCMAKE_INSTALL_LIBDIR_NOARCH=${libdir}"
+EXTRA_OECMAKE = "-DHAVE_LINUX_API=1 -DCMAKE_INSTALL_LIBDIR=${libdir} -DCMAKE_INSTALL_LIBDIR_NOARCH=${libdir}"
 
 # Create the wrapper for python3
 PACKAGES =+ "python3-${BPN}"
