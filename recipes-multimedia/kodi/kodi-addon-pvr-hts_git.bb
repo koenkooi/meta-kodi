@@ -5,12 +5,12 @@ LIC_FILES_CHKSUM = "file://src/client.cpp;beginline=1;endline=19;md5=101ceb12553
 
 inherit kodi-addon
 
-SRCREV_pvrhts = "095784b3190ee36abdc0001f267dbbd2db29ca2e"
+SRCREV_pvrhts = "f4ea60f944d0cfb8b73c0f9dc2181e54d3c367bf"
 
 SRCREV_FORMAT = "pvrhts"
 
-PV = "4.2.13+gitr${SRCPV}"
-SRC_URI = "git://github.com/kodi-pvr/pvr.hts.git;branch=master;destsuffix=pvr.hts;name=pvrhts \
+PV = "4.4.3+gitr${SRCPV}"
+SRC_URI = "git://github.com/kodi-pvr/pvr.hts.git;branch=master;destsuffix=pvr.hts;name=pvrhts;protocol=https \
           "
 
 S = "${WORKDIR}/pvr.hts"
