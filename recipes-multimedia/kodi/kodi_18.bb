@@ -68,8 +68,7 @@ DEPENDS += " \
             zlib \
           "
 
-SRCREV = "fce4d884b87bc7371a046f4bed1ec21fcc8355a2"
-
+SRCREV = "5478a4cf3713bea1519ada11f9a58e56afa1619d"
 
 # 'patch' doesn't support binary diffs
 PATCHTOOL = "git"
@@ -78,6 +77,7 @@ PV = "18.0+gitr${SRCPV}"
 SRC_URI = "git://github.com/xbmc/xbmc.git;protocol=https \
            file://0001-estuary-move-recently-added-entries-to-the-top-in-ho.patch \
            file://0002-kodi.sh-set-mesa-debug.patch \
+           file://0001-peripheral-settings-export-CEC-device_name-in-GUI.patch \
            file://flatbuffers.patch \
            file://kodi-guisize.patch \
            file://kodi.service \

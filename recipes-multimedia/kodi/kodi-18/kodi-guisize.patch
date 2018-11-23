@@ -81,9 +81,9 @@ index c5e4d98e0bef..830576c156a6 100644
            <visible>false</visible>
          </setting>
 +        <setting id="videoscreen.limitguisize" type="integer" label="13487" help="13488">
-+          <visible>false</visible>
++          <visible>true</visible>
 +          <level>3</level>
-+          <default>0</default>
++          <default>3</default>
 +          <constraints>
 +            <options>
 +              <option label="13489">0</option> <!-- No limit -->
