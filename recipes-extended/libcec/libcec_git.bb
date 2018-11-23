@@ -9,10 +9,10 @@ DEPENDS = "p8platform udev lockdev ncurses swig-native python3"
 DEPENDS += "${@bb.utils.contains('DISTRO_FEATURES', 'x11', 'libx11 libxrandr', '', d)}"
 DEPENDS_append_rpi = "${@bb.utils.contains('MACHINE_FEATURES', 'vc4graphics', '', ' userland', d)}"
 
-PV = "4.0.2+git${SRCPV}"
+PV = "4.0.3+git${SRCPV}"
 
-SRCREV = "d54093a548a29756dfe2b2bf66eb156421465788"
-SRC_URI = "git://github.com/Pulse-Eight/libcec.git;branch=release \
+SRCREV = "d57d3ac91a2e6c7f224082fc749331210718a08b"
+SRC_URI = "git://github.com/Pulse-Eight/libcec.git;branch=master \
            file://0001-Add-Linux-CEC-Adapter.patch \
           "
 
@@ -23,9 +23,9 @@ inherit cmake pkgconfig
 EXTRA_OECMAKE = "-DHAVE_LINUX_API=1 -DCMAKE_INSTALL_LIBDIR=${libdir} -DCMAKE_INSTALL_LIBDIR_NOARCH=${libdir}"
 
 # Create the wrapper for python3
-PACKAGES =+ "python3-${BPN}"
-FILES_python3-${BPN} = "${libdir}/python3* ${bindir}/py*"
-RDEPENDS_python3-${BPN} += "python"
+PACKAGES =+ "python3-libcec"
+FILES_python3-libcec = "${libdir}/python3* ${bindir}/py*"
+RDEPENDS_python3-libcec += "python3-core"
 
 # cec-client and xbmc need the .so present to work :(
 FILES_${PN} += "${libdir}/*.so"

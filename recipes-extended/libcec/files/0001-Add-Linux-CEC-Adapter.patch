@@ -1,29 +1,29 @@
-From 935a96c093b149cff095c1e471606a2d97367603 Mon Sep 17 00:00:00 2001
+From 48255b7d4e1cba1050b8abfbd03be37c0737e832 Mon Sep 17 00:00:00 2001
 From: Jonas Karlman <jonas@kwiboo.se>
 Date: Wed, 6 Sep 2017 17:37:05 +0200
 Subject: [PATCH] Add Linux CEC Adapter
 
 ---
- docs/README.linux.md                               |   6 +
- include/cectypes.h                                 |  11 +
- src/libcec/CECTypeUtils.h                          |   2 +
- src/libcec/CMakeLists.txt                          |   2 +
- src/libcec/adapter/AdapterFactory.cpp              |  26 +-
- .../adapter/Linux/LinuxCECAdapterCommunication.cpp | 367 +++++++++++++++++++++
- .../adapter/Linux/LinuxCECAdapterCommunication.h   |  94 ++++++
- .../adapter/Linux/LinuxCECAdapterDetection.cpp     |  50 +++
- .../adapter/Linux/LinuxCECAdapterDetection.h       |  51 +++
- src/libcec/cmake/CheckPlatformSupport.cmake        |  12 +
- src/libcec/cmake/DisplayPlatformSupport.cmake      |   6 +
- src/libcec/env.h.in                                |   3 +
- 12 files changed, 628 insertions(+), 2 deletions(-)
+ docs/README.linux.md                          |   6 +
+ include/cectypes.h                            |  11 +
+ src/libcec/CECTypeUtils.h                     |   2 +
+ src/libcec/CMakeLists.txt                     |   2 +
+ src/libcec/adapter/AdapterFactory.cpp         |  26 +-
+ .../Linux/LinuxCECAdapterCommunication.cpp    | 367 ++++++++++++++++++
+ .../Linux/LinuxCECAdapterCommunication.h      |  95 +++++
+ .../Linux/LinuxCECAdapterDetection.cpp        |  50 +++
+ .../adapter/Linux/LinuxCECAdapterDetection.h  |  51 +++
+ src/libcec/cmake/CheckPlatformSupport.cmake   |  12 +
+ src/libcec/cmake/DisplayPlatformSupport.cmake |   6 +
+ src/libcec/env.h.in                           |   3 +
+ 12 files changed, 629 insertions(+), 2 deletions(-)
  create mode 100644 src/libcec/adapter/Linux/LinuxCECAdapterCommunication.cpp
  create mode 100644 src/libcec/adapter/Linux/LinuxCECAdapterCommunication.h
  create mode 100644 src/libcec/adapter/Linux/LinuxCECAdapterDetection.cpp
  create mode 100644 src/libcec/adapter/Linux/LinuxCECAdapterDetection.h
 
 diff --git a/docs/README.linux.md b/docs/README.linux.md
-index c59fb80..e8053cc 100644
+index c59fb806..e8053cca 100644
 --- a/docs/README.linux.md
 +++ b/docs/README.linux.md
 @@ -51,5 +51,11 @@ Pass the argument `-DHAVE_TDA995X_API=1` to the cmake command in the compilation
@@ -40,13 +40,14 @@ index c59fb80..e8053cc 100644
  See [docs/README.debian.md](README.debian.md).
 \ No newline at end of file
 diff --git a/include/cectypes.h b/include/cectypes.h
-index 9c91842..2c32e4d 100644
+index 9c918427..2c32e4d9 100644
 --- a/include/cectypes.h
 +++ b/include/cectypes.h
-@@ -282,6 +282,16 @@ namespace CEC {
+@@ -281,6 +281,16 @@ namespace CEC {
+  */
  #define CEC_MAX_DATA_PACKET_SIZE (16 * 4)
  
- /*!
++/*!
 + * the path to use for the Linux CEC device
 + */
 +#define CEC_LINUX_PATH		"/dev/cec0"
@@ -56,10 +57,9 @@ index 9c91842..2c32e4d 100644
 + */
 +#define CEC_LINUX_VIRTUAL_COM		"Linux"
 +
-+/*!
+ /*!
   * the path to use for the AOCEC HDMI CEC device
   */
- #define CEC_AOCEC_PATH		"/dev/aocec"
 @@ -861,6 +871,7 @@ typedef enum cec_adapter_type
    ADAPTERTYPE_RPI              = 0x100,
    ADAPTERTYPE_TDA995x          = 0x200,
@@ -69,7 +69,7 @@ index 9c91842..2c32e4d 100644
  } cec_adapter_type;
  
 diff --git a/src/libcec/CECTypeUtils.h b/src/libcec/CECTypeUtils.h
-index 0d0cf17..49be8fb 100644
+index 25c1c6e3..15f9543f 100644
 --- a/src/libcec/CECTypeUtils.h
 +++ b/src/libcec/CECTypeUtils.h
 @@ -766,6 +766,8 @@ namespace CEC
@@ -82,10 +82,10 @@ index 0d0cf17..49be8fb 100644
          return "unknown";
        }
 diff --git a/src/libcec/CMakeLists.txt b/src/libcec/CMakeLists.txt
-index 5c88807..eb1c7ee 100644
+index 6baee69e..74fe5f37 100644
 --- a/src/libcec/CMakeLists.txt
 +++ b/src/libcec/CMakeLists.txt
-@@ -88,6 +88,8 @@ set(CEC_HEADERS devices/CECRecordingDevice.h
+@@ -89,6 +89,8 @@ set(CEC_HEADERS devices/CECRecordingDevice.h
                  adapter/Exynos/ExynosCEC.h
                  adapter/Exynos/ExynosCECAdapterDetection.h
                  adapter/Exynos/ExynosCECAdapterCommunication.h
@@ -95,7 +95,7 @@ index 5c88807..eb1c7ee 100644
                  adapter/AOCEC/AOCECAdapterDetection.h
                  adapter/AOCEC/AOCECAdapterCommunication.h
 diff --git a/src/libcec/adapter/AdapterFactory.cpp b/src/libcec/adapter/AdapterFactory.cpp
-index 91195ea..323c272 100644
+index 91195ea0..323c2724 100644
 --- a/src/libcec/adapter/AdapterFactory.cpp
 +++ b/src/libcec/adapter/AdapterFactory.cpp
 @@ -58,6 +58,11 @@
@@ -161,14 +161,14 @@ index 91195ea..323c272 100644
  }
 diff --git a/src/libcec/adapter/Linux/LinuxCECAdapterCommunication.cpp b/src/libcec/adapter/Linux/LinuxCECAdapterCommunication.cpp
 new file mode 100644
-index 0000000..400abde
+index 00000000..878c572f
 --- /dev/null
 +++ b/src/libcec/adapter/Linux/LinuxCECAdapterCommunication.cpp
 @@ -0,0 +1,367 @@
 +/*
 + * This file is part of the libCEC(R) library.
 + *
-+ * libCEC Linux CEC Adapter is Copyright (C) 2017 Jonas Karlman
++ * libCEC Linux CEC Adapter is Copyright (C) 2017-2018 Jonas Karlman
 + * based heavily on:
 + * libCEC AOCEC Code is Copyright (C) 2016 Gerald Dachs
 + * libCEC Exynos Code is Copyright (C) 2014 Valentin Manea
@@ -209,7 +209,7 @@ index 0000000..400abde
 +#include "LinuxCECAdapterCommunication.h"
 +#include "CECTypeUtils.h"
 +#include "LibCEC.h"
-+#include <p8-platform/util/buffer.h>
++#include "p8-platform/util/buffer.h"
 +#include <linux/cec.h>
 +
 +using namespace CEC;
@@ -420,12 +420,12 @@ index 0000000..400abde
 +  return false;
 +}
 +
-+cec_logical_addresses CLinuxCECAdapterCommunication::GetLogicalAddresses(void)
++cec_logical_addresses CLinuxCECAdapterCommunication::GetLogicalAddresses(void) const
 +{
 +  cec_logical_addresses addresses;
 +  addresses.Clear();
 +
-+  if (IsOpen())
++  if (m_fd != INVALID_SOCKET_VALUE)
 +  {
 +    struct cec_log_addrs log_addrs = {};
 +    if (ioctl(m_fd, CEC_ADAP_G_LOG_ADDRS, &log_addrs))
@@ -534,15 +534,15 @@ index 0000000..400abde
 +#endif
 diff --git a/src/libcec/adapter/Linux/LinuxCECAdapterCommunication.h b/src/libcec/adapter/Linux/LinuxCECAdapterCommunication.h
 new file mode 100644
-index 0000000..66d3e57
+index 00000000..f4fac87e
 --- /dev/null
 +++ b/src/libcec/adapter/Linux/LinuxCECAdapterCommunication.h
-@@ -0,0 +1,94 @@
+@@ -0,0 +1,95 @@
 +#pragma once
 +/*
 + * This file is part of the libCEC(R) library.
 + *
-+ * libCEC Linux CEC Adapter is Copyright (C) 2017 Jonas Karlman
++ * libCEC Linux CEC Adapter is Copyright (C) 2017-2018 Jonas Karlman
 + * based heavily on:
 + * libCEC AOCEC Code is Copyright (C) 2016 Gerald Dachs
 + * libCEC Exynos Code is Copyright (C) 2014 Valentin Manea
@@ -578,7 +578,7 @@ index 0000000..66d3e57
 +#include "env.h"
 +
 +#if defined(HAVE_LINUX_API)
-+#include <p8-platform/threads/threads.h>
++#include "p8-platform/threads/threads.h"
 +#include "../AdapterCommunication.h"
 +
 +namespace CEC
@@ -603,13 +603,14 @@ index 0000000..66d3e57
 +    bool SetLineTimeout(uint8_t UNUSED(iTimeout)) override { return true; }
 +    bool StartBootloader(void) override { return false; }
 +    bool SetLogicalAddresses(const cec_logical_addresses &addresses) override;
-+    cec_logical_addresses GetLogicalAddresses(void) override;
++    cec_logical_addresses GetLogicalAddresses(void) const override;
 +    bool PingAdapter(void) override { return true; }
 +    uint16_t GetFirmwareVersion(void) override { return 0; }
 +    uint32_t GetFirmwareBuildDate(void) override { return 0; }
 +    bool IsRunningLatestFirmware(void) override { return true; }
 +    bool SetControlledMode(bool UNUSED(controlled)) override { return true; }
 +    bool PersistConfiguration(const libcec_configuration & UNUSED(configuration)) override { return false; }
++    bool SetAutoMode(bool UNUSED(automode)) override { return false; }
 +    bool GetConfiguration(libcec_configuration & UNUSED(configuration)) override { return false; }
 +    std::string GetPortName(void) override { return std::string("LINUX"); }
 +    uint16_t GetPhysicalAddress(void) override;
@@ -634,7 +635,7 @@ index 0000000..66d3e57
 +#endif
 diff --git a/src/libcec/adapter/Linux/LinuxCECAdapterDetection.cpp b/src/libcec/adapter/Linux/LinuxCECAdapterDetection.cpp
 new file mode 100644
-index 0000000..7b72238
+index 00000000..7b72238f
 --- /dev/null
 +++ b/src/libcec/adapter/Linux/LinuxCECAdapterDetection.cpp
 @@ -0,0 +1,50 @@
@@ -690,7 +691,7 @@ index 0000000..7b72238
 +#endif
 diff --git a/src/libcec/adapter/Linux/LinuxCECAdapterDetection.h b/src/libcec/adapter/Linux/LinuxCECAdapterDetection.h
 new file mode 100644
-index 0000000..f5ea2c4
+index 00000000..f5ea2c47
 --- /dev/null
 +++ b/src/libcec/adapter/Linux/LinuxCECAdapterDetection.h
 @@ -0,0 +1,51 @@
@@ -746,7 +747,7 @@ index 0000000..f5ea2c4
 +
 +#endif
 diff --git a/src/libcec/cmake/CheckPlatformSupport.cmake b/src/libcec/cmake/CheckPlatformSupport.cmake
-index 6875606..6c9ebf8 100644
+index d9e1e41b..4c60b6db 100644
 --- a/src/libcec/cmake/CheckPlatformSupport.cmake
 +++ b/src/libcec/cmake/CheckPlatformSupport.cmake
 @@ -9,6 +9,7 @@
@@ -757,7 +758,7 @@ index 6875606..6c9ebf8 100644
  #       HAVE_AOCEC_API            ON if AOCEC is supported
  #       HAVE_P8_USB               ON if Pulse-Eight devices are supported
  #       HAVE_P8_USB_DETECT        ON if Pulse-Eight devices can be auto-detected
-@@ -29,6 +30,7 @@ SET(HAVE_LIBUDEV         OFF CACHE BOOL "udev not supported")
+@@ -30,6 +31,7 @@ SET(HAVE_LIBUDEV         OFF CACHE BOOL "udev not supported")
  SET(HAVE_RPI_API         OFF CACHE BOOL "raspberry pi not supported")
  SET(HAVE_TDA995X_API     OFF CACHE BOOL "tda995x not supported")
  SET(HAVE_EXYNOS_API      OFF CACHE BOOL "exynos not supported")
@@ -765,7 +766,7 @@ index 6875606..6c9ebf8 100644
  SET(HAVE_AOCEC_API       OFF CACHE BOOL "aocec not supported")
  # Pulse-Eight devices are always supported
  set(HAVE_P8_USB          ON  CACHE BOOL "p8 usb-cec supported" FORCE)
-@@ -137,6 +139,16 @@ else()
+@@ -139,6 +141,16 @@ else()
      list(APPEND CEC_SOURCES ${CEC_SOURCES_ADAPTER_EXYNOS})
    endif()
  
@@ -783,7 +784,7 @@ index 6875606..6c9ebf8 100644
    if (${HAVE_AOCEC_API})
      set(LIB_INFO "${LIB_INFO}, AOCEC")
 diff --git a/src/libcec/cmake/DisplayPlatformSupport.cmake b/src/libcec/cmake/DisplayPlatformSupport.cmake
-index 83a778a..f47b1f7 100644
+index 83a778af..f47b1f7b 100644
 --- a/src/libcec/cmake/DisplayPlatformSupport.cmake
 +++ b/src/libcec/cmake/DisplayPlatformSupport.cmake
 @@ -44,6 +44,12 @@ else()
@@ -800,7 +801,7 @@ index 83a778a..f47b1f7 100644
    message(STATUS "AOCEC support:                          yes")
  else()
 diff --git a/src/libcec/env.h.in b/src/libcec/env.h.in
-index 0774a1c..6ee352a 100644
+index 456a2e75..71895a86 100644
 --- a/src/libcec/env.h.in
 +++ b/src/libcec/env.h.in
 @@ -76,6 +76,9 @@
@@ -813,6 +814,3 @@ index 0774a1c..6ee352a 100644
  /* Define to 1 for AOCEC support */
  #cmakedefine HAVE_AOCEC_API @HAVE_AOCEC_API@
  
--- 
-2.0.1
-
