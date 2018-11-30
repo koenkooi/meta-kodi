@@ -78,6 +78,7 @@ SRC_URI = "git://github.com/xbmc/xbmc.git;protocol=https \
            file://0001-estuary-move-recently-added-entries-to-the-top-in-ho.patch \
            file://0002-kodi.sh-set-mesa-debug.patch \
            file://0001-peripheral-settings-export-CEC-device_name-in-GUI.patch \
+           file://14962.patch \
            file://flatbuffers.patch \
            file://kodi-guisize.patch \
            file://kodi.service \
