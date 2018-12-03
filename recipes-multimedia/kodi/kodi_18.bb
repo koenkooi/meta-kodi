@@ -55,6 +55,7 @@ DEPENDS += " \
             libssh \
             libtinyxml \
             libusb1 \
+            libxkbcommon \
             libxslt \
             lzo \
             mpeg2dec \
