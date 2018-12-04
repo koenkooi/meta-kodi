@@ -25,6 +25,9 @@ LIC_FILES_CHKSUM = "file://COPYING.GPLv2;md5=b234ee4d69f5fce4486a80fdaf4a4263 \
 
 SRCREV = "dee8f4b01bfeca7cc4080d20b6be442184bbb233"
 SRC_URI = "git://github.com/FFmpeg/FFmpeg.git;protocol=https;branch=release/4.0 \
+           \
+           file://mips64_cpu_detection.patch \
+           \
            file://0001-libavcodec-v4l2m2m-fix-indentation-and-add-M2MDEC_CL.patch \
            file://0002-libavcodec-v4l2m2m-output-AVDRMFrameDescriptor.patch \
            file://0003-libavcodec-v4l2m2m-adjust-formatting.patch \
