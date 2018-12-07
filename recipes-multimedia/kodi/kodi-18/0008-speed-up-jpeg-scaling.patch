@@ -1,8 +1,9 @@
-From c16a91dbc81c2ce6151985f49fe31ac41b106abf Mon Sep 17 00:00:00 2001
+From 6fe32d3e3808552820465549046560f9c37af56a Mon Sep 17 00:00:00 2001
 From: Matthias Treydte <mt@waldheinz.de>
 Date: Tue, 27 Nov 2018 21:07:11 +0100
-Subject: [PATCH 1/2] first prototype
+Subject: [PATCH 08/12] speed-up jpeg scaling
 
+first prototype
 ---
  CMakeLists.txt               |   2 +-
  xbmc/guilib/JPEGImage.h      | 119 +++++++++++++++++++++++++++++++++++
@@ -11,10 +12,10 @@ Subject: [PATCH 1/2] first prototype
  create mode 100644 xbmc/guilib/JPEGImage.h
 
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index d29771602948..beb942f9b50f 100644
+index 28024af9fe9..4ae5ac3ecba 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -328,7 +328,7 @@ else()
+@@ -330,7 +330,7 @@ else()
  endif()
  add_dependencies(${APP_NAME_LC} ${APP_NAME_LC}-libraries export-files pack-skins)
  whole_archive(_MAIN_LIBRARIES ${core_DEPENDS})
@@ -25,7 +26,7 @@ index d29771602948..beb942f9b50f 100644
  if(WIN32)
 diff --git a/xbmc/guilib/JPEGImage.h b/xbmc/guilib/JPEGImage.h
 new file mode 100644
-index 000000000000..830ac6dcc581
+index 00000000000..830ac6dcc58
 --- /dev/null
 +++ b/xbmc/guilib/JPEGImage.h
 @@ -0,0 +1,119 @@
@@ -149,7 +150,7 @@ index 000000000000..830ac6dcc581
 +  std::vector<unsigned char> m_data;
 +};
 diff --git a/xbmc/guilib/imagefactory.cpp b/xbmc/guilib/imagefactory.cpp
-index c4567b298e55..3dd572496a83 100644
+index c4567b298e5..3dd572496a8 100644
 --- a/xbmc/guilib/imagefactory.cpp
 +++ b/xbmc/guilib/imagefactory.cpp
 @@ -8,6 +8,7 @@
@@ -171,64 +172,6 @@ index c4567b298e55..3dd572496a83 100644
 +    return new CFFmpegImage(strMimeType);
 +  }
  }
+-- 
+2.17.1
 
-From 9dd92101d6fff3cf1e6e9db2c25297e86c93f64a Mon Sep 17 00:00:00 2001
-From: Matthias Treydte <mt@waldheinz.de>
-Date: Tue, 27 Nov 2018 21:27:45 +0100
-Subject: [PATCH 2/2] extend ffmpeg image (to inherit saving capabilities)
-
----
- xbmc/guilib/JPEGImage.h      | 9 +++------
- xbmc/guilib/imagefactory.cpp | 6 ++++--
- 2 files changed, 7 insertions(+), 8 deletions(-)
-
-diff --git a/xbmc/guilib/JPEGImage.h b/xbmc/guilib/JPEGImage.h
-index 830ac6dcc581..cc6072b052ed 100644
---- a/xbmc/guilib/JPEGImage.h
-+++ b/xbmc/guilib/JPEGImage.h
-@@ -5,14 +5,15 @@
- #include <jpeglib.h>
- 
- #include "iimage.h"
-+#include "FFmpegImage.h"
- #include "TextureFormats.h"
- 
- #include <iostream>
- 
--class JPEGImage : public IImage
-+class JPEGImage : public CFFmpegImage
- {
- public:
--  JPEGImage()
-+  JPEGImage(std::string const & mime) : CFFmpegImage(mime)
-   {
-       m_allocated = false;
-   }
-@@ -66,10 +67,6 @@ struct jpeg_error_mgr jerr;
-     return true;
-   }
- 
--  bool CreateThumbnailFromSurface(unsigned char*, unsigned int, unsigned int,
--                                    unsigned int, unsigned int, const std::string&,
--                                    unsigned char*&, unsigned int&) override { return false; }
--
-   bool Decode(unsigned char * const pixels, unsigned int width, unsigned int height,
-               unsigned int pitch, unsigned int format) override
-   {
-diff --git a/xbmc/guilib/imagefactory.cpp b/xbmc/guilib/imagefactory.cpp
-index 3dd572496a83..460a44ff6bc2 100644
---- a/xbmc/guilib/imagefactory.cpp
-+++ b/xbmc/guilib/imagefactory.cpp
-@@ -52,8 +52,10 @@ IImage* ImageFactory::CreateLoaderFromMimeType(const std::string& strMimeType)
-     }
-   }
- 
--  if (strMimeType == "image/jpeg") {
--    return new JPEGImage();
-+  std::cerr << "mime = " << strMimeType << std::endl;
-+
-+  if (strMimeType == "image/jpeg" || strMimeType == "image/jpg") {
-+    return new JPEGImage(strMimeType);
-   } else {
-     return new CFFmpegImage(strMimeType);
-   }

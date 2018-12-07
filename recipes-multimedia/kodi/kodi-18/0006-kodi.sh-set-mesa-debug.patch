@@ -1,7 +1,7 @@
-From c936dd2b98e42e75ccb137de9c3915ee68d64da8 Mon Sep 17 00:00:00 2001
+From 82d9255b61bca4b1eb1229d848c7c6a5bad7dbea Mon Sep 17 00:00:00 2001
 From: Koen Kooi <koen.kooi@linaro.org>
 Date: Sun, 22 Apr 2018 12:43:47 +0200
-Subject: [PATCH 2/2] kodi.sh: set mesa debug
+Subject: [PATCH 06/12] kodi.sh: set mesa debug
 
 Signed-off-by: Koen Kooi <koen.kooi@linaro.org>
 ---
@@ -9,7 +9,7 @@ Signed-off-by: Koen Kooi <koen.kooi@linaro.org>
  1 file changed, 4 insertions(+)
 
 diff --git a/tools/Linux/kodi.sh.in b/tools/Linux/kodi.sh.in
-index 5e5360c..dc6e424 100644
+index 4b2b6a74764..ee0a06f6503 100644
 --- a/tools/Linux/kodi.sh.in
 +++ b/tools/Linux/kodi.sh.in
 @@ -18,6 +18,10 @@
@@ -24,5 +24,5 @@ index 5e5360c..dc6e424 100644
  bin_name=@APP_NAME_LC@
  SAVED_ARGS="$@"
 -- 
-2.9.5
+2.17.1
 

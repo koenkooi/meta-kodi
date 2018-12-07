@@ -55,6 +55,7 @@ DEPENDS += " \
             libssh \
             libtinyxml \
             libusb1 \
+            libxkbcommon \
             libxslt \
             lzo \
             mpeg2dec \
@@ -75,12 +76,21 @@ PATCHTOOL = "git"
 
 PV = "18.0+gitr${SRCPV}"
 SRC_URI = "git://github.com/xbmc/xbmc.git;protocol=https \
-           file://0001-estuary-move-recently-added-entries-to-the-top-in-ho.patch \
-           file://0002-kodi.sh-set-mesa-debug.patch \
-           file://0001-peripheral-settings-export-CEC-device_name-in-GUI.patch \
-           file://14962.patch \
-           file://flatbuffers.patch \
-           file://kodi-guisize.patch \
+           \
+           file://0001-Add-support-for-musl-triplets.patch \
+           file://0002-Fix-file_Emu-on-musl.patch \
+           file://0003-Remove-FILEWRAP.patch \
+           file://0004-Replace-u_int64_t-with-uint64_t-from-stdint.h.patch \
+           \
+           file://0005-estuary-move-recently-added-entries-to-the-top-in-ho.patch \
+           file://0006-kodi.sh-set-mesa-debug.patch \
+           file://0007-peripheral-settings-export-CEC-device_name-in-GUI.patch \
+           file://0008-speed-up-jpeg-scaling.patch \
+           file://0009-extend-ffmpeg-image-to-inherit-saving-capabilities.patch \
+           file://0010-flatbuffers.patch \
+           file://0011-WIP-windowing-gbm-add-option-to-limit-gui-size.patch \
+           file://0012-WIP-Resolution-use-desktop-screen-width-in-whitelist.patch \
+           \
            file://kodi.service \
            file://kodi-x11.service \
           "
@@ -115,8 +125,20 @@ PACKAGECONFIG[pulseaudio] = "-DENABLE_PULSEAUDIO=ON,-DENABLE_PULSEAUDIO=OFF,puls
 PACKAGECONFIG[lcms] = ",,lcms"
 
 LDFLAGS += "${TOOLCHAIN_OPTIONS}"
+LDFLAGS_append_mips = " -latomic"
+LDFLAGS_append_mipsel = " -latomic"
+LDFLAGS_append_mips64 = " -latomic"
+LDFLAGS_append_mips64el = " -latomic"
+
+KODI_ARCH ?= ""
+KODI_ARCH_mips ?= "${TARGET_ARCH}"
+KODI_ARCH_mipsel ?= "${TARGET_ARCH}"
+KODI_ARCH_mips64 ?= "${TARGET_ARCH}"
+KODI_ARCH_mips64el ?= "${TARGET_ARCH}"
 
 EXTRA_OECMAKE = " \
+    -DWITH_ARCH=${KODI_ARCH} \
+    \
     -DNATIVEPREFIX=${STAGING_DIR_NATIVE}${prefix} \
     -DJava_JAVA_EXECUTABLE=/usr/bin/java \
     -DWITH_TEXTUREPACKER=${STAGING_BINDIR_NATIVE}/TexturePacker \

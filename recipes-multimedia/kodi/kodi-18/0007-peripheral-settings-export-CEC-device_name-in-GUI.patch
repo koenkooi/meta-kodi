@@ -1,7 +1,7 @@
-From a42d001bb03eee9fee1a45fef9b9e3e429cd8fb3 Mon Sep 17 00:00:00 2001
+From 38e59a5321c002d9473b3aff24a3310439a51a1e Mon Sep 17 00:00:00 2001
 From: Koen Kooi <koen@dominion.thruhere.net>
 Date: Fri, 23 Nov 2018 15:01:36 +0100
-Subject: [PATCH] peripheral settings: export CEC "device_name" in GUI
+Subject: [PATCH 07/12] peripheral settings: export CEC "device_name" in GUI
 
 Having multiple "kodi" entries in the menu is very unhelpful during
 testing.
@@ -13,10 +13,10 @@ Signed-off-by: Koen Kooi <koen@dominion.thruhere.net>
  2 files changed, 7 insertions(+), 2 deletions(-)
 
 diff --git a/addons/resource.language.en_gb/resources/strings.po b/addons/resource.language.en_gb/resources/strings.po
-index 7fc8981..c2e5aaf 100644
+index 7e264ae227b..1eaba006f74 100644
 --- a/addons/resource.language.en_gb/resources/strings.po
 +++ b/addons/resource.language.en_gb/resources/strings.po
-@@ -17847,7 +17847,12 @@ msgctxt "#36049"
+@@ -17857,7 +17857,12 @@ msgctxt "#36049"
  msgid "Remote button press release time (ms)"
  msgstr ""
  
@@ -31,7 +31,7 @@ index 7fc8981..c2e5aaf 100644
  #: system/settings/settings.xml
  msgctxt "#36099"
 diff --git a/system/peripherals.xml b/system/peripherals.xml
-index ff303e9..3b8155f 100644
+index ff303e99ae6..3b8155ff0cd 100644
 --- a/system/peripherals.xml
 +++ b/system/peripherals.xml
 @@ -27,7 +27,7 @@
@@ -44,5 +44,5 @@ index ff303e9..3b8155f 100644
      <setting key="wake_devices_advanced" type="string" value="" configurable="0" />
      <setting key="standby_devices_advanced" type="string" value="" configurable="0" />
 -- 
-2.0.1
+2.17.1
 

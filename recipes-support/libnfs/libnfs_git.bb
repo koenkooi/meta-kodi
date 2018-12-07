@@ -1,6 +1,6 @@
 SUMMARY = "NFS client library"
 
-LICENSE = "LGPLv2.1+GPLv3"
+LICENSE = "LGPLv2.1 & GPLv3"
 LIC_FILES_CHKSUM = "file://COPYING;md5=825301ba17efc9d188ee0abd4b924ada"
 
 PV = "2.0.0+git"

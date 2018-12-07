@@ -1,7 +1,7 @@
-From 7a88b0ad7a90a8ac2266f87ccb08dca5df0c0867 Mon Sep 17 00:00:00 2001
+From a7ef6ee15f8f928ec2b1dc585eb4d4031c232815 Mon Sep 17 00:00:00 2001
 From: Jonas Karlman <jonas@kwiboo.se>
 Date: Sun, 14 Oct 2018 14:20:03 +0200
-Subject: [PATCH] WIP: windowing/gbm: add option to limit gui size
+Subject: [PATCH 11/12] WIP: windowing/gbm: add option to limit gui size
 
 ---
  .../resources/strings.po                      | 52 ++++++++++++++++++-
@@ -10,10 +10,10 @@ Subject: [PATCH] WIP: windowing/gbm: add option to limit gui size
  3 files changed, 94 insertions(+), 1 deletion(-)
 
 diff --git a/addons/resource.language.en_gb/resources/strings.po b/addons/resource.language.en_gb/resources/strings.po
-index 97211d3b718a..eaa5b3fed759 100644
+index 1eaba006f74..858da3dadcf 100644
 --- a/addons/resource.language.en_gb/resources/strings.po
 +++ b/addons/resource.language.en_gb/resources/strings.po
-@@ -7256,7 +7256,57 @@ msgctxt "#13465"
+@@ -7261,7 +7261,57 @@ msgctxt "#13465"
  msgid "EGL"
  msgstr ""
  
@@ -73,7 +73,7 @@ index 97211d3b718a..eaa5b3fed759 100644
  #: system/settings/settings.xml
  msgctxt "#13505"
 diff --git a/system/settings/gbm.xml b/system/settings/gbm.xml
-index c5e4d98e0bef..830576c156a6 100644
+index c5e4d98e0be..6d766179b93 100644
 --- a/system/settings/gbm.xml
 +++ b/system/settings/gbm.xml
 @@ -41,6 +41,21 @@
@@ -99,7 +99,7 @@ index c5e4d98e0bef..830576c156a6 100644
            <level>3</level>
            <default>false</default>
 diff --git a/xbmc/windowing/gbm/DRMUtils.cpp b/xbmc/windowing/gbm/DRMUtils.cpp
-index fceaf770d363..21a6f8f1b926 100644
+index df46ad4bdc2..4941e106e4a 100644
 --- a/xbmc/windowing/gbm/DRMUtils.cpp
 +++ b/xbmc/windowing/gbm/DRMUtils.cpp
 @@ -17,6 +17,8 @@
@@ -120,7 +120,7 @@ index fceaf770d363..21a6f8f1b926 100644
  CDRMUtils::CDRMUtils()
    : m_connector(new connector)
    , m_encoder(new encoder)
-@@ -731,6 +735,30 @@ RESOLUTION_INFO CDRMUtils::GetResolutionInfo(drmModeModeInfoPtr mode)
+@@ -730,6 +734,30 @@ RESOLUTION_INFO CDRMUtils::GetResolutionInfo(drmModeModeInfoPtr mode)
    res.iWidth = res.iScreenWidth;
    res.iHeight = res.iScreenHeight;
  
@@ -151,49 +151,6 @@ index fceaf770d363..21a6f8f1b926 100644
    if (mode->clock % 5 != 0)
      res.fRefreshRate = static_cast<float>(mode->vrefresh) * (1000.0f/1001.0f);
    else
-From 7f9a41351bb1adc0ce844f2efa016531f1cbf23e Mon Sep 17 00:00:00 2001
-From: Jonas Karlman <jonas@kwiboo.se>
-Date: Sun, 14 Oct 2018 14:20:03 +0200
-Subject: [PATCH] WIP: Resolution: use desktop screen width in whitelist
- fallback
+-- 
+2.17.1
 
-TODO: add and use iVideoLayerWidth/Height
----
- xbmc/windowing/Resolution.cpp | 10 ++++------
- 1 file changed, 4 insertions(+), 6 deletions(-)
-
-diff --git a/xbmc/windowing/Resolution.cpp b/xbmc/windowing/Resolution.cpp
-index d17caf0f6a81..15dc30ea2aae 100644
---- a/xbmc/windowing/Resolution.cpp
-+++ b/xbmc/windowing/Resolution.cpp
-@@ -134,15 +134,15 @@ void CResolutionUtils::FindResolutionFromWhitelist(float fps, int width, int hei
- 
-   CLog::Log(LOGDEBUG, "No double refresh rate whitelisted resolution matched, trying current resolution");
- 
-+  const RESOLUTION_INFO desktop_info = CServiceBroker::GetWinSystem()->GetGfxContext().GetResInfo(CDisplaySettings::GetInstance().GetCurrentResolution());
-+
-   for (const auto &mode : indexList)
-   {
-     auto i = CDisplaySettings::GetInstance().GetResFromString(mode.asString());
-     const RESOLUTION_INFO info = CServiceBroker::GetWinSystem()->GetGfxContext().GetResInfo(i);
- 
--    const RESOLUTION_INFO desktop_info = CServiceBroker::GetWinSystem()->GetGfxContext().GetResInfo(CDisplaySettings::GetInstance().GetCurrentResolution());
--
-     // allow resolutions that are desktop resolution but have the correct refresh rate
--    if (info.iScreenWidth == desktop_info.iWidth &&
-+    if (info.iScreenWidth == desktop_info.iScreenWidth &&
-         (info.dwFlags & D3DPRESENTFLAG_MODEMASK) == (desktop_info.dwFlags & D3DPRESENTFLAG_MODEMASK) &&
-         MathUtils::FloatEquals(info.fRefreshRate, fps, 0.01f))
-     {
-@@ -159,10 +159,8 @@ void CResolutionUtils::FindResolutionFromWhitelist(float fps, int width, int hei
-     auto i = CDisplaySettings::GetInstance().GetResFromString(mode.asString());
-     const RESOLUTION_INFO info = CServiceBroker::GetWinSystem()->GetGfxContext().GetResInfo(i);
- 
--    const RESOLUTION_INFO desktop_info = CServiceBroker::GetWinSystem()->GetGfxContext().GetResInfo(CDisplaySettings::GetInstance().GetCurrentResolution());
--
-     // allow resolutions that are desktop resolution but have double the refresh rate
--    if (info.iScreenWidth == desktop_info.iWidth &&
-+    if (info.iScreenWidth == desktop_info.iScreenWidth &&
-         (info.dwFlags & D3DPRESENTFLAG_MODEMASK) == (desktop_info.dwFlags & D3DPRESENTFLAG_MODEMASK) &&
-         MathUtils::FloatEquals(info.fRefreshRate, fps * 2, 0.01f))
-     {
