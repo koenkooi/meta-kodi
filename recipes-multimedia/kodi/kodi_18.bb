@@ -130,14 +130,14 @@ LDFLAGS_append_mipsel = " -latomic"
 LDFLAGS_append_mips64 = " -latomic"
 LDFLAGS_append_mips64el = " -latomic"
 
-KODI_ARCH ?= ""
-KODI_ARCH_mips ?= "${TARGET_ARCH}"
-KODI_ARCH_mipsel ?= "${TARGET_ARCH}"
-KODI_ARCH_mips64 ?= "${TARGET_ARCH}"
-KODI_ARCH_mips64el ?= "${TARGET_ARCH}"
+KODI_ARCH = ""
+KODI_ARCH_mips = "-DWITH_ARCH=${TARGET_ARCH}"
+KODI_ARCH_mipsel = "-DWITH_ARCH=${TARGET_ARCH}"
+KODI_ARCH_mips64 = "-DWITH_ARCH=${TARGET_ARCH}"
+KODI_ARCH_mips64el = "-DWITH_ARCH=${TARGET_ARCH}"
 
 EXTRA_OECMAKE = " \
-    -DWITH_ARCH=${KODI_ARCH} \
+    ${KODI_ARCH} \
     \
     -DNATIVEPREFIX=${STAGING_DIR_NATIVE}${prefix} \
     -DJava_JAVA_EXECUTABLE=/usr/bin/java \
