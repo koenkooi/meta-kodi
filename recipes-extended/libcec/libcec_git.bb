@@ -11,7 +11,7 @@ DEPENDS_append_rpi = "${@bb.utils.contains('MACHINE_FEATURES', 'vc4graphics', ''
 
 PV = "4.0.3+git${SRCPV}"
 
-SRCREV = "d57d3ac91a2e6c7f224082fc749331210718a08b"
+SRCREV = "f7593243377687c84c27b4e0342b00bb2ef2efbc"
 SRC_URI = "git://github.com/Pulse-Eight/libcec.git;branch=master \
            file://0001-Add-Linux-CEC-Adapter.patch \
           "
