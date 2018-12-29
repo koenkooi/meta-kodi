@@ -13,5 +13,5 @@ inherit lib_package
 EXTRA_OEMAKE = "CONFIG_SHARED=1"
 
 do_install() {
-	oe_runmake install DESTDIR="${D}" PREFIX="${prefix}"
+	oe_runmake install DESTDIR="${D}" PREFIX="${prefix}" LIBDIR="${libdir}"
 }
