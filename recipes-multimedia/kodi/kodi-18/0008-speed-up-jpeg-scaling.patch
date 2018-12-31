@@ -60,13 +60,13 @@ index 00000000000..830ac6dcc58
 +  {
 +    // make a copy of data as we need it at decode time.
 +    m_data.resize(bufSize);
-+      std::cerr << "lifm " << this << " sz = " << bufSize << ", ideal w = " << width << std::endl;
++      //std::cerr << "lifm " << this << " sz = " << bufSize << ", ideal w = " << width << std::endl;
 +    std::copy(buffer, buffer+bufSize, m_data.begin());
 +struct jpeg_error_mgr jerr;
 +
 +    m_mpoinfo.err = jpeg_std_error(&jerr);
 +    jpeg_create_decompress(&m_mpoinfo);
-+    std::cerr << "lifm " << this << " created decomp " <<  std::endl;
++    //std::cerr << "lifm " << this << " created decomp " <<  std::endl;
 +    jpeg_mem_src(&m_mpoinfo, m_data.data(), m_data.size());
 +    if (!jpeg_read_header(&m_mpoinfo, true))
 +    {
@@ -74,7 +74,7 @@ index 00000000000..830ac6dcc58
 +      return false;
 +    }
 +
-+    std::cerr << "lifm " << this << " header parsed, w =  " << m_mpoinfo.image_width <<  std::endl;
++    //std::cerr << "lifm " << this << " header parsed, w =  " << m_mpoinfo.image_width <<  std::endl;
 +
 +    m_allocated = true;
 +    m_originalWidth = m_mpoinfo.image_width;
@@ -93,7 +93,7 @@ index 00000000000..830ac6dcc58
 +    m_width = m_mpoinfo.output_width;
 +    m_height = m_mpoinfo.output_height;
 +
-+    std::cerr << "lifm " << this << " will scale to " << m_mpoinfo.scale_num << "/" << m_mpoinfo.scale_denom << std::endl;
++    //std::cerr << "lifm " << this << " will scale to " << m_mpoinfo.scale_num << "/" << m_mpoinfo.scale_denom << std::endl;
 +
 +    return true;
 +  }
@@ -115,8 +115,8 @@ index 00000000000..830ac6dcc58
 +    int const row_stride = m_mpoinfo.output_width * m_mpoinfo.output_components;
 +    buffer = (*m_mpoinfo.mem->alloc_sarray)((j_common_ptr)&m_mpoinfo, JPOOL_IMAGE, row_stride, 1);
 +
-+    std::cerr << "deco" << this << "img height = " << m_mpoinfo.image_height << ", height = " << height
-+      << ", output_height = " << m_mpoinfo.output_height << std::endl;
++    //std::cerr << "deco" << this << "img height = " << m_mpoinfo.image_height << ", height = " << height
++    //  << ", output_height = " << m_mpoinfo.output_height << std::endl;
 +
 +    int line = 0;
 +
@@ -138,7 +138,7 @@ index 00000000000..830ac6dcc58
 +      line += nl;
 +    }
 +
-+    std::cerr << "decode " << this << " done, pos = " << m_mpoinfo.output_scanline << std::endl;
++    //std::cerr << "decode " << this << " done, pos = " << m_mpoinfo.output_scanline << std::endl;
 +    jpeg_finish_decompress(&m_mpoinfo);
 +
 +    return true;
