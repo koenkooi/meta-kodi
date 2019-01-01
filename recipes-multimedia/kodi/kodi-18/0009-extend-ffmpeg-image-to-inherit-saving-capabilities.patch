@@ -51,7 +51,7 @@ index 3dd572496a8..460a44ff6bc 100644
  
 -  if (strMimeType == "image/jpeg") {
 -    return new JPEGImage();
-+  std::cerr << "mime = " << strMimeType << std::endl;
++  //std::cerr << "mime = " << strMimeType << std::endl;
 +
 +  if (strMimeType == "image/jpeg" || strMimeType == "image/jpg") {
 +    return new JPEGImage(strMimeType);
