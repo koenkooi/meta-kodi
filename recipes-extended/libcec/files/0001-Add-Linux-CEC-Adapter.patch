@@ -1,4 +1,4 @@
-From 48255b7d4e1cba1050b8abfbd03be37c0737e832 Mon Sep 17 00:00:00 2001
+From 467cc79fd289403e7d4f6e4e817b906c0c0027dd Mon Sep 17 00:00:00 2001
 From: Jonas Karlman <jonas@kwiboo.se>
 Date: Wed, 6 Sep 2017 17:37:05 +0200
 Subject: [PATCH] Add Linux CEC Adapter
@@ -9,14 +9,14 @@ Subject: [PATCH] Add Linux CEC Adapter
  src/libcec/CECTypeUtils.h                     |   2 +
  src/libcec/CMakeLists.txt                     |   2 +
  src/libcec/adapter/AdapterFactory.cpp         |  26 +-
- .../Linux/LinuxCECAdapterCommunication.cpp    | 367 ++++++++++++++++++
- .../Linux/LinuxCECAdapterCommunication.h      |  95 +++++
- .../Linux/LinuxCECAdapterDetection.cpp        |  50 +++
- .../adapter/Linux/LinuxCECAdapterDetection.h  |  51 +++
+ .../Linux/LinuxCECAdapterCommunication.cpp    | 438 ++++++++++++++++++
+ .../Linux/LinuxCECAdapterCommunication.h      |  95 ++++
+ .../Linux/LinuxCECAdapterDetection.cpp        |  50 ++
+ .../adapter/Linux/LinuxCECAdapterDetection.h  |  51 ++
  src/libcec/cmake/CheckPlatformSupport.cmake   |  12 +
  src/libcec/cmake/DisplayPlatformSupport.cmake |   6 +
  src/libcec/env.h.in                           |   3 +
- 12 files changed, 629 insertions(+), 2 deletions(-)
+ 12 files changed, 700 insertions(+), 2 deletions(-)
  create mode 100644 src/libcec/adapter/Linux/LinuxCECAdapterCommunication.cpp
  create mode 100644 src/libcec/adapter/Linux/LinuxCECAdapterCommunication.h
  create mode 100644 src/libcec/adapter/Linux/LinuxCECAdapterDetection.cpp
@@ -161,14 +161,14 @@ index 91195ea0..323c2724 100644
  }
 diff --git a/src/libcec/adapter/Linux/LinuxCECAdapterCommunication.cpp b/src/libcec/adapter/Linux/LinuxCECAdapterCommunication.cpp
 new file mode 100644
-index 00000000..878c572f
+index 00000000..6a288352
 --- /dev/null
 +++ b/src/libcec/adapter/Linux/LinuxCECAdapterCommunication.cpp
-@@ -0,0 +1,367 @@
+@@ -0,0 +1,438 @@
 +/*
 + * This file is part of the libCEC(R) library.
 + *
-+ * libCEC Linux CEC Adapter is Copyright (C) 2017-2018 Jonas Karlman
++ * libCEC Linux CEC Adapter is Copyright (C) 2017-2019 Jonas Karlman
 + * based heavily on:
 + * libCEC AOCEC Code is Copyright (C) 2016 Gerald Dachs
 + * libCEC Exynos Code is Copyright (C) 2014 Valentin Manea
@@ -264,6 +264,19 @@ index 00000000..878c572f
 +      return false;
 +    }
 +
++    uint16_t addr;
++    if (ioctl(m_fd, CEC_ADAP_G_PHYS_ADDR, &addr))
++    {
++      LIB_CEC->AddLog(CEC_LOG_ERROR, "CLinuxCECAdapterCommunication::Open - ioctl CEC_ADAP_G_PHYS_ADDR failed - errno=%d", errno);
++      Close();
++      return false;
++    }
++
++    LIB_CEC->AddLog(CEC_LOG_DEBUG, "CLinuxCECAdapterCommunication::Open - ioctl CEC_ADAP_G_PHYS_ADDR - addr=%04x", addr);
++
++    if (addr == CEC_PHYS_ADDR_INVALID)
++      LIB_CEC->AddLog(CEC_LOG_WARNING, "CLinuxCECAdapterCommunication::Open - physical address is invalid");
++
 +    // Clear existing logical addresses and set the CEC device to the unconfigured state
 +    struct cec_log_addrs log_addrs = {};
 +    if (ioctl(m_fd, CEC_ADAP_S_LOG_ADDRS, &log_addrs))
@@ -272,6 +285,27 @@ index 00000000..878c572f
 +      Close();
 +      return false;
 +    }
++
++    LIB_CEC->AddLog(CEC_LOG_DEBUG, "CLinuxCECAdapterCommunication::Open - ioctl CEC_ADAP_S_LOG_ADDRS - log_addr_mask=%04x num_log_addrs=%u", log_addrs.log_addr_mask, log_addrs.num_log_addrs);
++
++    // Set logical address to unregistered, without any logical address configured no messages is transmitted or received
++    log_addrs = {};
++    log_addrs.cec_version = CEC_OP_CEC_VERSION_1_4;
++    log_addrs.vendor_id = CEC_VENDOR_PULSE_EIGHT;
++    log_addrs.num_log_addrs = 1;
++    log_addrs.flags = CEC_LOG_ADDRS_FL_ALLOW_UNREG_FALLBACK;
++    log_addrs.log_addr[0] = CEC_LOG_ADDR_UNREGISTERED;
++    log_addrs.primary_device_type[0] = CEC_OP_PRIM_DEVTYPE_SWITCH;
++    log_addrs.log_addr_type[0] = CEC_LOG_ADDR_TYPE_UNREGISTERED;
++    log_addrs.all_device_types[0] = CEC_OP_ALL_DEVTYPE_SWITCH;
++    if (ioctl(m_fd, CEC_ADAP_S_LOG_ADDRS, &log_addrs))
++    {
++      LIB_CEC->AddLog(CEC_LOG_ERROR, "CLinuxCECAdapterCommunication::Open - ioctl CEC_ADAP_S_LOG_ADDRS failed - errno=%d", errno);
++      Close();
++      return false;
++    }
++
++    LIB_CEC->AddLog(CEC_LOG_DEBUG, "CLinuxCECAdapterCommunication::Open - ioctl CEC_ADAP_S_LOG_ADDRS - log_addr_mask=%04x num_log_addrs=%u", log_addrs.log_addr_mask, log_addrs.num_log_addrs);
 +
 +    if (CreateThread())
 +      return true;
@@ -323,7 +357,7 @@ index 00000000..878c572f
 +
 +    LIB_CEC->AddLog(CEC_LOG_DEBUG, "CLinuxCECAdapterCommunication::Write - ioctl CEC_TRANSMIT - tx_status=%02x len=%d addr=%02x opcode=%02x", msg.tx_status, msg.len, msg.msg[0], cec_msg_opcode(&msg));
 +
-+    // The CEC device will already make multiple transmit attempts
++    // The CEC driver will make re-transmission attempts
 +    bRetry = false;
 +
 +    if (msg.tx_status & CEC_TX_STATUS_OK)
@@ -331,9 +365,6 @@ index 00000000..878c572f
 +
 +    if (msg.tx_status & CEC_TX_STATUS_NACK)
 +      return ADAPTER_MESSAGE_STATE_SENT_NOT_ACKED;
-+
-+    if (msg.tx_status & CEC_TX_STATUS_ERROR)
-+      bRetry = true;
 +
 +    return ADAPTER_MESSAGE_STATE_ERROR;
 +  }
@@ -350,6 +381,21 @@ index 00000000..878c572f
 +    {
 +      LIB_CEC->AddLog(CEC_LOG_ERROR, "CLinuxCECAdapterCommunication::SetLogicalAddresses - ioctl CEC_ADAP_G_LOG_ADDRS failed - errno=%d", errno);
 +      return false;
++    }
++
++    // TODO: Claiming a logical address will only work when CEC device has a valid physical address
++
++    // Clear existing logical addresses and set the CEC device to the unconfigured state
++    if (log_addrs.num_log_addrs)
++    {
++      log_addrs = {};
++      if (ioctl(m_fd, CEC_ADAP_S_LOG_ADDRS, &log_addrs))
++      {
++        LIB_CEC->AddLog(CEC_LOG_ERROR, "CLinuxCECAdapterCommunication::SetLogicalAddresses - ioctl CEC_ADAP_S_LOG_ADDRS failed - errno=%d", errno);
++        return false;
++      }
++
++      LIB_CEC->AddLog(CEC_LOG_DEBUG, "CLinuxCECAdapterCommunication::SetLogicalAddresses - ioctl CEC_ADAP_S_LOG_ADDRS - log_addr_mask=%04x num_log_addrs=%u", log_addrs.log_addr_mask, log_addrs.num_log_addrs);
 +    }
 +
 +    if (!addresses.IsEmpty())
@@ -414,6 +460,10 @@ index 00000000..878c572f
 +    }
 +
 +    LIB_CEC->AddLog(CEC_LOG_DEBUG, "CLinuxCECAdapterCommunication::SetLogicalAddresses - ioctl CEC_ADAP_S_LOG_ADDRS - log_addr_mask=%04x num_log_addrs=%u", log_addrs.log_addr_mask, log_addrs.num_log_addrs);
++
++    if (log_addrs.num_log_addrs && !log_addrs.log_addr_mask)
++        return false;
++
 +    return true;
 +  }
 +
@@ -471,6 +521,9 @@ index 00000000..878c572f
 +
 +void *CLinuxCECAdapterCommunication::Process(void)
 +{
++  CTimeout phys_addr_timeout;
++  bool phys_addr_changed = false;
++  uint16_t phys_addr = CEC_INVALID_PHYSICAL_ADDRESS;
 +  fd_set rd_fds;
 +  fd_set ex_fds;
 +
@@ -501,9 +554,27 @@ index 00000000..878c572f
 +
 +        // TODO: handle ev.state_change.log_addr_mask change
 +
-+        if (!IsStopped() && !(ev.flags & CEC_EVENT_FL_INITIAL_STATE))
-+          m_callback->HandlePhysicalAddressChanged(ev.state_change.phys_addr);
++        phys_addr = ev.state_change.phys_addr;
++        phys_addr_changed = true;
++
++        if (ev.state_change.phys_addr == CEC_PHYS_ADDR_INVALID)
++        {
++          // Debounce change to invalid physical address with 2 seconds because
++          // EDID refresh and other events may cause short periods of invalid physical address
++          phys_addr_timeout.Init(2000);
++        }
++        else
++        {
++          // Debounce change to valid physical address with 500 ms when no logical address have been claimed
++          phys_addr_timeout.Init(ev.state_change.log_addr_mask ? 0 : 500);
++        }
 +      }
++    }
++
++    if (phys_addr_changed && !phys_addr_timeout.TimeLeft() && !IsStopped())
++    {
++      phys_addr_changed = false;
++      m_callback->HandlePhysicalAddressChanged(phys_addr);
 +    }
 +
 +    if (FD_ISSET(m_fd, &rd_fds))
@@ -747,7 +818,7 @@ index 00000000..f5ea2c47
 +
 +#endif
 diff --git a/src/libcec/cmake/CheckPlatformSupport.cmake b/src/libcec/cmake/CheckPlatformSupport.cmake
-index d9e1e41b..4c60b6db 100644
+index 2d7102f3..dacca0f0 100644
 --- a/src/libcec/cmake/CheckPlatformSupport.cmake
 +++ b/src/libcec/cmake/CheckPlatformSupport.cmake
 @@ -9,6 +9,7 @@
