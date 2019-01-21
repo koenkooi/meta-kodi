@@ -79,3 +79,54 @@ index 56c401aca144..f0a310ff931d 100644
  
    // clear colour for "black" bars
    float m_clearColour{0.0f};
+From b6f23d89b2fdaa83d280d4f7b13aadc506c52f37 Mon Sep 17 00:00:00 2001
+From: Jonas Karlman <jonas@kwiboo.se>
+Date: Sun, 20 Jan 2019 09:55:39 +0100
+Subject: [PATCH] fixup! [GLES] memcpy intead multi glTexSubImage2D for planes
+ with pitch
+
+---
+ .../VideoRenderers/LinuxRendererGLES.cpp         | 16 ++++++++++------
+ 1 file changed, 10 insertions(+), 6 deletions(-)
+
+diff --git a/xbmc/cores/VideoPlayer/VideoRenderers/LinuxRendererGLES.cpp b/xbmc/cores/VideoPlayer/VideoRenderers/LinuxRendererGLES.cpp
+index 181b12e3a0eb..7c65946e7e01 100644
+--- a/xbmc/cores/VideoPlayer/VideoRenderers/LinuxRendererGLES.cpp
++++ b/xbmc/cores/VideoPlayer/VideoRenderers/LinuxRendererGLES.cpp
+@@ -264,26 +264,30 @@ void CLinuxRendererGLES::LoadPlane(CYuvPlane& plane, int type,
+   GLint pixelStore = -1;
+   if (stride != static_cast<int>(width * bps))
+   {
++#if HAS_GLES == 3
+     unsigned int verMajor, verMinor;
+     m_renderSystem->GetRenderVersion(verMajor, verMinor);
+ 
+-    if (verMajor < 3)
++    if (verMajor >= 3)
++    {
++      glGetIntegerv(GL_UNPACK_ROW_LENGTH, &pixelStore);
++      glPixelStorei(GL_UNPACK_ROW_LENGTH, stride);
++    }
++    else
++#endif
+     {
+       unsigned char* src (static_cast<unsigned char*>(data)), *dst(m_planeBuffer);
+       for (unsigned int y = 0; y < height; ++y, src += stride, dst += width)
+         memcpy(dst, src, width);
+       pixelData = m_planeBuffer;
+     }
+-    else
+-    {
+-      glGetIntegerv(GL_UNPACK_ROW_LENGTH, &pixelStore);
+-      glPixelStorei(GL_UNPACK_ROW_LENGTH, stride);
+-    }
+   }
+   glTexSubImage2D(m_textureTarget, 0, 0, 0, width, height, type, GL_UNSIGNED_BYTE, pixelData);
+ 
++#if HAS_GLES == 3
+   if (pixelStore >= 0)
+     glPixelStorei(GL_UNPACK_ROW_LENGTH, pixelStore);
++#endif
+ 
+   // check if we need to load any border pixels
+   if (height < plane.texheight)
