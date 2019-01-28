@@ -69,7 +69,7 @@ DEPENDS += " \
             zlib \
           "
 
-SRCREV = "d16b0f697e88bd3eacd8ddc6b1a5cbd76c8c41a8"
+SRCREV = "d81c34c4651a4dfbc9ab0e893fec40f92b5e31e4"
 
 # 'patch' doesn't support binary diffs
 PATCHTOOL = "git"
@@ -91,7 +91,6 @@ SRC_URI = "git://github.com/xbmc/xbmc.git;protocol=https \
            file://0011-WIP-windowing-gbm-add-option-to-limit-gui-size.patch \
            file://0012-WIP-Resolution-use-desktop-screen-width-in-whitelist.patch \
            \
-           file://PR15286.patch \
            file://PR15286-shader-nopow.patch \
            file://8b854a412ed111678f20edbd662ead4028f19474.patch \
            \
