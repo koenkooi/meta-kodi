@@ -74,6 +74,10 @@ SRCREV = "454f124ced8d2766d7e95dbea3ae10cb80c96847"
 # 'patch' doesn't support binary diffs
 PATCHTOOL = "git"
 
+# Correct 18+git vs 18-git screwup
+PE = "1"
+
+#PV = "18.1-gitr${SRCPV}"
 PV = "18.0+18.1rc1-gitr${SRCPV}"
 SRC_URI = "git://github.com/xbmc/xbmc.git;protocol=https \
            \
