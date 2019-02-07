@@ -69,7 +69,7 @@ DEPENDS += " \
             zlib \
           "
 
-SRCREV = "454f124ced8d2766d7e95dbea3ae10cb80c96847"
+SRCREV = "c2c06e2b40791224735a463993376eeff7477d98"
 
 # 'patch' doesn't support binary diffs
 PATCHTOOL = "git"
@@ -93,7 +93,6 @@ SRC_URI = "git://github.com/xbmc/xbmc.git;protocol=https \
            file://0009-extend-ffmpeg-image-to-inherit-saving-capabilities.patch \
            file://0010-flatbuffers.patch \
            file://0011-WIP-windowing-gbm-add-option-to-limit-gui-size.patch \
-           file://0012-WIP-Resolution-use-desktop-screen-width-in-whitelist.patch \
            \
            file://PR15286-shader-nopow.patch \
            file://8b854a412ed111678f20edbd662ead4028f19474.patch \
