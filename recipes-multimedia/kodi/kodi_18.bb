@@ -69,7 +69,7 @@ DEPENDS += " \
             zlib \
           "
 
-SRCREV = "46f2c8867254351bf4c57ef1efb6686ce66c48bd"
+SRCREV = "5e82ff9595c50b44d26451a56024bf0d9de335ab"
 
 # 'patch' doesn't support binary diffs
 PATCHTOOL = "git"
@@ -96,6 +96,7 @@ SRC_URI = "git://github.com/xbmc/xbmc.git;protocol=https \
            \
            file://PR15286-shader-nopow.patch \
            file://8b854a412ed111678f20edbd662ead4028f19474.patch \
+           file://15518.patch \
            \
            file://kodi.service \
            file://kodi-x11.service \
