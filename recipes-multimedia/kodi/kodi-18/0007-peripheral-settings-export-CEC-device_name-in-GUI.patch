@@ -1,35 +1,33 @@
-From 38e59a5321c002d9473b3aff24a3310439a51a1e Mon Sep 17 00:00:00 2001
+From 6fc62cdb67a3602b640f6e00386c9e1f4f05470f Mon Sep 17 00:00:00 2001
 From: Koen Kooi <koen@dominion.thruhere.net>
 Date: Fri, 23 Nov 2018 15:01:36 +0100
-Subject: [PATCH 07/12] peripheral settings: export CEC "device_name" in GUI
+Subject: [PATCH] peripheral settings: export CEC "device_name" in GUI
 
 Having multiple "kodi" entries in the menu is very unhelpful during
 testing.
 
 Signed-off-by: Koen Kooi <koen@dominion.thruhere.net>
 ---
- addons/resource.language.en_gb/resources/strings.po | 7 ++++++-
+ addons/resource.language.en_gb/resources/strings.po | 5 +++++
  system/peripherals.xml                              | 2 +-
- 2 files changed, 7 insertions(+), 2 deletions(-)
+ 2 files changed, 6 insertions(+), 1 deletion(-)
 
 diff --git a/addons/resource.language.en_gb/resources/strings.po b/addons/resource.language.en_gb/resources/strings.po
-index 7e264ae227b..1eaba006f74 100644
+index ebaa166c032..8237124a056 100644
 --- a/addons/resource.language.en_gb/resources/strings.po
 +++ b/addons/resource.language.en_gb/resources/strings.po
-@@ -17857,7 +17857,12 @@ msgctxt "#36049"
- msgid "Remote button press release time (ms)"
+@@ -17871,6 +17871,11 @@ msgctxt "#36050"
+ msgid "On start"
  msgstr ""
  
--#empty strings from id 36050 to 36098
 +#: system/peripherals.xml
-+msgctxt "#36050"
++msgctxt "#36060"
 +msgid "Device name on CEC bus"
 +msgstr ""
 +
-+#empty strings from id 36051 to 36098
+ #empty strings from id 36051 to 36098
  
  #: system/settings/settings.xml
- msgctxt "#36099"
 diff --git a/system/peripherals.xml b/system/peripherals.xml
 index ff303e99ae6..3b8155ff0cd 100644
 --- a/system/peripherals.xml
@@ -39,10 +37,10 @@ index ff303e99ae6..3b8155ff0cd 100644
  
      <setting key="tv_vendor" type="int" value="0" configurable="0" />
 -    <setting key="device_name" type="string" value="Kodi" configurable="0" />
-+    <setting key="device_name" type="string" value="Kodi" label="36050" />
++    <setting key="device_name" type="string" value="Kodi" label="36060" />
      <setting key="device_type" type="int" value="1" configurable="0" />
      <setting key="wake_devices_advanced" type="string" value="" configurable="0" />
      <setting key="standby_devices_advanced" type="string" value="" configurable="0" />
 -- 
-2.17.1
+2.11.0
 
