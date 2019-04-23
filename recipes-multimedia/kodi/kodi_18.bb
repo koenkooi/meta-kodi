@@ -69,7 +69,7 @@ DEPENDS += " \
             zlib \
           "
 
-SRCREV = "a2079469e36b5ff18f383be5b5f46677c4e1da36"
+SRCREV = "ded117bbd636fc88802599a590e26b1d0fd7c609"
 
 # 'patch' doesn't support binary diffs
 PATCHTOOL = "git"
@@ -78,8 +78,8 @@ PATCHTOOL = "git"
 PE = "1"
 
 #PV = "18.1-gitr${SRCPV}"
-PV = "18.1+18.2rc1-gitr${SRCPV}"
-SRC_URI = "git://github.com/xbmc/xbmc.git;protocol=https \
+PV = "18.2+18.3rc1-gitr${SRCPV}"
+SRC_URI = "git://github.com/xbmc/xbmc.git;protocol=https;branch=Leia \
            \
            file://0001-Add-support-for-musl-triplets.patch \
            file://0002-Fix-file_Emu-on-musl.patch \
@@ -95,8 +95,7 @@ SRC_URI = "git://github.com/xbmc/xbmc.git;protocol=https \
            file://0011-WIP-windowing-gbm-add-option-to-limit-gui-size.patch \
            \
            file://PR15286-shader-nopow.patch \
-           file://8b854a412ed111678f20edbd662ead4028f19474.patch \
-           file://15518.patch \
+           file://15941.patch \
            \
            file://kodi.service \
            file://kodi-x11.service \
