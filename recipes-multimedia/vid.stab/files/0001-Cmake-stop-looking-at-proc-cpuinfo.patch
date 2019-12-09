@@ -1,0 +1,38 @@
+From 067ea5d78b01ed972f90744047629244aed69939 Mon Sep 17 00:00:00 2001
+From: Koen Kooi <koen@dominion.thruhere.net>
+Date: Mon, 9 Dec 2019 13:09:27 +0100
+Subject: [PATCH] Cmake: stop looking at /proc/cpuinfo
+
+Signed-off-by: Koen Kooi <koen@dominion.thruhere.net>
+---
+ CMakeLists.txt       | 1 -
+ tests/CMakeLists.txt | 1 -
+ 2 files changed, 2 deletions(-)
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index bf07bc1..d5ff39c 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -3,7 +3,6 @@ project (vid.stab)
+ 
+ set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/CMakeModules/")
+ 
+-include (FindSSE)
+ include (GNUInstallDirs)
+ 
+ set(MAJOR_VERSION 1)
+diff --git a/tests/CMakeLists.txt b/tests/CMakeLists.txt
+index 6812916..43687ac 100644
+--- a/tests/CMakeLists.txt
++++ b/tests/CMakeLists.txt
+@@ -7,7 +7,6 @@ project (vid.stab)
+ 
+ set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/../CMakeModules/")
+ 
+-include (FindSSE)
+ 
+ option(USE_OMP "use parallelization use OMP" ON)
+ 
+-- 
+2.20.1
+
