@@ -15,3 +15,5 @@ SRC_URI = "git://github.com/videolan/x265.git;protocol=https"
 S = "${WORKDIR}/git/source/"
 
 inherit cmake lib_package
+
+EXTRA_OECMAKE = "-DENABLE_PIC=ON"
