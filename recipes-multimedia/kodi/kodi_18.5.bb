@@ -1,7 +1,7 @@
 SUMMARY = "Kodi Media Center"
 
 require ${BPN}.inc
-inherit cmake gettext python-dir pythonnative systemd
+inherit kodi-common cmake gettext python-dir pythonnative systemd
 
 NATIVE_DEPENDS = " \
   curl-native \
@@ -77,21 +77,10 @@ KODI_ADDONS = " \
 CCACHE_DISABLE = "1"
 ASNEEDED = ""
 
-X86_HW_ACCEL = " \
-  ${@bb.utils.contains('DISTRO_FEATURES', 'x11', 'vdpau', '', d)} \
-  ${@bb.utils.contains('DISTRO_FEATURES', 'x11', 'vaapi', '', d)} \
-"
-
-ACCEL ?= ""
-ACCEL_x86 = "${X86_HW_ACCEL}"
-ACCEL_x86-64 = "${X86_HW_ACCEL}"
-
-# Default to GBM everywhere, sucks to be nvidia
-WINDOWSYSTEM ?= "gbm"
 
 PACKAGECONFIG ?= " \
-  ${ACCEL} \
-  ${WINDOWSYSTEM} \
+  ${KODI_ACCELERATION_LIBRARIES} \
+  ${KODI_GRAPHICAL_BACKEND} \
   ${@bb.utils.contains('DISTRO_FEATURES', 'pulseaudio', 'pulseaudio', '', d)} \
   lcms \
   airtunes \
@@ -105,6 +94,8 @@ PACKAGECONFIG[raspberrypi] = "-DCORE_PLATFORM_NAME=rbpi,,userland"
 PACKAGECONFIG[wayland] = "-DCORE_PLATFORM_NAME=wayland -DWAYLAND_RENDER_SYSTEM=gles,,wayland waylandpp"
 PACKAGECONFIG[x11] = "-DCORE_PLATFORM_NAME=x11,,libxinerama libxmu libxrandr libxtst glew"
 
+# Features
+
 PACKAGECONFIG[airtunes] = "-DENABLE_AIRTUNES=ON,-DENABLE_AIRTUNES=OFF"
 PACKAGECONFIG[dvdcss] = "-DENABLE_DVDCSS=ON,-DENABLE_DVDCSS=OFF"
 PACKAGECONFIG[lcms] = ",,lcms"
@@ -115,9 +106,9 @@ PACKAGECONFIG[vaapi] = "-DENABLE_VAAPI=ON,-DENABLE_VAAPI=OFF,libva"
 PACKAGECONFIG[vdpau] = "-DENABLE_VDPAU=ON,-DENABLE_VDPAU=OFF,libvdpau"
 
 # Compilation tunes
+
 PACKAGECONFIG[gold] = "-DENABLE_LDGOLD=ON,-DENABLE_LDGOLD=OFF"
 PACKAGECONFIG[lto] = "-DUSE_LTO=${@oe.utils.cpu_count()},-DUSE_LTO=OFF"
-
 
 LDFLAGS += "${TOOLCHAIN_OPTIONS}"
 LDFLAGS_append_mips = " -latomic"

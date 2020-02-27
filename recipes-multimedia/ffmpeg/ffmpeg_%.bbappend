@@ -1,14 +1,6 @@
-ACCEL ?= ""
-ACCEL_x86 = "vaapi vdpau"
-ACCEL_x86-64 = "vaapi vdpau"
+inherit kodi-common
 
-DEPENDS += "vid.stab x265"
+PACKAGECONFIG[vidstab] = "--enable-libvidstab,--disable-libvidstab,vid.stab"
+PACKAGECONFIG[x265] = "--enable-libx265,--disable-libx265,x265"
 
-EXTRA_OECONF += "--enable-libvidstab \
-                 --enable-libx265 \
-                "
-
-PACKAGECONFIG = "avdevice avfilter avcodec avformat swresample swscale postproc \
-                 bzlib gpl lzma theora x264 \
-                 ${@bb.utils.contains('DISTRO_FEATURES', 'x11', 'xv', '', d)} \
-                 ${ACCEL}"
+PACKAGECONFIG_append = " ${KODI_ADDITIONAL_CODES} ${KODI_ACCELERATION_LIBRARIES}"
