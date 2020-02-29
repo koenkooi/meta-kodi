@@ -1,5 +1,5 @@
 [Unit]
-Description=Kodi media thing
+Description=Kodi Media Center
 
 [Service]
 User=root

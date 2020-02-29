@@ -16,3 +16,7 @@ KODI_GRAPHICAL_BACKEND ?= "gbm"
 # Codecs
 
 KODI_ADDITIONAL_CODES ?= "vidstab x265" 
+
+# Autostart
+
+KODI_SYSTEMD_AUTOSTART ?= "enable"
