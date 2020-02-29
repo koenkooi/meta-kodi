@@ -36,6 +36,7 @@ DEPENDS += " \
   faad2 \
   ffmpeg \
   flatbuffers \
+  fmt \
   fontconfig \
   fribidi \
   fstrcmp \
@@ -46,7 +47,6 @@ DEPENDS += " \
   libdvdcss \
   libdvdnav \
   libdvdread \
-  libfmt \
   libinput \
   libmad \
   libmicrohttpd \
@@ -69,10 +69,10 @@ DEPENDS += " \
   samba \
   sqlite3 \
   taglib \
+  virtual/egl \
   wavpack \
   yajl \
   zlib \
-  virtual/egl \
 "
 
 # breaks compilation
