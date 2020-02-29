@@ -1,5 +1,3 @@
-FILESPATH =. "${FILE_DIRNAME}/kodi-18:"
-
 CODENAME ?= "Leia"
 
 # Some forked meta-kodi repositories using custom kodi urls, personally I think they should use variable instead of
