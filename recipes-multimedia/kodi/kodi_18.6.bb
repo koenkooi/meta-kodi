@@ -1,4 +1,11 @@
 SUMMARY = "Kodi Media Center"
+DESCRIPTION = "Kodi is an award-winning free and open source home theater/media \ 
+center software and entertainment hub for digital media. With its beautiful \
+interface and powerful skinning engine, it's available for Android, BSD, Linux, \
+macOS, iOS and Windows."
+
+HOMEPAGE = "https://kodi.tv/"
+BUGTRACKER = "https://github.com/xbmc/xbmc/issues"
 
 require ${BPN}.inc
 inherit kodi-common cmake gettext python-dir pythonnative
@@ -7,10 +14,10 @@ NATIVE_DEPENDS = " \
   curl-native \
   flatbuffers-native \
   gperf-native \
-  jsonschemabuilder-native \
+  kodi-tools-jsonschemabuilder-native \
+  kodi-tools-texturepacker-native \
   nasm-native \
   swig-native \
-  texturepacker-native \
   unzip-native \
   yasm-native \
   zip-native \
