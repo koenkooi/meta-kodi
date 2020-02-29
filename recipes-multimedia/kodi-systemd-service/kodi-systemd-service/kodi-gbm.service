@@ -1,8 +1,7 @@
 [Unit]
-Description=Kodi media thing
+Description=Kodi Media Center
 
 [Service]
-
 Environment=__GL_YIELD=USLEEP
 Environment=DISPLAY=:0.0
 Environment=WAYLAND_DISPLAY=wayland-0

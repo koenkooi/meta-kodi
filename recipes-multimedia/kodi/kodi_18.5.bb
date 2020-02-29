@@ -1,7 +1,7 @@
 SUMMARY = "Kodi Media Center"
 
 require ${BPN}.inc
-inherit kodi-common cmake gettext python-dir pythonnative systemd
+inherit kodi-common cmake gettext python-dir pythonnative
 
 NATIVE_DEPENDS = " \
   curl-native \
@@ -68,11 +68,6 @@ DEPENDS += " \
   virtual/egl \
 "
 
-KODI_ADDONS = " \
-  file://kodi.service \
-  file://kodi-x11.service \
-"
-
 # breaks compilation
 CCACHE_DISABLE = "1"
 ASNEEDED = ""
@@ -82,8 +77,9 @@ PACKAGECONFIG ?= " \
   ${KODI_ACCELERATION_LIBRARIES} \
   ${KODI_GRAPHICAL_BACKEND} \
   ${@bb.utils.contains('DISTRO_FEATURES', 'pulseaudio', 'pulseaudio', '', d)} \
-  lcms \
+  ${@bb.utils.contains('DISTRO_FEATURES', 'systemd', 'systemd', '', d)} \
   airtunes \
+  lcms \
 "
 
 # Core windowing system choices
@@ -102,6 +98,7 @@ PACKAGECONFIG[lcms] = ",,lcms"
 PACKAGECONFIG[mysql] = "-DENABLE_MYSQLCLIENT=ON,-DENABLE_MYSQLCLIENT=OFF,mysql5"
 PACKAGECONFIG[optical] = "-DENABLE_OPTICAL=ON,-DENABLE_OPTICAL=OFF"
 PACKAGECONFIG[pulseaudio] = "-DENABLE_PULSEAUDIO=ON,-DENABLE_PULSEAUDIO=OFF,pulseaudio"
+PACKAGECONFIG[systemd] = ",,,kodi-systemd-service"
 PACKAGECONFIG[vaapi] = "-DENABLE_VAAPI=ON,-DENABLE_VAAPI=OFF,libva"
 PACKAGECONFIG[vdpau] = "-DENABLE_VDPAU=ON,-DENABLE_VDPAU=OFF,libvdpau"
 
@@ -174,18 +171,6 @@ do_configure_prepend() {
 	sed -i -e 's:CMAKE_NM}:}${TARGET_PREFIX}gcc-nm:' ${S}/xbmc/cores/DllLoader/exports/CMakeLists.txt
 }
 
-do_install_append() {
-	install -d ${D}/lib/systemd/system
-
-	if [ -e ${D}${libdir}/kodi/kodi-gbm ] ; then
-		install -m 0644 ${WORKDIR}/kodi.service ${D}/lib/systemd/system/kodi.service
-	else
-		install -m 0644 ${WORKDIR}/kodi-x11.service ${D}/lib/systemd/system/kodi.service
-	fi
-}
-
-SYSTEMD_PACKAGES = "${PN}"
-SYSTEMD_SERVICE_${PN} = "kodi.service"
 INSANE_SKIP_${PN} = "rpaths"
 
 FILES_${PN} += "${datadir}/xsessions ${datadir}/icons ${libdir}/xbmc ${datadir}/xbmc ${libdir}/firewalld"
