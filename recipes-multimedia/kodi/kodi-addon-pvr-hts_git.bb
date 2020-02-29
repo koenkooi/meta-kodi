@@ -10,8 +10,7 @@ SRCREV_pvrhts = "f4ea60f944d0cfb8b73c0f9dc2181e54d3c367bf"
 SRCREV_FORMAT = "pvrhts"
 
 PV = "4.4.3+gitr${SRCPV}"
-SRC_URI = "git://github.com/kodi-pvr/pvr.hts.git;branch=master;destsuffix=pvr.hts;name=pvrhts;protocol=https \
-          "
+SRC_URI = "git://github.com/kodi-pvr/pvr.hts.git;branch=master;destsuffix=pvr.hts;name=pvrhts;protocol=https"
 
 S = "${WORKDIR}/pvr.hts"
 

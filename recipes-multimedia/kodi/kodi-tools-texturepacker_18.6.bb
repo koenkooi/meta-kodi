@@ -1,4 +1,4 @@
-SUMMARY = "Kodi Media Center"
+SUMMARY = "Kodi texture packer"
 
 require kodi.inc
 inherit cmake gettext python-dir pythonnative

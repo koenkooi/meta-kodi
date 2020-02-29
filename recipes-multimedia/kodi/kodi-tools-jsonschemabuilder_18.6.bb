@@ -1,4 +1,4 @@
-SUMMARY = "Kodi Media Center"
+SUMMARY = "Kodi json schema builder"
 
 require kodi.inc
 inherit autotools-brokensep gettext native
@@ -15,3 +15,4 @@ do_compile_prepend() {
     done
 }
 
+BBCLASSEXTEND = "native"
