@@ -3,7 +3,7 @@ SUMMARY = "Kodi texture packer"
 require kodi.inc
 inherit cmake gettext python-dir pythonnative
 
-DEFAULT_KODI_WORKDIR = "${WORKDIR}/git/tools/depends/native/TexturePacker"
+KODI_WORKDIR = "${WORKDIR}/git/tools/depends/native/TexturePacker"
 
 DEPENDS = " \
     giflib \
