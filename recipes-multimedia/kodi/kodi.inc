@@ -3,16 +3,16 @@
 
 inherit kodi-common
 
-KODI_URI ?= "gitsm://github.com/xbmc/xbmc.git;protocol=https;branch=${KODI_CODENAME}"
-KODI_REV ?= "${PV}-${KODI_CODENAME}"
-KODI_WORKDIR ?= "${WORKDIR}/git"
+KODIURI ?= "gitsm://github.com/xbmc/xbmc.git;protocol=https;branch=${KODICODENAME}"
+KODIREV ?= "${PV}-${KODICODENAME}"
+KODIWORKDIR ?= "${WORKDIR}/git"
 
-KODI_PATCHES ?= ""
-KODI_ADDONS ?= ""
+KODIPATCHES ?= ""
+KODIADDONS ?= ""
 
-SRC_URI = "${KODI_URI} ${KODI_PATCHES} ${KODI_ADDONS}"
-SRCREV = "${KODI_REV}"
-S = "${KODI_WORKDIR}"
+SRC_URI = "${KODIURI} ${KODIPATCHES} ${KODIADDONS}"
+SRCREV = "${KODIREV}"
+S = "${KODIWORKDIR}"
 
 LICENSE = "GPLv2"
 LIC_FILES_CHKSUM ?= "file:///${WORKDIR}/git/LICENSE.md;md5=7b423f1c9388eae123332e372451a4f7"
