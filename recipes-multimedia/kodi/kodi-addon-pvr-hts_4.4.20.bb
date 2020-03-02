@@ -10,8 +10,8 @@ LIC_FILES_CHKSUM = "file://${COMMON_LICENSE_DIR}/GPL-2.0;md5=801f80980d171dd6425
 
 inherit kodi-addon
 
-SRCREV = "${PV}-${KODI_CODENAME}"
+SRCREV = "${PV}-${KODICODENAME}"
 SRC_URI = "git://github.com/kodi-pvr/pvr.hts.git;nobranch=1;protocol=https"
 S = "${WORKDIR}/git"
 
-KODI_ADDON_NAME = "pvr.hts"
+KODIADDONNAME = "pvr.hts"
