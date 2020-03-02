@@ -3,7 +3,7 @@ SUMMARY = "Kodi json schema builder"
 require kodi.inc
 inherit autotools-brokensep gettext native
 
-DEFAULT_KODI_WORKDIR = "${WORKDIR}/git/tools/depends/native/JsonSchemaBuilder/src"
+KODI_WORKDIR = "${WORKDIR}/git/tools/depends/native/JsonSchemaBuilder/src"
 
 do_compile_prepend() {
     for i in $(find . -name "Makefile") ; do

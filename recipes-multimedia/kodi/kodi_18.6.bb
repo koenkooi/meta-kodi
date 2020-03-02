@@ -8,7 +8,7 @@ HOMEPAGE = "https://kodi.tv/"
 BUGTRACKER = "https://github.com/xbmc/xbmc/issues"
 
 require ${BPN}.inc
-inherit kodi-common cmake gettext python-dir pythonnative
+inherit cmake gettext python-dir pythonnative
 
 NATIVE_DEPENDS = " \
   curl-native \
