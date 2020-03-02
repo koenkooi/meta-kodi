@@ -20,8 +20,8 @@ Please follow the recommended setup procedures of your OE distribution. For Angs
 
 There is a list of variables that can be used in your local.conf or distro.conf to customize behavior
 
-**KODI_SYSTEMD_AUTOSTART** - If your distribution is shipped with systemd support then
-*kodi-systemd-service* recipe will be installed automatically by kodi. By default **KODI_SYSTEMD_AUTOSTART**
+**KODISYSTEMDAUTOSTART** - If your distribution is shipped with systemd support then
+*kodi-systemd-service* recipe will be installed automatically by kodi. By default **KODISYSTEMDAUTOSTART**
 variable is set to "enable" and this will trigger autostart kodi behavior. It can be changed to "disable" 
 in oder to disable autostart feature.
 

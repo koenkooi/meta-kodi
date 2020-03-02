@@ -8,7 +8,7 @@ HOMEPAGE = "https://kodi.tv/"
 BUGTRACKER = "https://github.com/xbmc/xbmc/issues"
 
 require ${BPN}.inc
-inherit kodi-common cmake gettext python-dir pythonnative
+inherit cmake gettext python-dir pythonnative
 
 OECMAKE_FIND_ROOT_PATH_MODE_PROGRAM = "BOTH"
 
@@ -83,8 +83,8 @@ ASNEEDED = ""
 
 
 PACKAGECONFIG ?= " \
-  ${KODI_ACCELERATION_LIBRARIES} \
-  ${KODI_GRAPHICAL_BACKEND} \
+  ${KODIACCELERATIONLIBRARIES} \
+  ${KODIGRAPHICALBACKEND} \
   ${@bb.utils.contains('DISTRO_FEATURES', 'bluetooth', 'bluetooth', '', d)} \
   ${@bb.utils.contains('DISTRO_FEATURES', 'pulseaudio', 'pulseaudio', '', d)} \
   ${@bb.utils.contains('DISTRO_FEATURES', 'systemd', 'systemd', '', d)} \
