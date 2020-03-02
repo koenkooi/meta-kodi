@@ -10,6 +10,8 @@ BUGTRACKER = "https://github.com/xbmc/xbmc/issues"
 require ${BPN}.inc
 inherit cmake gettext python-dir pythonnative
 
+OECMAKE_FIND_ROOT_PATH_MODE_PROGRAM = "BOTH"
+
 NATIVE_DEPENDS = " \
   curl-native \
   flatbuffers-native \
@@ -83,10 +85,12 @@ ASNEEDED = ""
 PACKAGECONFIG ?= " \
   ${KODIACCELERATIONLIBRARIES} \
   ${KODIGRAPHICALBACKEND} \
+  ${@bb.utils.contains('DISTRO_FEATURES', 'bluetooth', 'bluetooth', '', d)} \
   ${@bb.utils.contains('DISTRO_FEATURES', 'pulseaudio', 'pulseaudio', '', d)} \
   ${@bb.utils.contains('DISTRO_FEATURES', 'systemd', 'systemd', '', d)} \
   airtunes \
   lcms \
+  lirc \
 "
 
 # Core windowing system choices
@@ -100,8 +104,10 @@ PACKAGECONFIG[x11] = "-DCORE_PLATFORM_NAME=x11,,libxinerama libxmu libxrandr lib
 # Features
 
 PACKAGECONFIG[airtunes] = "-DENABLE_AIRTUNES=ON,-DENABLE_AIRTUNES=OFF"
+PACKAGECONFIG[bluetooth] = ",,bluez5"
 PACKAGECONFIG[dvdcss] = "-DENABLE_DVDCSS=ON,-DENABLE_DVDCSS=OFF"
 PACKAGECONFIG[lcms] = ",,lcms"
+PACKAGECONFIG[lirc] = ",,lirc"
 PACKAGECONFIG[mysql] = "-DENABLE_MYSQLCLIENT=ON,-DENABLE_MYSQLCLIENT=OFF,mysql5"
 PACKAGECONFIG[optical] = "-DENABLE_OPTICAL=ON,-DENABLE_OPTICAL=OFF"
 PACKAGECONFIG[pulseaudio] = "-DENABLE_PULSEAUDIO=ON,-DENABLE_PULSEAUDIO=OFF,pulseaudio"
