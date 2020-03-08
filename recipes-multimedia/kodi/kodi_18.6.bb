@@ -12,7 +12,7 @@ inherit cmake gettext python-dir pythonnative
 
 OECMAKE_FIND_ROOT_PATH_MODE_PROGRAM = "BOTH"
 
-NATIVE_DEPENDS = " \
+DEPENDS += " \
   curl-native \
   flatbuffers-native \
   gperf-native \
@@ -23,10 +23,7 @@ NATIVE_DEPENDS = " \
   unzip-native \
   yasm-native \
   zip-native \
-"
-
-DEPENDS += " \
-  ${NATIVE_DEPENDS} \
+  \
   avahi \
   boost \
   bzip2 \
@@ -85,9 +82,7 @@ ASNEEDED = ""
 PACKAGECONFIG ?= " \
   ${KODIACCELERATIONLIBRARIES} \
   ${KODIGRAPHICALBACKEND} \
-  ${@bb.utils.contains('DISTRO_FEATURES', 'bluetooth', 'bluetooth', '', d)} \
-  ${@bb.utils.contains('DISTRO_FEATURES', 'pulseaudio', 'pulseaudio', '', d)} \
-  ${@bb.utils.contains('DISTRO_FEATURES', 'systemd', 'systemd', '', d)} \
+  ${@bb.utils.filter('DISTRO_FEATURES', 'bluetooth pulseaudio systemd', d)} \
   airtunes \
   lcms \
   lirc \
@@ -126,24 +121,21 @@ LDFLAGS_append_mipsel = " -latomic"
 LDFLAGS_append_mips64 = " -latomic"
 LDFLAGS_append_mips64el = " -latomic"
 
-KODI_ARCH = ""
-KODI_ARCH_mips = "-DWITH_ARCH=${TARGET_ARCH}"
-KODI_ARCH_mipsel = "-DWITH_ARCH=${TARGET_ARCH}"
-KODI_ARCH_mips64 = "-DWITH_ARCH=${TARGET_ARCH}"
-KODI_ARCH_mips64el = "-DWITH_ARCH=${TARGET_ARCH}"
-
-KODI_DISABLE_INTERNAL_LIBRARIES = " \
-  -DENABLE_INTERNAL_CROSSGUID=OFF \
-  -DENABLE_INTERNAL_FLATBUFFERS=OFF \
-  -DENABLE_INTERNAL_FMT=OFF \
-  -DENABLE_INTERNAL_FSTRCMP=0 \
-  -DENABLE_INTERNAL_RapidJSON=OFF \
-  -DENABLE_INTERNAL_FFMPEG=OFF \
-"
+KODIARCH = ""
+KODIARCH_mips = "-DWITH_ARCH=${TARGET_ARCH}"
+KODIARCH_mipsel = "-DWITH_ARCH=${TARGET_ARCH}"
+KODIARCH_mips64 = "-DWITH_ARCH=${TARGET_ARCH}"
+KODIARCH_mips64el = "-DWITH_ARCH=${TARGET_ARCH}"
 
 EXTRA_OECMAKE = " \
-    ${KODI_ARCH} \
-    ${KODI_DISABLE_INTERNAL_LIBRARIES} \
+    ${KODIARCH} \
+    \
+    -DENABLE_INTERNAL_CROSSGUID=OFF \
+    -DENABLE_INTERNAL_FLATBUFFERS=OFF \
+    -DENABLE_INTERNAL_FMT=OFF \
+    -DENABLE_INTERNAL_FSTRCMP=0 \
+    -DENABLE_INTERNAL_RapidJSON=OFF \
+    -DENABLE_INTERNAL_FFMPEG=OFF \
     \
     -DNATIVEPREFIX=${STAGING_DIR_NATIVE}${prefix} \
     -DJava_JAVA_EXECUTABLE=/usr/bin/java \
