@@ -1,4 +1,4 @@
-inherit kodi-common
+inherit vpu
 
 PACKAGECONFIG_append_class-target = " \
     ${@bb.utils.contains('VAAPISUPPORT', '1', 'vaapi', '', d)} \
