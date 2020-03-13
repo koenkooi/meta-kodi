@@ -86,7 +86,7 @@ PACKAGECONFIG ?= " \
   ${@bb.utils.contains('VAAPISUPPORT', '1', 'vaapi', '', d)} \
   ${@bb.utils.contains('VDPAUSUPPORT', '1', 'vdpau', '', d)} \
   ${@bb.utils.filter('DISTRO_FEATURES', 'bluetooth pulseaudio systemd', d)} \
-  ${@bb.utils.filter('KODIGRAPHICALBACKEND', 'amlogic gbm raspberrypi wayland x11', d)} \
+  ${@bb.utils.filter('KODIGRAPHICALBACKEND', 'gbm wayland x11', d)} \
   airtunes \
   lcms \
   lirc \
@@ -94,9 +94,7 @@ PACKAGECONFIG ?= " \
 
 # Core windowing system choices
 
-PACKAGECONFIG[amlogic] = "-DCORE_PLATFORM_NAME=aml,,"
 PACKAGECONFIG[gbm] = "-DCORE_PLATFORM_NAME=gbm -DGBM_RENDER_SYSTEM=gles,,"
-PACKAGECONFIG[raspberrypi] = "-DCORE_PLATFORM_NAME=rbpi,,userland"
 PACKAGECONFIG[wayland] = "-DCORE_PLATFORM_NAME=wayland -DWAYLAND_RENDER_SYSTEM=gles,,wayland waylandpp"
 PACKAGECONFIG[x11] = "-DCORE_PLATFORM_NAME=x11,,libxinerama libxmu libxrandr libxtst glew"
 
