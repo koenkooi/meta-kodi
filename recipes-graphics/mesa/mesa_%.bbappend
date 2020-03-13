@@ -12,4 +12,3 @@ PACKAGES += "libvdpau-mesa libvdpau-mesa-dev"
 
 FILES_libvdpau-mesa = "${libdir}/vdpau/*.so.*"
 FILES_libvdpau-mesa-dev = "${libdir}/vdpau/*.so"
-
