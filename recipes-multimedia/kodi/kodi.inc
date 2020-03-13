@@ -1,7 +1,7 @@
 # Some forked meta-kodi repositories using custom kodi urls, personally I think they should use variable instead of
 # creating different recipes and diverse from upstream
 
-inherit kodi-common
+inherit kodi-common vpu
 
 KODIURI ?= "gitsm://github.com/xbmc/xbmc.git;protocol=https;branch=${KODICODENAME}"
 KODIREV ?= "${PV}-${KODICODENAME}"
