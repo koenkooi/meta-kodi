@@ -78,11 +78,15 @@ DEPENDS += " \
 CCACHE_DISABLE = "1"
 ASNEEDED = ""
 
+KODIVAAPIDEPENDS = "libva"
+KODIVAAPIDEPENDS_append_x86 = " intel-vaapi-driver"
+KODIVAAPIDEPENDS_append_x86-64 = " intel-vaapi-driver"
 
 PACKAGECONFIG ?= " \
-  ${KODIACCELERATIONLIBRARIES} \
-  ${KODIGRAPHICALBACKEND} \
+  ${@bb.utils.contains('VAAPISUPPORT', '1', 'vaapi', '', d)} \
+  ${@bb.utils.contains('VDPAUSUPPORT', '1', 'vdpau', '', d)} \
   ${@bb.utils.filter('DISTRO_FEATURES', 'bluetooth pulseaudio systemd', d)} \
+  ${@bb.utils.filter('KODIGRAPHICALBACKEND', 'amlogic gbm raspberrypi wayland x11', d)} \
   airtunes \
   lcms \
   lirc \
@@ -107,8 +111,8 @@ PACKAGECONFIG[mysql] = "-DENABLE_MYSQLCLIENT=ON,-DENABLE_MYSQLCLIENT=OFF,mysql5"
 PACKAGECONFIG[optical] = "-DENABLE_OPTICAL=ON,-DENABLE_OPTICAL=OFF"
 PACKAGECONFIG[pulseaudio] = "-DENABLE_PULSEAUDIO=ON,-DENABLE_PULSEAUDIO=OFF,pulseaudio"
 PACKAGECONFIG[systemd] = ",,,kodi-systemd-service"
-PACKAGECONFIG[vaapi] = "-DENABLE_VAAPI=ON,-DENABLE_VAAPI=OFF,libva"
-PACKAGECONFIG[vdpau] = "-DENABLE_VDPAU=ON,-DENABLE_VDPAU=OFF,libvdpau"
+PACKAGECONFIG[vaapi] = "-DENABLE_VAAPI=ON,-DENABLE_VAAPI=OFF,${KODIVAAPIDEPENDS},${KODIVAAPIDEPENDS}"
+PACKAGECONFIG[vdpau] = "-DENABLE_VDPAU=ON,-DENABLE_VDPAU=OFF,libvdpau,libvdpau-mesa"
 
 # Compilation tunes
 
