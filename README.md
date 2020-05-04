@@ -10,7 +10,7 @@ The meta-kodi layer depends on:
 	layers: meta
 
 	URI: git://git.openembedded.org/meta-openembedded
-	layers: meta-oe, meta-multimedia, meta-networking, meta-python
+	layers: meta-oe, meta-multimedia, meta-networking
 	
 	URI: https://git.openembedded.org/meta-python2
 
