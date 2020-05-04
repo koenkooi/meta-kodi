@@ -8,11 +8,11 @@ The meta-kodi layer depends on:
 
 	URI: git://git.openembedded.org/openembedded-core
 	layers: meta
-	branch: zeus
 
 	URI: git://git.openembedded.org/meta-openembedded
 	layers: meta-oe, meta-multimedia, meta-networking, meta-python
-	branch: zeus
+	
+	URI: https://git.openembedded.org/meta-python2
 
 Please follow the recommended setup procedures of your OE distribution. For Angstrom that is http://www.angstrom-distribution.org/building-angstrom, other distros should have similar online resources.
 
