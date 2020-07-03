@@ -10,7 +10,7 @@ PV = "42.0.0+git${SRCPV}"
 SRCREV_mkvtoolnix = "64b1c3d9b380731ba94eae6a613dded87fa05d79"
 SRCREV_FORMAT = "mkvtoolnix"
 SRC_URI = " \
-           gitsm://gitlab.com/mbunkus/mkvtoolnix.git;protocol=https;name=mkvtoolnix \
+           gitsm://gitlab.com/mbunkus/mkvtoolnix.git;protocol=https;name=mkvtoolnix;branch=main \
           "
 
 S = "${WORKDIR}/git"
