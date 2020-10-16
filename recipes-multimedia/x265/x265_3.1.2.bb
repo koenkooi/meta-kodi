@@ -9,7 +9,7 @@ DEPENDS_append_x86-64_class-target = " nasm-native"
 
 SRCREV = "${PV}"
 SRC_URI = "git://github.com/videolan/x265.git;protocol=https;nobranch=1"
-S = "${WORKDIR}/git/source/"
+S = "${WORKDIR}/git/source"
 
 inherit cmake lib_package
 
