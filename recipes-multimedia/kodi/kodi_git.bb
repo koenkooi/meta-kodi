@@ -8,7 +8,7 @@ HOMEPAGE = "https://kodi.tv/"
 BUGTRACKER = "https://github.com/xbmc/xbmc/issues"
 
 require ${BPN}.inc
-inherit kodi-common cmake gettext python-dir pythonnative
+inherit cmake gettext python3-dir python3native
 
 OECMAKE_FIND_ROOT_PATH_MODE_PROGRAM = "BOTH"
 
@@ -66,6 +66,7 @@ DEPENDS += " \
   python \
   rapidjson \
   samba \
+  spdlog \
   sqlite3 \
   taglib \
   virtual/egl \
@@ -129,8 +130,17 @@ KODIARCH_mipsel = "-DWITH_ARCH=${TARGET_ARCH}"
 KODIARCH_mips64 = "-DWITH_ARCH=${TARGET_ARCH}"
 KODIARCH_mips64el = "-DWITH_ARCH=${TARGET_ARCH}"
 
+
+#| cmake/scripts/common/Platform.cmake:11 (message):
+#|   You need to decide whether you want to use GL- or GLES-based rendering.
+#|   Please set APP_RENDER_SYSTEM to either "gl" or "gles".
+#|   For embedded systems you will usually want to use "gles".
+
+KODI_OPENGL_STANDARD ?= "gles"
+
 EXTRA_OECMAKE = " \
     ${KODIARCH} \
+    -DAPP_RENDER_SYSTEM=${KODI_OPENGL_STANDARD} \
     \
     -DENABLE_INTERNAL_CROSSGUID=OFF \
     -DENABLE_INTERNAL_FLATBUFFERS=OFF \
@@ -190,19 +200,17 @@ RRECOMMENDS_${PN}_append = " \
   libcurl \
   libnfs \
   ${@bb.utils.contains('PACKAGECONFIG', 'x11', 'xdyinfo xrandr xinit mesa-demos', '', d)} \
-  python \
-  python-ctypes \
-  python-lang \
-  python-re \
-  python-netclient \
-  python-html \
-  python-difflib \
-  python-json \
-  python-zlib \
-  python-shell \
-  python-sqlite3 \
-  python-compression \
-  python-xmlrpc \
+  python3 \
+  python3-compression \
+  python3-ctypes \
+  python3-difflib \
+  python3-html \
+  python3-json \
+  python3-netclient \
+  python3-regex \
+  python3-shell \
+  python3-sqlite3 \
+  python3-xmlrpc \
   tzdata-africa \
   tzdata-americas \
   tzdata-antarctica \
