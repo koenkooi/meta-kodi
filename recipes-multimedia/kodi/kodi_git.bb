@@ -15,6 +15,7 @@ OECMAKE_FIND_ROOT_PATH_MODE_PROGRAM = "BOTH"
 DEPENDS += " \
   curl-native \
   flatbuffers-native \
+  googletest-native \
   gperf-native \
   kodi-tools-jsonschemabuilder-native \
   kodi-tools-texturepacker-native \
@@ -117,6 +118,7 @@ PACKAGECONFIG[vdpau] = "-DENABLE_VDPAU=ON,-DENABLE_VDPAU=OFF,libvdpau,mesa-vdpau
 
 PACKAGECONFIG[gold] = "-DENABLE_LDGOLD=ON,-DENABLE_LDGOLD=OFF"
 PACKAGECONFIG[lto] = "-DUSE_LTO=${@oe.utils.cpu_count()},-DUSE_LTO=OFF"
+PACKAGECONFIG[testing] = "-DENABLE_TESTING=ON,-DENABLE_TESTING=0FF,googletest"
 
 LDFLAGS += "${TOOLCHAIN_OPTIONS}"
 LDFLAGS_append_mips = " -latomic"
