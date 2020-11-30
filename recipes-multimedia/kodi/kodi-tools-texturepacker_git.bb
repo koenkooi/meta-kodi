@@ -1,7 +1,7 @@
 SUMMARY = "Kodi texture packer"
 
 require kodi.inc
-inherit cmake gettext python-dir pythonnative
+inherit cmake gettext python3-dir python3native
 
 KODIWORKDIR = "${WORKDIR}/git/tools/depends/native/TexturePacker"
 
