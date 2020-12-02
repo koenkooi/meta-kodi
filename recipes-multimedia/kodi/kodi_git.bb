@@ -86,11 +86,10 @@ KODIVAAPIDEPENDS_append_x86-64 = " intel-vaapi-driver"
 PACKAGECONFIG ?= " \
   ${@bb.utils.contains('VAAPISUPPORT', '1', 'vaapi', '', d)} \
   ${@bb.utils.contains('VDPAUSUPPORT', '1', 'vdpau', '', d)} \
-  ${@bb.utils.filter('DISTRO_FEATURES', 'bluetooth pulseaudio samba systemd', d)} \
+  ${@bb.utils.filter('DISTRO_FEATURES', 'bluetooth lirc pulseaudio samba systemd', d)} \
   ${@bb.utils.filter('KODIGRAPHICALBACKEND', 'gbm wayland x11', d)} \
   airtunes \
   lcms \
-  lirc \
 "
 
 # Core windowing system choices
