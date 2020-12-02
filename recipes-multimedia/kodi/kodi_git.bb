@@ -66,7 +66,6 @@ DEPENDS += " \
   mpeg2dec \
   python \
   rapidjson \
-  samba \
   spdlog \
   sqlite3 \
   taglib \
@@ -87,7 +86,7 @@ KODIVAAPIDEPENDS_append_x86-64 = " intel-vaapi-driver"
 PACKAGECONFIG ?= " \
   ${@bb.utils.contains('VAAPISUPPORT', '1', 'vaapi', '', d)} \
   ${@bb.utils.contains('VDPAUSUPPORT', '1', 'vdpau', '', d)} \
-  ${@bb.utils.filter('DISTRO_FEATURES', 'bluetooth pulseaudio systemd', d)} \
+  ${@bb.utils.filter('DISTRO_FEATURES', 'bluetooth pulseaudio samba systemd', d)} \
   ${@bb.utils.filter('KODIGRAPHICALBACKEND', 'gbm wayland x11', d)} \
   airtunes \
   lcms \
@@ -106,6 +105,7 @@ PACKAGECONFIG[airtunes] = "-DENABLE_AIRTUNES=ON,-DENABLE_AIRTUNES=OFF"
 PACKAGECONFIG[bluetooth] = ",,bluez5"
 PACKAGECONFIG[dvdcss] = "-DENABLE_DVDCSS=ON,-DENABLE_DVDCSS=OFF"
 PACKAGECONFIG[lcms] = ",,lcms"
+PACKAGECONFIG[samba] = ",,samba"
 PACKAGECONFIG[lirc] = ",,lirc"
 PACKAGECONFIG[mysql] = "-DENABLE_MYSQLCLIENT=ON,-DENABLE_MYSQLCLIENT=OFF,mysql5"
 PACKAGECONFIG[optical] = "-DENABLE_OPTICAL=ON,-DENABLE_OPTICAL=OFF"
