@@ -3,7 +3,7 @@
 
 inherit kodi-common vpu
 
-KODIVER ?= "19.0b1"
+KODIVER ?= "19.0b2"
 
 KODIURI ?= "gitsm://github.com/xbmc/xbmc.git;protocol=https;nobranch=1"
 KODIREV ?= "${KODIVER}-${KODICODENAME}"
