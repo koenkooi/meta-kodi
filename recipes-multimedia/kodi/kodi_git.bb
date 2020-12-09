@@ -119,18 +119,7 @@ PACKAGECONFIG[gold] = "-DENABLE_LDGOLD=ON,-DENABLE_LDGOLD=OFF"
 PACKAGECONFIG[lto] = "-DUSE_LTO=${@oe.utils.cpu_count()},-DUSE_LTO=OFF"
 PACKAGECONFIG[testing] = "-DENABLE_TESTING=ON,-DENABLE_TESTING=0FF,googletest"
 
-LDFLAGS += "${TOOLCHAIN_OPTIONS}"
-LDFLAGS_append_mips = " -latomic"
-LDFLAGS_append_mipsel = " -latomic"
-LDFLAGS_append_mips64 = " -latomic"
-LDFLAGS_append_mips64el = " -latomic"
-
-KODIARCH = ""
-KODIARCH_mips = "-DWITH_ARCH=${TARGET_ARCH}"
-KODIARCH_mipsel = "-DWITH_ARCH=${TARGET_ARCH}"
-KODIARCH_mips64 = "-DWITH_ARCH=${TARGET_ARCH}"
-KODIARCH_mips64el = "-DWITH_ARCH=${TARGET_ARCH}"
-
+require include/kodi-mips.inc
 
 #| cmake/scripts/common/Platform.cmake:11 (message):
 #|   You need to decide whether you want to use GL- or GLES-based rendering.
@@ -140,7 +129,6 @@ KODIARCH_mips64el = "-DWITH_ARCH=${TARGET_ARCH}"
 KODI_OPENGL_STANDARD ?= "gles"
 
 EXTRA_OECMAKE = " \
-    ${KODIARCH} \
     -DAPP_RENDER_SYSTEM=${KODI_OPENGL_STANDARD} \
     \
     -DENABLE_INTERNAL_CROSSGUID=OFF \
