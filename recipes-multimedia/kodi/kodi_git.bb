@@ -69,6 +69,7 @@ DEPENDS += " \
   spdlog \
   sqlite3 \
   taglib \
+  udev \
   virtual/egl \
   wavpack \
   yajl \
@@ -89,6 +90,7 @@ PACKAGECONFIG ?= " \
   ${@bb.utils.filter('DISTRO_FEATURES', 'bluetooth lirc pulseaudio samba systemd', d)} \
   ${@bb.utils.filter('KODIGRAPHICALBACKEND', 'gbm wayland x11', d)} \
   airtunes \
+  joystick \
   lcms \
 "
 
@@ -103,12 +105,13 @@ PACKAGECONFIG[x11] = "-DCORE_PLATFORM_NAME=x11,,libxinerama libxmu libxrandr lib
 PACKAGECONFIG[airtunes] = "-DENABLE_AIRTUNES=ON,-DENABLE_AIRTUNES=OFF"
 PACKAGECONFIG[bluetooth] = ",,bluez5"
 PACKAGECONFIG[dvdcss] = "-DENABLE_DVDCSS=ON,-DENABLE_DVDCSS=OFF"
+PACKAGECONFIG[joystick] = ",,,kodi-addon-peripheral-joystick"
 PACKAGECONFIG[lcms] = ",,lcms"
-PACKAGECONFIG[samba] = ",,samba"
 PACKAGECONFIG[lirc] = ",,lirc"
 PACKAGECONFIG[mysql] = "-DENABLE_MYSQLCLIENT=ON,-DENABLE_MYSQLCLIENT=OFF,mysql5"
 PACKAGECONFIG[optical] = "-DENABLE_OPTICAL=ON,-DENABLE_OPTICAL=OFF"
 PACKAGECONFIG[pulseaudio] = "-DENABLE_PULSEAUDIO=ON,-DENABLE_PULSEAUDIO=OFF,pulseaudio"
+PACKAGECONFIG[samba] = ",,samba"
 PACKAGECONFIG[systemd] = ",,,kodi-systemd-service"
 PACKAGECONFIG[vaapi] = "-DENABLE_VAAPI=ON,-DENABLE_VAAPI=OFF,${KODIVAAPIDEPENDS},${KODIVAAPIDEPENDS}"
 PACKAGECONFIG[vdpau] = "-DENABLE_VDPAU=ON,-DENABLE_VDPAU=OFF,libvdpau,mesa-vdpau-drivers"
