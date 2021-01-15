@@ -13,7 +13,7 @@ inherit cmake pkgconfig gettext
 ASNEEDED = ""
 
 EXTRA_OECMAKE = " \
-  -DADDONS_TO_BUILD=inputstream.adaptive \
+  -DADDONS_TO_BUILD=${KODIADDONNAME} \
   -DADDON_SRC_PREFIX=${WORKDIR}/git \
   -DCMAKE_BUILD_TYPE=RelWithDebInfo \
   -DCMAKE_INSTALL_PREFIX=${KODIADDONDIR} \
