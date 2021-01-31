@@ -9,7 +9,7 @@ SRCREV = "${PV}"
 SRC_URI = "git://github.com/NilsBrause/waylandpp.git;protocol=https"
 S = "${WORKDIR}/git"
 
-inherit cmake lib_package native pkgconfig
+inherit cmake lib_package pkgconfig native
 
 DEPENDS += "doxygen-native wayland pugixml"
 
