@@ -64,7 +64,7 @@ DEPENDS += " \
   libxslt \
   lzo \
   mpeg2dec \
-  python \
+  python3 \
   rapidjson \
   spdlog \
   sqlite3 \
