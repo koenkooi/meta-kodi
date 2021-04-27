@@ -130,21 +130,7 @@ PACKAGECONFIG[mysql] = "-DENABLE_MYSQLCLIENT=ON,-DENABLE_MYSQLCLIENT=OFF,mysql5"
 PACKAGECONFIG[pulseaudio] = "-DENABLE_PULSEAUDIO=ON,-DENABLE_PULSEAUDIO=OFF,pulseaudio"
 PACKAGECONFIG[lcms] = ",,lcms"
 
-LDFLAGS += "${TOOLCHAIN_OPTIONS}"
-LDFLAGS_append_mips = " -latomic"
-LDFLAGS_append_mipsel = " -latomic"
-LDFLAGS_append_mips64 = " -latomic"
-LDFLAGS_append_mips64el = " -latomic"
-
-KODI_ARCH = ""
-KODI_ARCH_mips = "-DWITH_ARCH=${TARGET_ARCH}"
-KODI_ARCH_mipsel = "-DWITH_ARCH=${TARGET_ARCH}"
-KODI_ARCH_mips64 = "-DWITH_ARCH=${TARGET_ARCH}"
-KODI_ARCH_mips64el = "-DWITH_ARCH=${TARGET_ARCH}"
-
 EXTRA_OECMAKE = " \
-    ${KODI_ARCH} \
-    \
     -DNATIVEPREFIX=${STAGING_DIR_NATIVE}${prefix} \
     -DJava_JAVA_EXECUTABLE=/usr/bin/java \
     -DWITH_TEXTUREPACKER=${STAGING_BINDIR_NATIVE}/TexturePacker \
@@ -169,6 +155,10 @@ EXTRA_OECMAKE = " \
     -DENABLE_DEBUGFISSION=OFF \
     -DCMAKE_BUILD_TYPE=RelWithDebInfo \
 "
+EXTRA_OECMAKE_append_mipsarch = " -DWITH_ARCH=${TARGET_ARCH}"
+
+LDFLAGS += "${TOOLCHAIN_OPTIONS}"
+LDFLAGS_append_mipsarch = " -latomic -lpthread"
 
 # OECMAKE_GENERATOR="Unix Makefiles"
 #PARALLEL_MAKE = " "
