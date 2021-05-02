@@ -118,20 +118,9 @@ PACKAGECONFIG[gold] = "-DENABLE_LDGOLD=ON,-DENABLE_LDGOLD=OFF"
 PACKAGECONFIG[lto] = "-DUSE_LTO=${@oe.utils.cpu_count()},-DUSE_LTO=OFF"
 
 LDFLAGS += "${TOOLCHAIN_OPTIONS}"
-LDFLAGS_append_mips = " -latomic"
-LDFLAGS_append_mipsel = " -latomic"
-LDFLAGS_append_mips64 = " -latomic"
-LDFLAGS_append_mips64el = " -latomic"
-
-KODIARCH = ""
-KODIARCH_mips = "-DWITH_ARCH=${TARGET_ARCH}"
-KODIARCH_mipsel = "-DWITH_ARCH=${TARGET_ARCH}"
-KODIARCH_mips64 = "-DWITH_ARCH=${TARGET_ARCH}"
-KODIARCH_mips64el = "-DWITH_ARCH=${TARGET_ARCH}"
+LDFLAGS_append_mipsarch = " -latomic -lpthread"
 
 EXTRA_OECMAKE = " \
-    ${KODIARCH} \
-    \
     -DENABLE_INTERNAL_CROSSGUID=OFF \
     -DENABLE_INTERNAL_FLATBUFFERS=OFF \
     -DENABLE_INTERNAL_FMT=OFF \
@@ -153,6 +142,8 @@ EXTRA_OECMAKE = " \
     -DSHAIRPLAY_INCLUDE_DIR=${STAGING_INCDIR} \
     -DCMAKE_BUILD_TYPE=RelWithDebInfo \
 "
+
+EXTRA_OECMAKE_append_mipsarch = " -DWITH_ARCH=${TARGET_ARCH}"
 
 # OECMAKE_GENERATOR="Unix Makefiles"
 #PARALLEL_MAKE = " "
