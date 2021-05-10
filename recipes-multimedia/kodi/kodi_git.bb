@@ -122,7 +122,11 @@ PACKAGECONFIG[gold] = "-DENABLE_LDGOLD=ON,-DENABLE_LDGOLD=OFF"
 PACKAGECONFIG[lto] = "-DUSE_LTO=${@oe.utils.cpu_count()},-DUSE_LTO=OFF"
 PACKAGECONFIG[testing] = "-DENABLE_TESTING=ON,-DENABLE_TESTING=0FF,googletest"
 
-require include/kodi-mips.inc
+# MIPS
+
+LDFLAGS += "${TOOLCHAIN_OPTIONS}"
+LDFLAGS_append_mipsarch = " -latomic -lpthread"
+EXTRA_OECMAKE_append_mipsarch = " -DWITH_ARCH=${TARGET_ARCH}"
 
 #| cmake/scripts/common/Platform.cmake:11 (message):
 #|   You need to decide whether you want to use GL- or GLES-based rendering.
