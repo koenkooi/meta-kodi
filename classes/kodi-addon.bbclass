@@ -3,16 +3,12 @@ inherit kodi-common
 KODIADDONNAME ?= "${PN}"
 KODIADDONDIR ?= "${datadir}/kodi/addons"
 
-DEPENDS += "zip-native \
-            p8platform \
-            kodi-platform \
-          "
-
 inherit cmake pkgconfig gettext
 
-ASNEEDED = ""
+DEPENDS_append = " kodi-platform p8platform zip-native"
+RDEPENDS_${PN}_append = " libkodiplatform"
 
-EXTRA_OECMAKE = " \
+EXTRA_OECMAKE_append = " \
   -DADDONS_TO_BUILD=${KODIADDONNAME} \
   -DADDON_SRC_PREFIX=${WORKDIR}/git \
   -DCMAKE_BUILD_TYPE=RelWithDebInfo \
@@ -29,9 +25,6 @@ do_install_append() {
 	( cd ${D}${KODIADDONDIR}
 	  zip -r ${D}${KODIADDONDIR}/packages/${KODIADDONNAME}-${PV}.zip ${KODIADDONNAME} -x '*.debug*' )
 }
-
-# Doesn't get added automagically, dlopen()?
-RDEPENDS_${PN} = "libkodiplatform"
 
 INSANE_SKIP_${PN} = "dev-so libdir"
 FILES_${PN} += "${KODIADDONDIR}"
