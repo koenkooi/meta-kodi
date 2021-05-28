@@ -9,7 +9,7 @@ inherit kodi-addon
 
 DEPENDS += "expat"
 
-PV = "2.6.11"
+PV = "2.6.16"
 
 SRCREV = "${PV}-${KODICODENAME}"
 SRC_URI = "git://github.com/peak3d/inputstream.adaptive.git;nobranch=1;protocol=https"
