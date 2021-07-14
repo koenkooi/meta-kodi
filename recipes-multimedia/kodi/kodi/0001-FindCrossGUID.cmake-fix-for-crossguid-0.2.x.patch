@@ -1,15 +1,16 @@
-From b68589698b7a9d95dbcbdd963f62f955e0facf3a Mon Sep 17 00:00:00 2001
+From e49217dce4cf400e3da7cf403d146b29220fc5f6 Mon Sep 17 00:00:00 2001
 From: Markus Volk <f_l_k@t-online.de>
-Date: Wed, 14 Jul 2021 14:14:45 +0200
+Date: Wed, 14 Jul 2021 16:24:32 +0200
 Subject: [PATCH] FindCrossGUID.cmake: fix for crossguid 0.2.x
 
 Signed-off-by: Markus Volk <f_l_k@t-online.de>
 ---
  cmake/modules/FindCrossGUID.cmake | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ xbmc/utils/StringUtils.cpp        | 3 ++-
+ 2 files changed, 5 insertions(+), 4 deletions(-)
 
 diff --git a/cmake/modules/FindCrossGUID.cmake b/cmake/modules/FindCrossGUID.cmake
-index 613c2a4a3fd..d96ff97bea8 100644
+index 613c2a4a3fd..1ce696f954c 100644
 --- a/cmake/modules/FindCrossGUID.cmake
 +++ b/cmake/modules/FindCrossGUID.cmake
 @@ -46,10 +46,10 @@ if(ENABLE_INTERNAL_CROSSGUID)
@@ -21,11 +22,26 @@ index 613c2a4a3fd..d96ff97bea8 100644
  
 -  find_library(CROSSGUID_LIBRARY_RELEASE NAMES crossguid)
 -  find_library(CROSSGUID_LIBRARY_DEBUG NAMES crossguidd)
-+  find_library(CROSSGUID_LIBRARY_RELEASE NAMES xg)
-+  find_library(CROSSGUID_LIBRARY_DEBUG NAMES xg)
++  find_library(CROSSGUID_LIBRARY_RELEASE NAMES crossguid xg)
++  find_library(CROSSGUID_LIBRARY_DEBUG NAMES crossguidd xg)
  
    include(SelectLibraryConfigurations)
    select_library_configurations(CROSSGUID)
+diff --git a/xbmc/utils/StringUtils.cpp b/xbmc/utils/StringUtils.cpp
+index c19d285bba6..1449378f8d6 100644
+--- a/xbmc/utils/StringUtils.cpp
++++ b/xbmc/utils/StringUtils.cpp
+@@ -16,8 +16,9 @@
+ //
+ //------------------------------------------------------------------------
+ 
++#define HAVE_NEW_CROSSGUID
+ #ifdef HAVE_NEW_CROSSGUID
+-#include <guid.hpp>
++#include <Guid.hpp>
+ #else
+ #include <guid.h>
+ #endif
 -- 
 2.25.1
 
