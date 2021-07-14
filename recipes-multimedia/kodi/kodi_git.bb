@@ -10,6 +10,10 @@ BUGTRACKER = "https://github.com/xbmc/xbmc/issues"
 require ${BPN}.inc
 inherit cmake gettext python3-dir python3native
 
+SRC_URI_append = " \
+	file://0001-FindCrossGUID.cmake-fix-for-crossguid-0.2.x.patch \
+"
+
 OECMAKE_FIND_ROOT_PATH_MODE_PROGRAM = "BOTH"
 
 DEPENDS += " \
