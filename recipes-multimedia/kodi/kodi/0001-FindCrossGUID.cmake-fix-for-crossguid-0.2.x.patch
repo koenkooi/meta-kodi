@@ -1,0 +1,31 @@
+From b68589698b7a9d95dbcbdd963f62f955e0facf3a Mon Sep 17 00:00:00 2001
+From: Markus Volk <f_l_k@t-online.de>
+Date: Wed, 14 Jul 2021 14:14:45 +0200
+Subject: [PATCH] FindCrossGUID.cmake: fix for crossguid 0.2.x
+
+Signed-off-by: Markus Volk <f_l_k@t-online.de>
+---
+ cmake/modules/FindCrossGUID.cmake | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/cmake/modules/FindCrossGUID.cmake b/cmake/modules/FindCrossGUID.cmake
+index 613c2a4a3fd..d96ff97bea8 100644
+--- a/cmake/modules/FindCrossGUID.cmake
++++ b/cmake/modules/FindCrossGUID.cmake
+@@ -46,10 +46,10 @@ if(ENABLE_INTERNAL_CROSSGUID)
+   set(CROSSGUID_LIBRARIES ${CROSSGUID_LIBRARY})
+   set(CROSSGUID_INCLUDE_DIRS ${CROSSGUID_INCLUDE_DIR})
+ else()
+-  find_path(CROSSGUID_INCLUDE_DIR NAMES guid.hpp guid.h)
++  find_path(CROSSGUID_INCLUDE_DIR NAMES Guid.hpp guid.h)
+ 
+-  find_library(CROSSGUID_LIBRARY_RELEASE NAMES crossguid)
+-  find_library(CROSSGUID_LIBRARY_DEBUG NAMES crossguidd)
++  find_library(CROSSGUID_LIBRARY_RELEASE NAMES xg)
++  find_library(CROSSGUID_LIBRARY_DEBUG NAMES xg)
+ 
+   include(SelectLibraryConfigurations)
+   select_library_configurations(CROSSGUID)
+-- 
+2.25.1
+
