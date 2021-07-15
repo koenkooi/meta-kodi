@@ -60,7 +60,6 @@ DEPENDS += " \
   libpcre \
   libplist \
   libsamplerate0 \
-  libsquish \
   libssh \
   libtinyxml \
   libusb1 \
