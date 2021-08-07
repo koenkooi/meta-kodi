@@ -10,7 +10,7 @@ BUGTRACKER = "https://github.com/xbmc/xbmc/issues"
 require ${BPN}.inc
 inherit cmake gettext python3-dir python3native
 
-SRC_URI_append = " \
+SRC_URI:append = " \
 	file://0001-FindCrossGUID.cmake-fix-for-crossguid-0.2.2.patch \
 "
 
@@ -84,8 +84,8 @@ CCACHE_DISABLE = "1"
 ASNEEDED = ""
 
 KODIVAAPIDEPENDS = "libva"
-KODIVAAPIDEPENDS_append_x86 = " intel-vaapi-driver"
-KODIVAAPIDEPENDS_append_x86-64 = " intel-vaapi-driver"
+KODIVAAPIDEPENDS:append:x86 = " intel-vaapi-driver"
+KODIVAAPIDEPENDS:append:x86-64 = " intel-vaapi-driver"
 
 PACKAGECONFIG ?= " \
   ${@bb.utils.contains('VAAPISUPPORT', '1', 'vaapi', '', d)} \
@@ -128,8 +128,8 @@ PACKAGECONFIG[testing] = "-DENABLE_TESTING=ON,-DENABLE_TESTING=0FF,googletest"
 # MIPS
 
 LDFLAGS += "${TOOLCHAIN_OPTIONS}"
-LDFLAGS_append_mipsarch = " -latomic -lpthread"
-EXTRA_OECMAKE_append_mipsarch = " -DWITH_ARCH=${TARGET_ARCH}"
+LDFLAGS:append:mipsarch = " -latomic -lpthread"
+EXTRA_OECMAKE:append:mipsarch = " -DWITH_ARCH=${TARGET_ARCH}"
 
 #| cmake/scripts/common/Platform.cmake:11 (message):
 #|   You need to decide whether you want to use GL- or GLES-based rendering.
@@ -173,7 +173,7 @@ export PYTHON_DIR
 
 export TARGET_PREFIX
 
-do_configure_prepend() {
+do_configure:prepend() {
 	# Ensure 'nm' can find the lto plugins 
 	liblto=$(find ${STAGING_DIR_NATIVE} -name "liblto_plugin.so.0.0.0")
 	mkdir -p ${STAGING_LIBDIR_NATIVE}/bfd-plugins
@@ -182,14 +182,14 @@ do_configure_prepend() {
 	sed -i -e 's:CMAKE_NM}:}${TARGET_PREFIX}gcc-nm:' ${S}/xbmc/cores/DllLoader/exports/CMakeLists.txt
 }
 
-INSANE_SKIP_${PN} = "rpaths"
+INSANE_SKIP:${PN} = "rpaths"
 
-FILES_${PN} += "${datadir}/xsessions ${datadir}/icons ${libdir}/xbmc ${datadir}/xbmc ${libdir}/firewalld"
-FILES_${PN}-dbg += "${libdir}/kodi/.debug ${libdir}/kodi/*/.debug ${libdir}/kodi/*/*/.debug ${libdir}/kodi/*/*/*/.debug"
+FILES:${PN} += "${datadir}/xsessions ${datadir}/icons ${libdir}/xbmc ${datadir}/xbmc ${libdir}/firewalld"
+FILES:${PN}-dbg += "${libdir}/kodi/.debug ${libdir}/kodi/*/.debug ${libdir}/kodi/*/*/.debug ${libdir}/kodi/*/*/*/.debug"
 
 # kodi uses some kind of dlopen() method for libcec so we need to add it manually
 # OpenGL builds need glxinfo, that's in mesa-demos
-RRECOMMENDS_${PN}_append = " \
+RRECOMMENDS:${PN}:append = " \
   libcec \
   libcurl \
   libnfs \
@@ -217,7 +217,7 @@ RRECOMMENDS_${PN}_append = " \
   xkeyboard-config \
 "
 
-RRECOMMENDS_${PN}_append_libc-glibc = " \
+RRECOMMENDS:${PN}:append:libc-glibc = " \
   glibc-charmap-ibm850 \
   glibc-gconv-ibm850 \
   glibc-charmap-ibm437 \

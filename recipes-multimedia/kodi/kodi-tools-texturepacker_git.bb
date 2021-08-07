@@ -12,9 +12,9 @@ DEPENDS = " \
     lzo \
 "
 
-OECMAKE_CXX_FLAGS_append = " -DTARGET_POSIX -std=gnu++11 -I${WORKDIR}/git/xbmc/linux"
+OECMAKE_CXX_FLAGS:append = " -DTARGET_POSIX -std=gnu++11 -I${WORKDIR}/git/xbmc/linux"
 
-do_configure_prepend() {
+do_configure:prepend() {
     ln -sf ${WORKDIR}/git/xbmc ${WORKDIR}/git/tools/depends/native/TexturePacker/
 }
 

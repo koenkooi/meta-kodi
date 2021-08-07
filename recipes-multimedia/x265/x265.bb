@@ -4,8 +4,8 @@ HOMEPAGE = "https://bitbucket.org/multicoreware/x265/wiki/Home"
 LICENSE = "GPLv2"
 LIC_FILES_CHKSUM = "file://../COPYING;md5=c9e0427bc58f129f99728c62d4ad4091"
 
-DEPENDS_append_x86_class-target =    " nasm-native"
-DEPENDS_append_x86-64_class-target = " nasm-native"
+DEPENDS:append:x86:class-target =    " nasm-native"
+DEPENDS:append:x86-64:class-target = " nasm-native"
 
 PV = "3.4"
 
