@@ -4,7 +4,7 @@ HOMEPAGE = "http://fstrcmp.sourceforge.net/"
 LICENSE = "GPLv3"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=84269fe9822f573d2cc8131b63febc57"
 
-SRC_URI = "http://fstrcmp.sourceforge.net/fstrcmp-${PV}.D001.tar.gz \
+SRC_URI = "https://fstrcmp.sourceforge.net/fstrcmp-${PV}.D001.tar.gz \
            file://nopdf.patch \
           "
 SRC_URI[md5sum] = "9c440bbdfcad9fd22e38f2388715b0cc"
