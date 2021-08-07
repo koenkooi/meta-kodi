@@ -1,2 +1,2 @@
-DEPENDS_remove = "virtual/mesa"
-PACKAGECONFIG_remove = "glx"
+DEPENDS:remove = "virtual/mesa"
+PACKAGECONFIG:remove = "glx"

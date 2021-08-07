@@ -1,1 +1,1 @@
-EXTRA_OECONF_remove_class-native = "--disable-libraries"
+EXTRA_OECONF:remove:class-native = "--disable-libraries"

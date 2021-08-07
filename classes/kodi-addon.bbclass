@@ -5,10 +5,10 @@ KODIADDONDIR ?= "${datadir}/kodi/addons"
 
 inherit cmake pkgconfig gettext
 
-DEPENDS_append = " kodi-platform p8platform zip-native"
-RDEPENDS_${PN}_append = " libkodiplatform"
+DEPENDS:append = " kodi-platform p8platform zip-native"
+RDEPENDS:${PN}:append = " libkodiplatform"
 
-EXTRA_OECMAKE_append = " \
+EXTRA_OECMAKE:append = " \
   -DADDONS_TO_BUILD=${KODIADDONNAME} \
   -DADDON_SRC_PREFIX=${WORKDIR}/git \
   -DCMAKE_BUILD_TYPE=RelWithDebInfo \
@@ -20,12 +20,12 @@ EXTRA_OECMAKE_append = " \
 "
 
 # Make zip package for manual installation
-do_install_append() {
+do_install:append() {
 	install -d ${D}${KODIADDONDIR}/packages/
 	( cd ${D}${KODIADDONDIR}
 	  zip -r ${D}${KODIADDONDIR}/packages/${KODIADDONNAME}-${PV}.zip ${KODIADDONNAME} -x '*.debug*' )
 }
 
-INSANE_SKIP_${PN} = "dev-so libdir"
-FILES_${PN} += "${KODIADDONDIR}"
-FILES_${PN}-dbg += "${KODIADDONDIR}/*/.debug/"
+INSANE_SKIP:${PN} = "dev-so libdir"
+FILES:${PN} += "${KODIADDONDIR}"
+FILES:${PN}-dbg += "${KODIADDONDIR}/*/.debug/"

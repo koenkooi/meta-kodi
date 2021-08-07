@@ -28,7 +28,7 @@ EXTRA_OECMAKE = " \
    -DKODI_INCLUDE_DIR=${STAGING_INCDIR}/kodi \
 "
 
-do_compile_prepend() {
+do_compile:prepend() {
 	sed -i -e 's:I/usr/include:I${STAGING_INCDIR}:g' \
 	       -e 's:-pipe:${HOST_CC_ARCH} ${TOOLCHAIN_OPTIONS} -pipe:g' \
 	          ${B}/CMakeFiles/kodiplatform.dir/flags.make
@@ -36,7 +36,7 @@ do_compile_prepend() {
 	          ${B}/CMakeFiles/kodiplatform.dir/link.txt
 }
 
-do_install_append() {
+do_install:append() {
 	sed -i -e '/CXX/d' \
                -e '/CC/d' \
                -e 's:${STAGING_LIBDIR}:${libdir}:g' \
@@ -50,7 +50,7 @@ do_install_append() {
 RPROVIDES_${PN} += "libkodiplatform"
 PACKAGES =+ "libkodiplatform"
 
-FILES_libkodiplatform = "${libdir}/lib*.so.*"
+FILES:libkodiplatform = "${libdir}/lib*.so.*"
 
-FILES_${PN}-dev += "${libdir}/*platform"
+FILES:${PN}-dev += "${libdir}/*platform"
 
