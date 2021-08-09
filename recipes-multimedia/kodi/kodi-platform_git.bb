@@ -47,7 +47,7 @@ do_install:append() {
             ${D}${libdir}/pkgconfig/*.pc
 }
 
-RPROVIDES_${PN} += "libkodiplatform"
+RPROVIDES:${PN} += "libkodiplatform"
 PACKAGES =+ "libkodiplatform"
 
 FILES:libkodiplatform = "${libdir}/lib*.so.*"
