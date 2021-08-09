@@ -161,7 +161,7 @@ EXTRA_OECMAKE = " \
 # OECMAKE_GENERATOR="Unix Makefiles"
 #PARALLEL_MAKE = " "
 
-FULL_OPTIMIZATION_armv7a = "-fexpensive-optimizations -fomit-frame-pointer -O4 -ffast-math"
+FULL_OPTIMIZATION:armv7a = "-fexpensive-optimizations -fomit-frame-pointer -O4 -ffast-math"
 BUILD_OPTIMIZATION = "${FULL_OPTIMIZATION}"
 
 # for python modules
