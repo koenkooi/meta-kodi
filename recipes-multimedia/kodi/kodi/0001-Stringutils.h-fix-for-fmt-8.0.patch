@@ -1,0 +1,27 @@
+From 7105c94c831e9f969b6a9cbbf5c4445dc09ea737 Mon Sep 17 00:00:00 2001
+From: MarkusVolk <f_l_k@t-online.de>
+Date: Wed, 15 Sep 2021 15:24:11 +0200
+Subject: [PATCH] Stringutils.h: fix for fmt < 8.0
+
+Signed-off-by: MarkusVolk <f_l_k@t-online.de>
+---
+ xbmc/utils/StringUtils.h | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/xbmc/utils/StringUtils.h b/xbmc/utils/StringUtils.h
+index ca6f82953d9..a1ec60d8d90 100644
+--- a/xbmc/utils/StringUtils.h
++++ b/xbmc/utils/StringUtils.h
+@@ -32,6 +32,9 @@
+ #define FMT_DEPRECATED
+ #endif
+ #include <fmt/format.h>
++#if FMT_VERSION >= 80000
++#include <fmt/xchar.h>
++#endif
+ 
+ #if FMT_VERSION >= 40000
+ #include <fmt/printf.h>
+-- 
+2.25.1
+
