@@ -12,6 +12,7 @@ inherit cmake gettext python3-dir python3native
 
 SRC_URI:append = " \
 	file://0001-FindCrossGUID.cmake-fix-for-crossguid-0.2.2.patch \
+	file://0001-Stringutils.h-fix-for-fmt-8.0.patch \
 "
 
 OECMAKE_FIND_ROOT_PATH_MODE_PROGRAM = "BOTH"
