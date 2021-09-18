@@ -6,7 +6,6 @@ inherit kodi-common vpu
 KODIVER ?= "19.1"
 
 KODIURI ?= "gitsm://github.com/xbmc/xbmc.git;protocol=https;nobranch=1"
-KODIREV ?= "${KODIVER}-${KODICODENAME}"
 KODIWORKDIR ?= "${WORKDIR}/git"
 
 KODIPATCHES ?= ""
