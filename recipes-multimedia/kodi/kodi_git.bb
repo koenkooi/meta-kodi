@@ -8,7 +8,7 @@ HOMEPAGE = "https://kodi.tv/"
 BUGTRACKER = "https://github.com/xbmc/xbmc/issues"
 
 require ${BPN}.inc
-inherit cmake gettext python3-dir python3native
+inherit cmake pkgconfig gettext python3-dir python3native
 
 SRC_URI:append = " \
 	file://0001-FindCrossGUID.cmake-fix-for-crossguid-0.2.2.patch \
