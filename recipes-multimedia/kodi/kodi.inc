@@ -3,7 +3,7 @@
 
 inherit kodi-common vpu
 
-KODIVER ?= "19.2"
+KODIVER ?= "19.3"
 
 KODIURI ?= "gitsm://github.com/xbmc/xbmc.git;protocol=https;nobranch=1"
 KODIWORKDIR ?= "${WORKDIR}/git"
