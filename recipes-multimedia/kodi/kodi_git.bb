@@ -17,6 +17,8 @@ SRC_URI:append = " \
 OECMAKE_FIND_ROOT_PATH_MODE_PROGRAM = "BOTH"
 
 DEPENDS += " \
+  autoconf-native \
+  automake-native \
   curl-native \
   flatbuffers-native \
   googletest-native \
@@ -48,9 +50,6 @@ DEPENDS += " \
   libass \
   libcdio \
   libcec \
-  libdvdcss \
-  libdvdnav \
-  libdvdread \
   libinput \
   libmad \
   libmicrohttpd \
