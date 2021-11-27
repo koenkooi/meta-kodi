@@ -12,6 +12,7 @@ inherit cmake pkgconfig gettext python3-dir python3native
 
 SRC_URI:append = " \
 	file://0001-FindCrossGUID.cmake-fix-for-crossguid-0.2.2.patch \
+	file://kodi-995.01-fix-missing-wayland-scanner-pkg-config.patch \
 "
 
 OECMAKE_FIND_ROOT_PATH_MODE_PROGRAM = "BOTH"
@@ -99,7 +100,7 @@ PACKAGECONFIG ?= " \
 # Core windowing system choices
 
 PACKAGECONFIG[gbm] = "-DCORE_PLATFORM_NAME=gbm -DGBM_RENDER_SYSTEM=gles,,"
-PACKAGECONFIG[wayland] = "-DCORE_PLATFORM_NAME=wayland -DWAYLAND_RENDER_SYSTEM=gles,,wayland waylandpp"
+PACKAGECONFIG[wayland] = "-DCORE_PLATFORM_NAME=wayland -DWAYLAND_RENDER_SYSTEM=gles,,wayland wayland-native waylandpp waylandpp-native"
 PACKAGECONFIG[x11] = "-DCORE_PLATFORM_NAME=x11,,libxinerama libxmu libxrandr libxtst glew"
 
 # Features
@@ -155,6 +156,7 @@ EXTRA_OECMAKE = " \
     -DNFS_INCLUDE_DIR=${STAGING_INCDIR} \
     -DSHAIRPLAY_INCLUDE_DIR=${STAGING_INCDIR} \
     -DWAYLANDPP_PROTOCOLS_DIR=${STAGING_DATADIR}/waylandpp/protocols \
+    -DWAYLANDPP_SCANNER=${STAGING_BINDIR_NATIVE}/wayland-scanner++ \
     -DCMAKE_BUILD_TYPE=RelWithDebInfo \
 "
 
