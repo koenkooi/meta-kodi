@@ -48,6 +48,7 @@ DEPENDS += " \
   fribidi \
   fstrcmp \
   giflib \
+  harfbuzz \
   libass \
   libcdio \
   libcec \
