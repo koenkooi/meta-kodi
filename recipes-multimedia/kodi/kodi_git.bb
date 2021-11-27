@@ -160,12 +160,6 @@ EXTRA_OECMAKE = " \
     -DCMAKE_BUILD_TYPE=RelWithDebInfo \
 "
 
-# OECMAKE_GENERATOR="Unix Makefiles"
-#PARALLEL_MAKE = " "
-
-FULL_OPTIMIZATION:armv7a = "-fexpensive-optimizations -fomit-frame-pointer -O4 -ffast-math"
-BUILD_OPTIMIZATION = "${FULL_OPTIMIZATION}"
-
 # for python modules
 export HOST_SYS
 export BUILD_SYS
