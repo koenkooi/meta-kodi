@@ -1,6 +1,6 @@
 inherit vpu
 
-PACKAGECONFIG[vidstab] = "--enable-libvidstab,--disable-libvidstab,vid.stab"
+PACKAGECONFIG[vidstab] = "--enable-libvidstab --enable-gpl,--disable-libvidstab,vid.stab"
 PACKAGECONFIG[x265] = "--enable-libx265,--disable-libx265,x265"
 
 KODIFFMPEGADDITIONALS ?= " \
