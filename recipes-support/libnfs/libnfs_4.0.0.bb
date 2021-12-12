@@ -5,7 +5,7 @@ BUGTRACKER = "https://github.com/sahlberg/libnfs"
 LICENSE = "LGPLv2.1 & GPLv3"
 LIC_FILES_CHKSUM = "file://COPYING;md5=825301ba17efc9d188ee0abd4b924ada"
 
-SRC_URI = "git://github.com/sahlberg/libnfs.git"
+SRC_URI = "git://github.com/sahlberg/libnfs.git;protocol=https;branch=master"
 SRCREV = "${PN}-${PV}"
 S = "${WORKDIR}/git"
 
