@@ -7,9 +7,9 @@ LIC_FILES_CHKSUM = "file://LICENSE.GPL;md5=930e2a5f63425d8dd72dbd7391c43c46"
 
 inherit kodi-addon
 
-DEPENDS += "expat"
+DEPENDS += "expat bento4"
 
-PV = "20.0.2"
+PV = "20.0.3"
 
 SRCREV = "${PV}-${KODICODENAME}"
 SRC_URI = "git://github.com/xbmc/inputstream.adaptive.git;nobranch=1;protocol=https"
