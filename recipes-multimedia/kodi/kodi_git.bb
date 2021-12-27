@@ -13,6 +13,20 @@ inherit cmake pkgconfig gettext python3-dir python3native
 SRC_URI:append = " \
 	file://0001-FindCrossGUID.cmake-fix-for-crossguid-0.2.2.patch \
 	file://kodi-995.01-fix-missing-wayland-scanner-pkg-config.patch \
+	file://libreelec/kodi-100.03-disable-online-check.patch \
+	file://libreelec/kodi-995.10-devinputmappings.patch \
+	file://libreelec/kodi-999.15-disable-using-tv-menu-language-by-default.patch \
+"
+	
+SRC_URI:append:rockchip = " \
+	file://rockchip/0001-WIP-DVDVideoCodecDRMPRIME-add-support-for-filters.patch \
+	file://rockchip/0002-WIP-DRMPRIME-deinterlace-filter.patch \
+"
+
+SRC_URI:append:rpi = " \
+	file://rpi/kodi-001-deinterlace.patch \
+	file://rpi/kodi-002-set-max-bpc-for-high-bit-depth-videos.patch \
+	file://rpi/kodi-003-add-colourspace-connector-property.patch \
 "
 
 OECMAKE_FIND_ROOT_PATH_MODE_PROGRAM = "BOTH"
@@ -179,18 +193,18 @@ do_configure:prepend() {
 	sed -i -e 's:CMAKE_NM}:}${TARGET_PREFIX}gcc-nm:' ${S}/xbmc/cores/DllLoader/exports/CMakeLists.txt
 }
 
-INSANE_SKIP:${PN} = "rpaths"
-
 FILES:${PN} += "${datadir}/metainfo ${datadir}/xsessions ${datadir}/icons ${libdir}/xbmc ${datadir}/xbmc ${libdir}/firewalld"
 FILES:${PN}-dbg += "${libdir}/kodi/.debug ${libdir}/kodi/*/.debug ${libdir}/kodi/*/*/.debug ${libdir}/kodi/*/*/*/.debug"
 
-# kodi uses some kind of dlopen() method for libcec so we need to add it manually
+
 # OpenGL builds need glxinfo, that's in mesa-demos
-RRECOMMENDS:${PN}:append = " \
+RRECOMMENDS:${PN} = " \
+  ${@bb.utils.contains('PACKAGECONFIG', 'x11', 'xdyinfo xrandr xinit mesa-demos', '', d)} \
+  kodi-addon-inputstream-adaptive \
+  kodi-addon-peripheral-joystick \
   libcec \
   libcurl \
   libnfs \
-  ${@bb.utils.contains('PACKAGECONFIG', 'x11', 'xdyinfo xrandr xinit mesa-demos', '', d)} \
   python3 \
   python3-compression \
   python3-ctypes \
@@ -224,3 +238,6 @@ RRECOMMENDS:${PN}:append:libc-glibc = " \
   glibc-charmap-utf-8 \
   glibc-localedata-en-us \
 "
+
+INSANE_SKIP:${PN} = "rpaths"
+

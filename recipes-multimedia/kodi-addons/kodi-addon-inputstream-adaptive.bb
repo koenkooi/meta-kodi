@@ -9,13 +9,12 @@ inherit kodi-addon
 
 DEPENDS += "expat"
 
-PV = "20.0.3"
+PV = "19.0.1"
 
-SRCREV = "785d2b10542f84417189409044b1165d47df23e2"
+SRCREV = "ea598cf9fab5961af507bdf87575d18e15d17b24"
 SRC_URI = "git://github.com/xbmc/inputstream.adaptive.git;nobranch=1;protocol=https"
 S = "${WORKDIR}/git"
 
 KODIADDONNAME = "inputstream.adaptive"
 
-EXTRA_OECMAKE += "-DENABLE_INTERNAL_BENTO4=ON"
 

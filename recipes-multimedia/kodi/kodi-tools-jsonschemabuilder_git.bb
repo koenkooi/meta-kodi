@@ -3,7 +3,7 @@ SUMMARY = "Kodi json schema builder"
 require kodi.inc
 inherit autotools-brokensep gettext native
 
-KODIWORKDIR = "${WORKDIR}/git/tools/depends/native/JsonSchemaBuilder/src"
+S = "${WORKDIR}/git/tools/depends/native/JsonSchemaBuilder/src"
 
 do_compile:prepend() {
     for i in $(find . -name "Makefile") ; do
@@ -16,3 +16,4 @@ do_compile:prepend() {
 }
 
 BBCLASSEXTEND = "native"
+

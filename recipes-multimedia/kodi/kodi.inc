@@ -3,19 +3,14 @@
 
 inherit kodi-common
 
-KODIVER ?= "20.0"
+KODIVER ?= "19.3"
 
-KODIURI ?= "gitsm://github.com/xbmc/xbmc.git;protocol=https;nobranch=1"
-KODIWORKDIR ?= "${WORKDIR}/git"
-
-KODIPATCHES ?= ""
-KODIADDONS ?= ""
-
-SRC_URI = "${KODIURI} ${KODIPATCHES} ${KODIADDONS}"
-SRCREV = "9bf56e0cbe7afd1ff29d5f4d7b68e8e301c7e5d5"
-S = "${KODIWORKDIR}"
+SRC_URI = "gitsm://github.com/xbmc/xbmc.git;protocol=https;nobranch=1"
+SRCREV = "49a04cd6a7f49ea9a0f05c492b11a3ba7c542a99"
+S = "${WORKDIR}/git"
 
 PV = "${KODIVER}-${KODICODENAME}"
 
 LICENSE = "GPLv2"
 LIC_FILES_CHKSUM ?= "file:///${WORKDIR}/git/LICENSE.md;md5=7b423f1c9388eae123332e372451a4f7"
+
