@@ -3,7 +3,7 @@ FILESEXTRAPATHS:prepend := "${THISDIR}/ffmpeg:"
 inherit retro-overrides
 
 SRC_URI = " \
-	git://github.com/xbmc/FFmpeg.git;protocol=https;branch=release/4.3-kodi \
+	git://github.com/xbmc/FFmpeg.git;protocol=https;branch=release/4.4-kodi \
 	file://libreelec/ffmpeg-001-libreelec.patch \
 "
 
@@ -14,13 +14,17 @@ SRC_URI:append:rpi = "	\
 SRC_URI:append:rockchip = " \
 	file://v4l2-drmprime/ffmpeg-001-v4l2-drmprime.patch \
 	file://v4l2-request/ffmpeg-001-v4l2-request.patch \
+	file://rockchip/ffmpeg-0001-v4l2_request-validate-supported-framesizes.patch \
 	file://rockchip/ffmpeg-0002-WIP-deint-filter.patch \
 	file://rockchip/ffmpeg-0003-libavfilter-v4l2deinterlace-dequeue-both-destination.patch \
+	file://rockchip/ffmpeg-0004-v4l2request-hevc-increase-max-slices.patch \
+	file://rockchip/ffmpeg-0006-deint_v4l2m2m-increase-input-and-output-buffers.patch \
+	file://rockchip/ffmpeg-0006-libavfilter-v4l2deinterlace-support-more-formats-aut.patch \
 "
 
 S = "${WORKDIR}/git"
-PV = "4.3.2-Matrix-19.2"
-SRCREV = "bdc2f5920ebc71b57d5ea413bd1a39e1703467b1"
+PV = "4.4-N-Alpha1"
+SRCREV = "${PV}"
 
 PACKAGECONFIG[dav1d] = "--enable-libdav1d,--disable-libdav1d,dav1d"
 PACKAGECONFIG[libass] = "--enable-libass,--disable-libass,libass"
