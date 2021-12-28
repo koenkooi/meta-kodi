@@ -12,14 +12,17 @@ SRC_URI:append:rpi = "	\
 "
 	
 SRC_URI:append:rockchip = " \
-	file://v4l2-drmprime/ffmpeg-001-v4l2-drmprime.patch \
-	file://v4l2-request/ffmpeg-001-v4l2-request.patch \
 	file://rockchip/ffmpeg-0001-v4l2_request-validate-supported-framesizes.patch \
 	file://rockchip/ffmpeg-0002-WIP-deint-filter.patch \
 	file://rockchip/ffmpeg-0003-libavfilter-v4l2deinterlace-dequeue-both-destination.patch \
 	file://rockchip/ffmpeg-0004-v4l2request-hevc-increase-max-slices.patch \
 	file://rockchip/ffmpeg-0006-deint_v4l2m2m-increase-input-and-output-buffers.patch \
 	file://rockchip/ffmpeg-0006-libavfilter-v4l2deinterlace-support-more-formats-aut.patch \
+"
+
+SRC_URI:append:armarch = " \
+        file://v4l2-drmprime/ffmpeg-001-v4l2-drmprime.patch \
+        file://v4l2-request/ffmpeg-001-v4l2-request.patch \
 "
 
 S = "${WORKDIR}/git"
@@ -47,7 +50,6 @@ PACKAGECONFIG:append = " \
 	${@bb.utils.contains('VDPAUSUPPORT', '1', 'vdpau', '', d)} \
 	dav1d \
 	fdk-aac \
-	gpl \
 	librtmp \
 	libass \
 	libfontconfig \
@@ -59,13 +61,11 @@ PACKAGECONFIG:append = " \
 	mp3lame \
 	openssl \
 	pulseaudio \
-	sdl2 \
 	vidstab \
 	vpx \
 	webp \
 	x264 \
 	x265 \
-	zimg \
 "
 
 PACKAGECONFIG:append:armarch = " \
@@ -152,4 +152,3 @@ EXTRA_FFCONF:append:rpi = " \
 "
 
 LICENSE_FLAGS_WHITELIST = "commercial"
-
