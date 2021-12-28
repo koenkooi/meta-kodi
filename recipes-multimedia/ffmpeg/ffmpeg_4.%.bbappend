@@ -73,9 +73,6 @@ PACKAGECONFIG:append:armarch = " \
 	v4l2-request \
 "
 
-VAAPISUPPORT:armarch = "0"
-VDPAUSUPPORT:armarch = "0"
-
 EXTRA_FFCONF = " \
 	--prefix=${prefix} \
 	--disable-static \
