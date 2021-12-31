@@ -47,13 +47,10 @@ DEPENDS += " \
   zip-native \
   \
   avahi \
-  boost \
   bzip2 \
   crossguid \
   curl \
   dcadec \
-  enca \
-  expat \
   faad2 \
   ffmpeg \
   flatbuffers \
@@ -67,18 +64,14 @@ DEPENDS += " \
   libcdio \
   libcec \
   libinput \
-  libmad \
   libmicrohttpd \
-  libmms \
-  libmodplug \
   libnfs \
   libpcre \
   libplist \
-  libsamplerate0 \
   libssh \
   libtinyxml \
-  libusb1 \
   libxkbcommon \
+  libxml2 \
   libxslt \
   lzo \
   mpeg2dec \
@@ -87,10 +80,8 @@ DEPENDS += " \
   spdlog \
   sqlite3 \
   taglib \
-  udev \
   virtual/egl \
   wavpack \
-  yajl \
   zlib \
 "
 
