@@ -232,3 +232,4 @@ RRECOMMENDS:${PN}:append:libc-glibc = " \
 
 INSANE_SKIP:${PN} = "rpaths"
 
+do_compile[network] = "1"
