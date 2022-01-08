@@ -5,7 +5,7 @@ LICENSE = "GPLv2+"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=4e572dadb7c9dcde312dfef274039145"
 
 SRCREV = "v${PV}"
-SRC_URI = "git://github.com/georgmartius/vid.stab.git;protocol=https"
+SRC_URI = "git://github.com/georgmartius/vid.stab.git;protocol=https;branch=master"
 S = "${WORKDIR}/git"
 
 do_patch() {
