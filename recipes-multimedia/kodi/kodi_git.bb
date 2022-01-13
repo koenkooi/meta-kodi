@@ -224,3 +224,5 @@ RRECOMMENDS:${PN}:append:libc-glibc = " \
   glibc-charmap-utf-8 \
   glibc-localedata-en-us \
 "
+
+do_compile[network] = "1"
