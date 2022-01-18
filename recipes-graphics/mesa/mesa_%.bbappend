@@ -1,4 +1,3 @@
-PACKAGECONFIG:append:class-target = " \
-    ${@bb.utils.contains('VAAPISUPPORT', '1', 'va', '', d)} \
-    ${@bb.utils.contains('VDPAUSUPPORT', '1', 'vdpau', '', d)} \
-"
+PACKAGECONFIG:append:x86:class-target = " va"
+PACKAGECONFIG:append:x86-64_class-target = " va"
+
