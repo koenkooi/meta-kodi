@@ -200,8 +200,10 @@ RRECOMMENDS:${PN} = " \
   python3-html \
   python3-json \
   python3-netclient \
+  python3-pycryptodome \
   python3-regex \
   python3-shell \
+  python3-six \
   python3-sqlite3 \
   python3-xmlrpc \
   tzdata-africa \
