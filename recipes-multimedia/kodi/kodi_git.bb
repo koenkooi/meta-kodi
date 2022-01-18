@@ -89,19 +89,16 @@ DEPENDS += " \
 CCACHE_DISABLE = "1"
 ASNEEDED = ""
 
-KODIVAAPIDEPENDS = "libva"
-KODIVAAPIDEPENDS:append:x86 = " intel-vaapi-driver"
-KODIVAAPIDEPENDS:append:x86-64 = " intel-vaapi-driver"
-
 PACKAGECONFIG ?= " \
-  ${@bb.utils.contains('VAAPISUPPORT', '1', 'vaapi', '', d)} \
-  ${@bb.utils.contains('VDPAUSUPPORT', '1', 'vdpau', '', d)} \
-  ${@bb.utils.filter('DISTRO_FEATURES', 'bluetooth lirc pulseaudio samba systemd', d)} \
+  ${@bb.utils.filter('DISTRO_FEATURES', 'bluetooth lirc pulseaudio samba', d)} \
   ${@bb.utils.filter('KODIGRAPHICALBACKEND', 'gbm wayland x11', d)} \
   airtunes \
   joystick \
   lcms \
 "
+
+PACKAGECONFIG:append:x86 = " vaapi"
+PACKAGECONFIG:append:x86-64 = " vaapi"
 
 # Core windowing system choices
 
@@ -122,7 +119,7 @@ PACKAGECONFIG[optical] = "-DENABLE_OPTICAL=ON,-DENABLE_OPTICAL=OFF"
 PACKAGECONFIG[pulseaudio] = "-DENABLE_PULSEAUDIO=ON,-DENABLE_PULSEAUDIO=OFF,pulseaudio"
 PACKAGECONFIG[samba] = ",,samba"
 PACKAGECONFIG[systemd] = ",,,kodi-systemd-service"
-PACKAGECONFIG[vaapi] = "-DENABLE_VAAPI=ON,-DENABLE_VAAPI=OFF,${KODIVAAPIDEPENDS},${KODIVAAPIDEPENDS}"
+PACKAGECONFIG[vaapi] = "-DENABLE_VAAPI=ON,-DENABLE_VAAPI=OFF,libva intel-vaapi-driver,intel-vaapi-driver"
 PACKAGECONFIG[vdpau] = "-DENABLE_VDPAU=ON,-DENABLE_VDPAU=OFF,libvdpau,mesa-vdpau-drivers"
 
 # Compilation tunes
