@@ -35,7 +35,7 @@ PACKAGECONFIG[librtmp] = "--enable-librtmp,--disable-librtmp,rtmpdump"
 PACKAGECONFIG[libv4l2] = "--enable-libv4l2,--disable-libv4l2,v4l-utils"
 PACKAGECONFIG[pulseaudio] = "--enable-libpulse,--disable-libpulse,pulseaudio"
 PACKAGECONFIG[v4l2-m2m] = "--enable-v4l2_m2m --enable-libdrm,--disable-v4l2_m2m,libdrm"
-PACKAGECONFIG[v4l2-request] = "--enable-v4l2-request --enable-libudev,--disable-v4l2-request"
+PACKAGECONFIG[v4l2-request] = "--enable-v4l2-request --enable-libudev"
 PACKAGECONFIG[webp] = "--enable-libwebp,--disable-libwebp,libwebp"
 PACKAGECONFIG[zimg] = "--enable-libzimg,--disable-libzimg,zimg"
 PACKAGECONFIG[libxml2] = "--enable-libxml2,--disable-libxml2,libxml2"
@@ -43,8 +43,6 @@ PACKAGECONFIG[vidstab] = "--enable-libvidstab --enable-gpl,--disable-libvidstab,
 PACKAGECONFIG[x265] = "--enable-libx265,--disable-libx265,x265"
 
 PACKAGECONFIG:append = " \
-	${@bb.utils.contains('VAAPISUPPORT', '1', 'vaapi', '', d)} \
-	${@bb.utils.contains('VDPAUSUPPORT', '1', 'vdpau', '', d)} \
 	dav1d \
 	fdk-aac \
 	librtmp \
@@ -69,6 +67,9 @@ PACKAGECONFIG:append:armarch = " \
 	v4l2-m2m \
 	v4l2-request \
 "
+
+PACKAGECONFIG:append:x86 = " vaapi"
+PACKAGECONFIG:append:x86-64 = " vaapi"
 
 EXTRA_FFCONF = " \
 	--prefix=${prefix} \
