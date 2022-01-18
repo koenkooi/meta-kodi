@@ -1,7 +1,5 @@
 FILESEXTRAPATHS:prepend := "${THISDIR}/ffmpeg:"
 
-inherit retro-overrides
-
 SRC_URI = " \
 	git://github.com/xbmc/FFmpeg.git;protocol=https;branch=release/4.4-kodi \
 	file://libreelec/ffmpeg-001-libreelec.patch \
@@ -63,10 +61,8 @@ PACKAGECONFIG:append = " \
 	x265 \
 "
 
-PACKAGECONFIG:append:armarch = " \
-	v4l2-m2m \
-	v4l2-request \
-"
+PACKAGECONFIG:append:arm = "v4l2-m2m v4l2-request"
+PACKAGECONFIG:append:aarch64 = "v4l2-m2m v4l2-request"
 
 PACKAGECONFIG:append:x86 = " vaapi"
 PACKAGECONFIG:append:x86-64 = " vaapi"
@@ -115,7 +111,7 @@ EXTRA_FFCONF = " \
 	--extra-cflags="${TARGET_CFLAGS} ${HOST_CC_ARCH}${TOOLCHAIN_OPTIONS} -ffunction-sections -fdata-sections -fno-aggressive-loop-optimizations" \
 "
 
-EXTRA_FFCONF:append:armarch = " \
+EXTRA_FFCONF:append:arm = " \
 	--disable-amd3dnow \
 	--disable-amd3dnowext \
 	--disable-mmx \
@@ -132,8 +128,32 @@ EXTRA_FFCONF:append:armarch = " \
 	--disable-fma3 \
 	--disable-fma4 \
 	--disable-avx2 \
-	${@bb.utils.contains("TARGET_ARCH", "arm", "--enable-armv6 --enable-armv6t2 --enable-vfp --enable-neon", "", d)} \
-	${@bb.utils.contains("TUNE_FEATURES", "aarch64", "--enable-armv8 --enable-vfp --enable-neon", "", d)} \
+	--enable-armv6 \
+	--enable-armv6t2 \
+	--enable-vfp \
+	--enable-neon \
+"
+
+EXTRA_FFCONF:append:aarch64 = " \
+	--disable-amd3dnow \
+	--disable-amd3dnowext \
+	--disable-mmx \
+	--disable-mmxext \
+	--disable-sse \
+	--disable-sse2 \
+	--disable-sse3 \
+	--disable-ssse3 \
+	--disable-sse4 \
+	--disable-sse42 \
+	--disable-x86asm \
+	--disable-avx \
+	--disable-xop \
+	--disable-fma3 \
+	--disable-fma4 \
+	--disable-avx2 \
+	--enable-armv8 \
+	--enable-vfp \
+	--enable-neon \
 "
 
 EXTRA_FFCONF:append:rpi = " \
