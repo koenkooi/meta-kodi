@@ -9,8 +9,8 @@ inherit kodi-addon
 
 DEPENDS = "libtinyxml2 udev"
 
-PV = "20.0.0"
-SRCREV = "${PV}-${KODICODENAME}"
+PV = "20.1.0"
+SRCREV = "f19f6f850fb020d4448ab07bbc4b834ef99ede3a"
 SRC_URI = "git://github.com/xbmc/peripheral.joystick.git;nobranch=1;protocol=https"
 S = "${WORKDIR}/git"
 

@@ -7,9 +7,9 @@ LIC_FILES_CHKSUM = "file://LICENSE.md;md5=435d4178fd08b25f9cf911f1c3a0ce1d"
 
 inherit kodi-addon
 
-PV = "20.1.2"
+PV = "20.2.2"
 
-SRCREV = "${PV}-${KODICODENAME}"
+SRCREV = "5486bce5bfd20e947885c28a46750d3140989d4c"
 SRC_URI = "git://github.com/kodi-pvr/pvr.hts.git;nobranch=1;protocol=https"
 S = "${WORKDIR}/git"
 
