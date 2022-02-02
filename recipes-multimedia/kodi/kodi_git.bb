@@ -189,6 +189,9 @@ FILES:${PN}-dbg += "${libdir}/kodi/.debug ${libdir}/kodi/*/.debug ${libdir}/kodi
 RRECOMMENDS:${PN} = " \
   ${@bb.utils.contains('PACKAGECONFIG', 'x11', 'xdyinfo xrandr xinit mesa-demos', '', d)} \
   kodi-addon-inputstream-adaptive \
+  kodi-addon-inputstream-rtmp \
+  kodi-addon-inputstream-ffmpegdirect \
+  kodi-addon-inputstreamhelper \
   kodi-addon-peripheral-joystick \
   libcec \
   libcurl \
