@@ -17,5 +17,16 @@ SRC_URI = " \
 S = "${WORKDIR}/git"
 
 KODIADDONNAME = "script.module.inputstreamhelper"
+KODIADDONDIR = "${datadir}/kodi/addons"
 
+do_install() {
+	sed -i "s|2.25.0|3.0.1|" ${S}/addon.xml
+	install -d ${D}${KODIADDONDIR}/${KODIADDONNAME}/lib
+	install -m644 ${S}/addon.xml ${D}${KODIADDONDIR}/${KODIADDONNAME}
+	install -m755 ${S}/default.py ${D}${KODIADDONDIR}/${KODIADDONNAME}
+	cp -rf ${S}/resources ${D}${KODIADDONDIR}/${KODIADDONNAME}
+	cp -rf ${B}/lib/inputstreamhelper ${D}${KODIADDONDIR}/${KODIADDONNAME}/lib
+}
+
+FILES:${PN} = "${KODIADDONDIR}"
 

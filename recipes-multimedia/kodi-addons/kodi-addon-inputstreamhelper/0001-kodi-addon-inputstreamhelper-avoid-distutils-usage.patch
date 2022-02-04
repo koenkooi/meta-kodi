@@ -1,16 +1,17 @@
-From 05a821c3ea019fa6b17e7ec37cfe3a4483a52b8c Mon Sep 17 00:00:00 2001
+From 92e9292be3509dfa1b8044df15d1ff9b121aa5fb Mon Sep 17 00:00:00 2001
 From: Markus Volk <f_l_k@t-online.de>
-Date: Tue, 18 Jan 2022 17:25:06 +0100
-Subject: [PATCH] kodi-addon-inputstreamhelper: avoid distutils usage
+Date: Fri, 4 Feb 2022 14:01:20 +0100
+Subject: [PATCH] avoid distutils usage
 
 LooseVersion is part of distutils which will be removed from python 3.12.
 Add a simplified version found in sympy and use that instead.
+
 ---
  lib/inputstreamhelper/__init__.py          | 14 +++++---------
- lib/inputstreamhelper/utils.py             | 16 ++++++++++++++++
+ lib/inputstreamhelper/utils.py             | 17 +++++++++++++++++
  lib/inputstreamhelper/widevine/arm.py      |  7 +++----
  lib/inputstreamhelper/widevine/widevine.py |  9 ++++-----
- 4 files changed, 28 insertions(+), 18 deletions(-)
+ 4 files changed, 29 insertions(+), 18 deletions(-)
 
 diff --git a/lib/inputstreamhelper/__init__.py b/lib/inputstreamhelper/__init__.py
 index c58a6e9..bf741fe 100644
@@ -66,14 +67,22 @@ index c58a6e9..bf741fe 100644
  
          log(3, 'HLS is unsupported on {addon} version {version}', addon=self.inputstream_addon, version=self._inputstream_version())
 diff --git a/lib/inputstreamhelper/utils.py b/lib/inputstreamhelper/utils.py
-index 21a9cf6..79690f9 100644
+index 21a9cf6..afe49bf 100644
 --- a/lib/inputstreamhelper/utils.py
 +++ b/lib/inputstreamhelper/utils.py
-@@ -329,3 +329,19 @@ def remove_tree(path):
+@@ -4,6 +4,7 @@
+ 
+ from __future__ import absolute_import, division, unicode_literals
+ import os
++import re
+ from time import time
+ from socket import timeout
+ from ssl import SSLError
+@@ -329,3 +330,19 @@ def remove_tree(path):
      """Remove an entire directory tree"""
      from shutil import rmtree
      rmtree(compat_path(path))
-+    
++
 +_component_re = re.compile(r'(\d+ | [a-z]+ | \.)', re.VERBOSE)
 +
 +def version_tuple(vstring):
