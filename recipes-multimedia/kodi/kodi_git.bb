@@ -188,11 +188,7 @@ FILES:${PN}-dbg += "${libdir}/kodi/.debug ${libdir}/kodi/*/.debug ${libdir}/kodi
 # OpenGL builds need glxinfo, that's in mesa-demos
 RRECOMMENDS:${PN} = " \
   ${@bb.utils.contains('PACKAGECONFIG', 'x11', 'xdyinfo xrandr xinit mesa-demos', '', d)} \
-  kodi-addon-inputstream-adaptive \
-  kodi-addon-inputstream-rtmp \
-  kodi-addon-inputstream-ffmpegdirect \
-  kodi-addon-inputstreamhelper \
-  kodi-addon-peripheral-joystick \
+  ${KODI_PLUGINS_INSTALL} \
   libcec \
   libcurl \
   libnfs \
@@ -230,6 +226,18 @@ RRECOMMENDS:${PN}:append:libc-glibc = " \
   glibc-gconv-utf-32 \
   glibc-charmap-utf-8 \
   glibc-localedata-en-us \
+"
+
+KODI_PLUGINS_INSTALL ??= " \
+  kodi-addon-inputstream-adaptive \
+  kodi-addon-inputstream-rtmp \
+  kodi-addon-inputstream-ffmpegdirect \
+  kodi-addon-inputstreamhelper \
+  kodi-addon-netflix \
+  kodi-addon-peripheral-joystick \
+  kodi-addon-ardundzdf \
+  kodi-addon-radio \
+  kodi-addon-fluxfm \
 "
 
 INSANE_SKIP:${PN} = "rpaths"
