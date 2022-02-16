@@ -5,7 +5,7 @@ LICENSE = "Proprietary"
 LIC_FILES_CHKSUM = "file://${COMMON_LICENSE_DIR}/Proprietary;md5=0557f9d92cf58f2ccdd50f62f8ac0b28"
 
 SRC_URI = "git://github.com/MarkusVolk/fluxfm.git;branch=master;protocol=https"
-SRCREV = "fd0f6de8fb7b7ceb511c541d0dfeefbecd754304"
+SRCREV = "53d8d7aa6d5f39e71c69ee0a7da96da75e1c5ea7"
 S = "${WORKDIR}/git/${KODIADDONNAME}"
 PV = "1.0.12"
 
