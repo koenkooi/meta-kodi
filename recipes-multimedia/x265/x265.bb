@@ -9,7 +9,7 @@ DEPENDS:append:x86-64:class-target = " nasm-native"
 
 PV = "3.4"
 
-SRCREV = "${PV}"
+SRCREV = "07295ba7ab551bb9c1580fdaee3200f1b45711b7"
 SRC_URI = "git://github.com/videolan/x265.git;protocol=https;nobranch=1"
 S = "${WORKDIR}/git/source"
 
