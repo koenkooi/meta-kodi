@@ -3,7 +3,7 @@ HOMEPAGE = "https://github.com/romanvm/kodi.six"
 LICENSE = "GPL-3.0"
 LIC_FILES_CHKSUM = "file://LICENSE.txt;md5=ff3103b5db8ba4e2c66c511b7a73e407"
 
-PV = "0.1.3.1"
+PV = "0.13.1"
 
 SRCREV = "2810f1ffd0f4ace0b37735d97a16f5defc36c608"
 SRC_URI = "git://github.com/romanvm/kodi.six.git;branch=master;protocol=https"
