@@ -166,4 +166,4 @@ EXTRA_FFCONF:append:rpi = " \
 	--disable-hwaccel=vp9_v4l2request \
 "
 
-LICENSE_FLAGS_WHITELIST = "commercial"
+LICENSE_FLAGS_ACCEPTED = "commercial"
