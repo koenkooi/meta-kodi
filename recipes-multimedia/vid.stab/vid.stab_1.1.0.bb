@@ -4,7 +4,7 @@ HOMEPAGE = "http://public.hronopik.de/vid.stab/"
 LICENSE = "GPLv2+"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=4e572dadb7c9dcde312dfef274039145"
 
-SRCREV = "v${PV}"
+SRCREV = "60d65da212c0d834cdfdc95d3404d42eab686d16"
 SRC_URI = "git://github.com/georgmartius/vid.stab.git;protocol=https;branch=master"
 S = "${WORKDIR}/git"
 
