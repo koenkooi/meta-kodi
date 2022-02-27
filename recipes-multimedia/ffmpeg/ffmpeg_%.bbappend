@@ -21,7 +21,7 @@ SRC_URI:append:rockchip = " \
 "
 
 S = "${WORKDIR}/git"
-PV = "4.4-N-Alpha1"
+PV = "4.4.1-N-Alpha1"
 SRCREV = "293e067b0c0f592628ee0de71769ed2e9c3d07f2"
 
 PACKAGECONFIG[dav1d] = "--enable-libdav1d,--disable-libdav1d,dav1d"

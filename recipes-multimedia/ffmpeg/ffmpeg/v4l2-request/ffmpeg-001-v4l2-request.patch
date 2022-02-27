@@ -1254,7 +1254,7 @@ Signed-off-by: Jonas Karlman <jonas@kwiboo.se>
  2 files changed, 2 insertions(+), 1 deletion(-)
 
 diff --git a/libavcodec/h264_slice.c b/libavcodec/h264_slice.c
-index 2d0605c7f4..c3a7338a70 100644
+index 0b415ada6f..b3e3ef6183 100644
 --- a/libavcodec/h264_slice.c
 +++ b/libavcodec/h264_slice.c
 @@ -1830,7 +1830,7 @@ static int h264_slice_header_parse(const H264Context *h, H264SliceContext *sl,
@@ -1264,8 +1264,8 @@ index 2d0605c7f4..c3a7338a70 100644
 -        get_ue_golomb_long(&sl->gb); /* idr_pic_id */
 +        sl->idr_pic_id = get_ue_golomb_long(&sl->gb);
  
-     if (sps->poc_type == 0) {
-         sl->poc_lsb = get_bits(&sl->gb, sps->log2_max_poc_lsb);
+     sl->poc_lsb = 0;
+     sl->delta_poc_bottom = 0;
 diff --git a/libavcodec/h264dec.h b/libavcodec/h264dec.h
 index b7b19ba4f1..0698ab95ba 100644
 --- a/libavcodec/h264dec.h
@@ -1312,9 +1312,9 @@ index c3a7338a70..c28b58cd5d 100644
          sl->idr_pic_id = get_ue_golomb_long(&sl->gb);
  
 +    pos = sl->gb.index;
+     sl->poc_lsb = 0;
+     sl->delta_poc_bottom = 0;
      if (sps->poc_type == 0) {
-         sl->poc_lsb = get_bits(&sl->gb, sps->log2_max_poc_lsb);
- 
 @@ -1845,6 +1846,7 @@ static int h264_slice_header_parse(const H264Context *h, H264SliceContext *sl,
          if (pps->pic_order_present == 1 && picture_structure == PICT_FRAME)
              sl->delta_poc[1] = get_se_golomb(&sl->gb);
