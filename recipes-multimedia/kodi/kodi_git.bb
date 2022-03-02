@@ -11,7 +11,6 @@ require ${BPN}.inc
 inherit cmake pkgconfig gettext python3-dir python3native
 
 SRC_URI:append = " \
-	file://0001-FindCrossGUID.cmake-fix-for-crossguid-0.2.2.patch \
 	file://kodi-995.01-fix-missing-wayland-scanner-pkg-config.patch \
 	file://libreelec/kodi-100.03-disable-online-check.patch \
 	file://libreelec/kodi-995.10-devinputmappings.patch \
@@ -48,7 +47,6 @@ DEPENDS += " \
   \
   avahi \
   bzip2 \
-  crossguid \
   curl \
   dcadec \
   faad2 \
@@ -144,7 +142,7 @@ KODI_OPENGL_STANDARD ?= "gles"
 EXTRA_OECMAKE = " \
     -DAPP_RENDER_SYSTEM=${KODI_OPENGL_STANDARD} \
     \
-    -DENABLE_INTERNAL_CROSSGUID=OFF \
+    -DENABLE_INTERNAL_CROSSGUID=ON \
     \
     -DNATIVEPREFIX=${STAGING_DIR_NATIVE}${prefix} \
     -DJava_JAVA_EXECUTABLE=/usr/bin/java \
@@ -239,6 +237,8 @@ KODI_PLUGINS_INSTALL ??= " \
   kodi-addon-ardundzdf \
   kodi-addon-radio \
   kodi-addon-fluxfm \
+  kodi-addon-pvr-iptvsimple \
+  kodi-addon-pvr-plutotv \
 "
 
 INSANE_SKIP:${PN} = "rpaths"
