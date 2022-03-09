@@ -1,6 +1,6 @@
 SUMMARY = "Kodi six addon."
 HOMEPAGE = "https://github.com/romanvm/kodi.six"
-LICENSE = "GPL-3.0"
+LICENSE = "GPL-3.0-only"
 LIC_FILES_CHKSUM = "file://LICENSE.txt;md5=ff3103b5db8ba4e2c66c511b7a73e407"
 
 PV = "0.13.1"

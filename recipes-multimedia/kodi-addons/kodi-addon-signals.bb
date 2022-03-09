@@ -1,7 +1,7 @@
 SUMMARY = "Kodi signal addon."
 HOMEPAGE = "https://github.com/ruuk/script.module.addon.signals"
 
-LICENSE = "LGPL-2.1"
+LICENSE = "LGPL-2.1-only"
 LIC_FILES_CHKSUM = "file://LICENSE.txt;md5=243b725d71bb5df4a1e5920b344b86ad"
 
 PV = "0.0.6"

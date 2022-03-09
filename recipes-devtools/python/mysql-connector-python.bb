@@ -1,5 +1,5 @@
 SUMMARY = "MySQL Connector/Python enables Python programs to access MySQL databases."
-LICENSE = "GPL-2.0"
+LICENSE = "GPL-2.0-only"
 LIC_FILES_CHKSUM = "file://LICENSE.txt;md5=e94afccb06cf8ffefdd2361ea575a821"
 
 SRC_URI = "git://github.com/mysql/mysql-connector-python.git;protocol=https;branch=master"
