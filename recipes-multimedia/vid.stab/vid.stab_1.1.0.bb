@@ -1,7 +1,7 @@
 SUMMARY = "Video stabilization library "
 HOMEPAGE = "http://public.hronopik.de/vid.stab/"
 
-LICENSE = "GPLv2+"
+LICENSE = "GPL-2.0-only"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=4e572dadb7c9dcde312dfef274039145"
 
 SRCREV = "60d65da212c0d834cdfdc95d3404d42eab686d16"
