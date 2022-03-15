@@ -13,6 +13,7 @@ inherit cmake pkgconfig gettext python3-dir python3native
 SRC_URI:append = " \
 	file://kodi-995.01-fix-missing-wayland-scanner-pkg-config.patch \
 	file://0001-fmt-hack-to-compile-with-fmt-8.1.patch \
+	file://0001-FindCrossGUID.cmake-fix-for-crossguid-0.2.2.patch \
 	file://libreelec/kodi-100.03-disable-online-check.patch \
 	file://libreelec/kodi-995.10-devinputmappings.patch \
 	file://libreelec/kodi-999.15-disable-using-tv-menu-language-by-default.patch \
@@ -34,6 +35,7 @@ OECMAKE_FIND_ROOT_PATH_MODE_PROGRAM = "BOTH"
 DEPENDS += " \
   autoconf-native \
   automake-native \
+  crossguid \
   curl-native \
   flatbuffers-native \
   googletest-native \
@@ -143,7 +145,7 @@ KODI_OPENGL_STANDARD ?= "gles"
 EXTRA_OECMAKE = " \
     -DAPP_RENDER_SYSTEM=${KODI_OPENGL_STANDARD} \
     \
-    -DENABLE_INTERNAL_CROSSGUID=ON \
+    -DENABLE_INTERNAL_CROSSGUID=OFF \
     \
     -DNATIVEPREFIX=${STAGING_DIR_NATIVE}${prefix} \
     -DJava_JAVA_EXECUTABLE=/usr/bin/java \
