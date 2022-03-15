@@ -8,7 +8,7 @@ inherit setuptools3
 
 PV = "0.5.8"
 
-SRCREV = "b21b228c22309ea62ec90627c983fa42ce7c7d4d"
+SRCREV = "ee0d06a1080b468763e19f284d38824613bd739e"
 SRC_URI = " \
 	git://github.com/emilsvennesson/script.module.inputstreamhelper.git;nobranch=1;protocol=https \
 	file://0001-kodi-addon-inputstreamhelper-avoid-distutils-usage.patch \
