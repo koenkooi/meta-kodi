@@ -11,7 +11,6 @@ require ${BPN}.inc
 inherit cmake pkgconfig gettext python3-dir python3native
 
 SRC_URI:append = " \
-	file://0001-fmt-hack-to-compile-with-fmt-8.1.patch \
 	file://libreelec/kodi-100.03-disable-online-check.patch \
 	file://libreelec/kodi-995.10-devinputmappings.patch \
 	file://libreelec/kodi-999.15-disable-using-tv-menu-language-by-default.patch \
