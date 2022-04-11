@@ -6,9 +6,9 @@ LIC_FILES_CHKSUM = "file://LICENSE.txt;md5=e7d24110ae7397fb8d7bbe5265aac078"
 
 inherit setuptools3
 
-PV = "0.5.8"
+PV = "0.5.9"
 
-SRCREV = "ee0d06a1080b468763e19f284d38824613bd739e"
+SRCREV = "8333a8f2acc426ef24300ef39d3257342a0cb95a"
 SRC_URI = " \
 	git://github.com/emilsvennesson/script.module.inputstreamhelper.git;nobranch=1;protocol=https \
 "
