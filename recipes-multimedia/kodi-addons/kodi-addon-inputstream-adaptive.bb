@@ -11,7 +11,7 @@ DEPENDS += "expat"
 
 PV = "20.1.2"
 
-SRCREV = "02d2faf5f770e072fe12987937c186ffdd71533a"
+SRCREV = "78398755ac051235327dcda709d00f5e3652c4fa"
 SRC_URI = "git://github.com/xbmc/inputstream.adaptive.git;nobranch=1;protocol=https"
 S = "${WORKDIR}/git"
 
