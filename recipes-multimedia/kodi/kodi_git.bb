@@ -8,7 +8,7 @@ HOMEPAGE = "https://kodi.tv/"
 BUGTRACKER = "https://github.com/xbmc/xbmc/issues"
 
 require ${BPN}.inc
-inherit cmake pkgconfig gettext python3-dir python3native
+inherit ccache cmake pkgconfig gettext python3-dir python3native
 
 SRC_URI:append = " \
 	file://libreelec/kodi-100.03-disable-online-check.patch \
@@ -30,38 +30,44 @@ SRC_URI:append:rpi = " \
 OECMAKE_FIND_ROOT_PATH_MODE_PROGRAM = "BOTH"
 
 DEPENDS += " \
+  \
+  alsa-lib \
   autoconf-native \
   automake-native \
-  crossguid \
-  curl-native \
-  flatbuffers-native \
-  googletest-native \
-  gperf-native \
-  kodi-tools-jsonschemabuilder-native \
-  kodi-tools-texturepacker-native \
-  nasm-native \
-  swig-native \
-  unzip-native \
-  yasm-native \
-  zip-native \
-  \
   avahi \
   bzip2 \
+  bzip2 \
+  crossguid \
   curl \
+  curl-native \
+  dbus \
   dcadec \
   faad2 \
   ffmpeg \
   flatbuffers \
+  flatbuffers-native \
   fmt \
   fontconfig \
+  freetype \
   fribidi \
   fstrcmp \
   giflib \
+  gmp \
+  gnutls \
+  googletest-native \
+  gperf-native \
   harfbuzz \
+  kodi-tools-jsonschemabuilder-native \
+  kodi-tools-texturepacker-native \
   libass \
   libcdio \
   libcec \
+  libdrm \
+  libevdev \
+  libgcrypt \
+  libgpg-error \
   libinput \
+  libjpeg-turbo \
   libmicrohttpd \
   libnfs \
   libpcre \
@@ -73,19 +79,23 @@ DEPENDS += " \
   libxslt \
   lzo \
   mpeg2dec \
+  mtdev \
+  nasm-native \
+  nettle \
+  openssl \
   python3 \
   rapidjson \
   spdlog \
   sqlite3 \
+  swig-native \
   taglib \
+  unzip-native \
   virtual/egl \
   wavpack \
+  yasm-native \
+  zip-native \
   zlib \
 "
-
-# breaks compilation
-CCACHE_DISABLE = "1"
-ASNEEDED = ""
 
 PACKAGECONFIG ?= " \
   ${@bb.utils.filter('DISTRO_FEATURES', 'bluetooth lirc pulseaudio samba', d)} \
@@ -112,7 +122,7 @@ PACKAGECONFIG[dvdcss] = "-DENABLE_DVDCSS=ON,-DENABLE_DVDCSS=OFF"
 PACKAGECONFIG[joystick] = ",,,kodi-addon-peripheral-joystick"
 PACKAGECONFIG[lcms] = ",,lcms"
 PACKAGECONFIG[lirc] = ",,lirc"
-PACKAGECONFIG[mysql] = "-DENABLE_MYSQLCLIENT=ON,-DENABLE_MYSQLCLIENT=OFF,mysql5"
+PACKAGECONFIG[mysql] = "-DENABLE_MYSQLCLIENT=ON ,-DENABLE_MYSQLCLIENT=OFF,mysql5"
 PACKAGECONFIG[optical] = "-DENABLE_OPTICAL=ON,-DENABLE_OPTICAL=OFF"
 PACKAGECONFIG[pulseaudio] = "-DENABLE_PULSEAUDIO=ON,-DENABLE_PULSEAUDIO=OFF,pulseaudio"
 PACKAGECONFIG[samba] = ",,samba"
@@ -192,6 +202,10 @@ RRECOMMENDS:${PN} = " \
   python3 \
   python3-compression \
   python3-ctypes \
+  python3-crypt \
+  python3-datetime \
+  python3-db \
+  python3-image \
   python3-difflib \
   python3-distutils \
   python3-html \
@@ -201,6 +215,7 @@ RRECOMMENDS:${PN} = " \
   python3-regex \
   python3-shell \
   python3-six \
+  python3-setuptools \
   python3-sqlite3 \
   python3-xmlrpc \
   tzdata-africa \
