@@ -1,0 +1,53 @@
+From c662b90b5b26a61f1a55d89f4770b41e4bbcdd93 Mon Sep 17 00:00:00 2001
+From: Markus Volk <f_l_k@t-online.de>
+Date: Sun, 8 May 2022 14:09:06 +0200
+Subject: [PATCH] mysqldataset: we use mysql includedir name for mariadb also
+
+---
+ xbmc/dbwrappers/mysqldataset.h | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/xbmc/dbwrappers/mysqldataset.h b/xbmc/dbwrappers/mysqldataset.h
+index 91bf12dc96e..d4696042b42 100644
+--- a/xbmc/dbwrappers/mysqldataset.h
++++ b/xbmc/dbwrappers/mysqldataset.h
+@@ -10,11 +10,11 @@
+ 
+ #include <stdio.h>
+ #include "dataset.h"
+-#ifdef HAS_MYSQL
++//#ifdef HAS_MYSQL
+ #include <mysql/mysql.h>
+-#elif defined(HAS_MARIADB)
+-#include <mariadb/mysql.h>
+-#endif
++//#elif defined(HAS_MARIADB)
++//#include <mariadb/mysql.h>
++//#endif
+ 
+ namespace dbiplus {
+ /***************** Class MysqlDatabase definition ******************
+diff --git a/xbmc/dbwrappers/mysqldataset.cpp b/xbmc/dbwrappers/mysqldataset.cpp
+index 9c7d13ad5c4..244756cdd15 100644
+--- a/xbmc/dbwrappers/mysqldataset.cpp
++++ b/xbmc/dbwrappers/mysqldataset.cpp
+@@ -19,11 +19,11 @@
+ #include <iostream>
+ #include <set>
+ #include <string>
+-#ifdef HAS_MYSQL
++//#ifdef HAS_MYSQL
+ #include <mysql/errmsg.h>
+-#elif defined(HAS_MARIADB)
+-#include <mariadb/errmsg.h>
+-#endif
++//#elif defined(HAS_MARIADB)
++//#include <mariadb/errmsg.h>
++//#endif
+ 
+ #ifdef TARGET_POSIX
+ #include "platform/posix/ConvUtils.h"
+
+-- 
+2.25.1
+
