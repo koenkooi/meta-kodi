@@ -11,6 +11,7 @@ require ${BPN}.inc
 inherit ccache cmake pkgconfig gettext python3-dir python3native
 
 SRC_URI:append = " \
+	file://0001-mysqldataset-we-use-mysql-includedir-name-for-mari.patch \
 	file://libreelec/kodi-100.03-disable-online-check.patch \
 	file://libreelec/kodi-995.10-devinputmappings.patch \
 	file://libreelec/kodi-999.15-disable-using-tv-menu-language-by-default.patch \
@@ -30,19 +31,16 @@ SRC_URI:append:rpi = " \
 OECMAKE_FIND_ROOT_PATH_MODE_PROGRAM = "BOTH"
 
 DEPENDS += " \
-  \
   alsa-lib \
   autoconf-native \
   automake-native \
   avahi \
   bzip2 \
-  bzip2 \
   crossguid \
   curl \
   curl-native \
   dbus \
-  dcadec \
-  faad2 \
+  expat \
   ffmpeg \
   flatbuffers \
   flatbuffers-native \
@@ -64,26 +62,29 @@ DEPENDS += " \
   libcec \
   libdrm \
   libevdev \
+  libffi \
   libgcrypt \
   libgpg-error \
   libinput \
   libjpeg-turbo \
   libmicrohttpd \
   libnfs \
-  libpcre \
   libplist \
-  libssh \
+  libpng \
   libtinyxml \
-  libxkbcommon \
+  libusb \
   libxml2 \
   libxslt \
   lzo \
-  mpeg2dec \
-  mtdev \
   nasm-native \
   nettle \
   openssl \
+  p8platform \
+  pcre \
   python3 \
+  python3-pillow \
+  python3-pycryptodome \
+  python3-setuptools \
   rapidjson \
   spdlog \
   sqlite3 \
@@ -91,18 +92,19 @@ DEPENDS += " \
   taglib \
   unzip-native \
   virtual/egl \
-  wavpack \
+  xz \
   yasm-native \
   zip-native \
   zlib \
 "
 
 PACKAGECONFIG ?= " \
-  ${@bb.utils.filter('DISTRO_FEATURES', 'bluetooth lirc pulseaudio samba', d)} \
+  ${@bb.utils.filter('DISTRO_FEATURES', 'systemd bluetooth lirc pulseaudio pipewire samba', d)} \
   ${@bb.utils.filter('KODIGRAPHICALBACKEND', 'gbm wayland x11', d)} \
   airtunes \
   joystick \
   lcms \
+  lto \
 "
 
 PACKAGECONFIG:append:x86 = " vaapi"
@@ -115,16 +117,18 @@ PACKAGECONFIG[wayland] = "-DCORE_PLATFORM_NAME=wayland -DWAYLAND_RENDER_SYSTEM=g
 PACKAGECONFIG[x11] = "-DCORE_PLATFORM_NAME=x11,,libxinerama libxmu libxrandr libxtst glew"
 
 # Features
-
-PACKAGECONFIG[airtunes] = "-DENABLE_AIRTUNES=ON,-DENABLE_AIRTUNES=OFF"
+PACKAGECONFIG[airtunes] = "-DENABLE_AIRTUNES=ON,-DENABLE_AIRTUNES=OFF,shairplay"
 PACKAGECONFIG[bluetooth] = ",,bluez5"
+PACKAGECONFIG[doxygen] = ",,doxygen-native"
 PACKAGECONFIG[dvdcss] = "-DENABLE_DVDCSS=ON,-DENABLE_DVDCSS=OFF"
 PACKAGECONFIG[joystick] = ",,,kodi-addon-peripheral-joystick"
 PACKAGECONFIG[lcms] = ",,lcms"
 PACKAGECONFIG[lirc] = ",,lirc"
 PACKAGECONFIG[mysql] = "-DENABLE_MYSQLCLIENT=ON ,-DENABLE_MYSQLCLIENT=OFF,mysql5"
-PACKAGECONFIG[optical] = "-DENABLE_OPTICAL=ON,-DENABLE_OPTICAL=OFF"
+PACKAGECONFIG[mariadb] = "-DENABLE_MARIADBCLIENT=ON -DMARIADBCLIENT_INCLUDE_DIR=${STAGING_INCDIR}/mysql,-DENABLE_MARIADBCLIENT=OFF,mariadb"
+PACKAGECONFIG[optical] = "-DENABLE_OPTICAL=ON,-DENABLE_OPTICAL=OFF,libudfread libbluray"
 PACKAGECONFIG[pulseaudio] = "-DENABLE_PULSEAUDIO=ON,-DENABLE_PULSEAUDIO=OFF,pulseaudio"
+PACKAGECONFIG[pipewire] = "-DENABLE_PIPEWIRE=ON,-DENABLE_PIPEWIRE=OFF,pipewire"
 PACKAGECONFIG[samba] = ",,samba"
 PACKAGECONFIG[systemd] = ",,,kodi-systemd-service"
 PACKAGECONFIG[vaapi] = "-DENABLE_VAAPI=ON,-DENABLE_VAAPI=OFF,libva intel-vaapi-driver,intel-vaapi-driver"
@@ -132,7 +136,6 @@ PACKAGECONFIG[vdpau] = "-DENABLE_VDPAU=ON,-DENABLE_VDPAU=OFF,libvdpau,mesa-vdpau
 
 # Compilation tunes
 
-PACKAGECONFIG[gold] = "-DENABLE_LDGOLD=ON,-DENABLE_LDGOLD=OFF"
 PACKAGECONFIG[lto] = "-DUSE_LTO=${@oe.utils.cpu_count()},-DUSE_LTO=OFF"
 PACKAGECONFIG[testing] = "-DENABLE_TESTING=ON,-DENABLE_TESTING=0FF,googletest"
 
@@ -152,32 +155,19 @@ KODI_OPENGL_STANDARD ?= "gles"
 EXTRA_OECMAKE = " \
     -DAPP_RENDER_SYSTEM=${KODI_OPENGL_STANDARD} \
     \
-    -DENABLE_INTERNAL_CROSSGUID=OFF \
-    \
-    -DNATIVEPREFIX=${STAGING_DIR_NATIVE}${prefix} \
-    -DJava_JAVA_EXECUTABLE=/usr/bin/java \
     -DWITH_TEXTUREPACKER=${STAGING_BINDIR_NATIVE}/TexturePacker \
     -DWITH_JSONSCHEMABUILDER=${STAGING_BINDIR_NATIVE}/JsonSchemaBuilder \
+    -DJava_JAVA_EXECUTABLE=/usr/bin/java \
     \
     -DENABLE_STATIC_LIBS=FALSE \
     -DCMAKE_NM='${NM}' \
     \
     -DFFMPEG_PATH=${STAGING_DIR_TARGET} \
-    -DLIBDVD_INCLUDE_DIRS=${STAGING_INCDIR} \
-    -DNFS_INCLUDE_DIR=${STAGING_INCDIR} \
-    -DSHAIRPLAY_INCLUDE_DIR=${STAGING_INCDIR} \
+    -DENABLE_INTERNAL_CROSSGUID=OFF \
+    -DENABLE_INTERNAL_RapidJSON=OFF \
     -DWAYLANDPP_PROTOCOLS_DIR=${STAGING_DATADIR}/waylandpp/protocols \
     -DCMAKE_BUILD_TYPE=RelWithDebInfo \
 "
-
-# for python modules
-export HOST_SYS
-export BUILD_SYS
-export STAGING_LIBDIR
-export STAGING_INCDIR
-export PYTHON_DIR
-
-export TARGET_PREFIX
 
 do_configure:prepend() {
 	# Ensure 'nm' can find the lto plugins 
@@ -211,6 +201,7 @@ RRECOMMENDS:${PN} = " \
   python3-html \
   python3-json \
   python3-netclient \
+  python3-pillow \
   python3-pycryptodome \
   python3-regex \
   python3-shell \
@@ -254,7 +245,5 @@ KODI_PLUGINS_INSTALL ??= " \
   kodi-addon-pvr-iptvsimple \
   kodi-addon-pvr-plutotv \
 "
-
-INSANE_SKIP:${PN} = "rpaths"
 
 do_compile[network] = "1"
