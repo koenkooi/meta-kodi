@@ -1,0 +1,106 @@
+From b29e2ecc72b3b162423c523d78c6908e49db6891 Mon Sep 17 00:00:00 2001
+From: graysky <graysky@archlinux.us>
+Date: Mon, 13 Dec 2021 14:01:07 -0500
+Subject: [PATCH] Revert "bpo-44050: Extension modules can share state when
+ they don't support sub-interpreters. (GH-27794) (GH-28738)"
+
+This reverts commit d0d29655ffc43d426ad68542d8de8304f7f1346a.
+---
+ Lib/test/test_capi.py     | 31 -------------------------------
+ Modules/_testmultiphase.c | 22 ----------------------
+ Python/import.c           |  4 +---
+ 3 files changed, 1 insertion(+), 56 deletions(-)
+
+diff --git a/Lib/test/test_capi.py b/Lib/test/test_capi.py
+index ecf3aa34ed..c97c38746c 100644
+--- a/Lib/test/test_capi.py
++++ b/Lib/test/test_capi.py
+@@ -774,37 +774,6 @@ def test_mutate_exception(self):
+ 
+         self.assertFalse(hasattr(binascii.Error, "foobar"))
+ 
+-    def test_module_state_shared_in_global(self):
+-        """
+-        bpo-44050: Extension module state should be shared between interpreters
+-        when it doesn't support sub-interpreters.
+-        """
+-        r, w = os.pipe()
+-        self.addCleanup(os.close, r)
+-        self.addCleanup(os.close, w)
+-
+-        script = textwrap.dedent(f"""
+-            import importlib.machinery
+-            import importlib.util
+-            import os
+-
+-            fullname = '_test_module_state_shared'
+-            origin = importlib.util.find_spec('_testmultiphase').origin
+-            loader = importlib.machinery.ExtensionFileLoader(fullname, origin)
+-            spec = importlib.util.spec_from_loader(fullname, loader)
+-            module = importlib.util.module_from_spec(spec)
+-            attr_id = str(id(module.Error)).encode()
+-
+-            os.write({w}, attr_id)
+-            """)
+-        exec(script)
+-        main_attr_id = os.read(r, 100)
+-
+-        ret = support.run_in_subinterp(script)
+-        self.assertEqual(ret, 0)
+-        subinterp_attr_id = os.read(r, 100)
+-        self.assertEqual(main_attr_id, subinterp_attr_id)
+-
+ 
+ class TestThreadState(unittest.TestCase):
+ 
+diff --git a/Modules/_testmultiphase.c b/Modules/_testmultiphase.c
+index ee69c42336..94380dfafd 100644
+--- a/Modules/_testmultiphase.c
++++ b/Modules/_testmultiphase.c
+@@ -848,28 +848,6 @@ PyInit__testmultiphase_meth_state_access(PyObject *spec)
+     return PyModuleDef_Init(&def_meth_state_access);
+ }
+ 
+-static PyModuleDef def_module_state_shared = {
+-    PyModuleDef_HEAD_INIT,
+-    .m_name = "_test_module_state_shared",
+-    .m_doc = PyDoc_STR("Regression Test module for single-phase init."),
+-    .m_size = -1,
+-};
+-
+-PyMODINIT_FUNC
+-PyInit__test_module_state_shared(PyObject *spec)
+-{
+-    PyObject *module = PyModule_Create(&def_module_state_shared);
+-    if (module == NULL) {
+-        return NULL;
+-    }
+-
+-    if (PyModule_AddObjectRef(module, "Error", PyExc_Exception) < 0) {
+-        Py_DECREF(module);
+-        return NULL;
+-    }
+-    return module;
+-}
+-
+ 
+ /*** Helper for imp test ***/
+ 
+diff --git a/Python/import.c b/Python/import.c
+index 51b779ca17..af6932f476 100644
+--- a/Python/import.c
++++ b/Python/import.c
+@@ -441,9 +441,7 @@ _PyImport_FixupExtensionObject(PyObject *mod, PyObject *name,
+         return -1;
+     }
+ 
+-    // bpo-44050: Extensions and def->m_base.m_copy can be updated
+-    // when the extension module doesn't support sub-interpreters.
+-    if (_Py_IsMainInterpreter(tstate->interp) || def->m_size == -1) {
++    if (_Py_IsMainInterpreter(tstate->interp)) {
+         if (def->m_size == -1) {
+             if (def->m_base.m_copy) {
+                 /* Somebody already imported the module,
+-- 
+2.34.1
+
