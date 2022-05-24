@@ -48,9 +48,9 @@ do_install:append() {
 }
 
 RPROVIDES:${PN} += "libkodiplatform"
+RDEPENDS:${PN}-dev = ""
 PACKAGES =+ "libkodiplatform"
 
 FILES:libkodiplatform = "${libdir}/lib*.so.*"
 
 FILES:${PN}-dev += "${libdir}/*platform"
-
