@@ -113,7 +113,7 @@ PACKAGECONFIG:append:x86-64 = " vaapi"
 # Core windowing system choices
 
 PACKAGECONFIG[gbm] = "-DCORE_PLATFORM_NAME=gbm -DGBM_RENDER_SYSTEM=gles,,"
-PACKAGECONFIG[wayland] = "-DCORE_PLATFORM_NAME=wayland -DWAYLAND_RENDER_SYSTEM=gles,,wayland wayland-native waylandpp waylandpp-native"
+PACKAGECONFIG[wayland] = "-DCORE_PLATFORM_NAME=wayland -DWAYLAND_RENDER_SYSTEM=gles,,wayland wayland-native waylandpp waylandpp-native libxkbcommon"
 PACKAGECONFIG[x11] = "-DCORE_PLATFORM_NAME=x11,,libxinerama libxmu libxrandr libxtst glew"
 
 # Features
