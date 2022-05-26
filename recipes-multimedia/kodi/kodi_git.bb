@@ -114,7 +114,7 @@ PACKAGECONFIG:append:x86-64 = " vaapi"
 
 PACKAGECONFIG[gbm] = "-DCORE_PLATFORM_NAME=gbm -DGBM_RENDER_SYSTEM=gles,,"
 PACKAGECONFIG[wayland] = "-DCORE_PLATFORM_NAME=wayland -DWAYLAND_RENDER_SYSTEM=gles,,wayland wayland-native waylandpp waylandpp-native libxkbcommon"
-PACKAGECONFIG[x11] = "-DCORE_PLATFORM_NAME=x11,,libxinerama libxmu libxrandr libxtst glew"
+PACKAGECONFIG[x11] = "-DCORE_PLATFORM_NAME=x11,,libxmu libxrandr glew"
 
 # Features
 PACKAGECONFIG[airtunes] = "-DENABLE_AIRTUNES=ON,-DENABLE_AIRTUNES=OFF,shairplay"
@@ -181,10 +181,7 @@ do_configure:prepend() {
 FILES:${PN} += "${datadir}/metainfo ${datadir}/xsessions ${datadir}/icons ${libdir}/xbmc ${datadir}/xbmc ${libdir}/firewalld"
 FILES:${PN}-dbg += "${libdir}/kodi/.debug ${libdir}/kodi/*/.debug ${libdir}/kodi/*/*/.debug ${libdir}/kodi/*/*/*/.debug"
 
-
-# OpenGL builds need glxinfo, that's in mesa-demos
 RRECOMMENDS:${PN} = " \
-  ${@bb.utils.contains('PACKAGECONFIG', 'x11', 'xdyinfo xrandr xinit mesa-demos', '', d)} \
   ${KODI_PLUGINS_INSTALL} \
   libcec \
   libcurl \
