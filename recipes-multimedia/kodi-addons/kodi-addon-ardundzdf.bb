@@ -7,9 +7,9 @@ LIC_FILES_CHKSUM = "file://LICENSE.txt;md5=883ff1a665ed91229ca96e1ede954ae2"
 RDEPENDS:${PN} = "python3-six kodi-addon-kodi-six"
 
 SRC_URI = "git://github.com/rols1/Kodi-Addon-ARDundZDF.git;branch=master;protocol=https"
-SRCREV = "a399dcc5dc7396d4d7cc835ee6b81fe0393cb205"
+SRCREV = "fb44e498d5a0a9283fd2845732f6cc81bd6c4abc"
 S = "${WORKDIR}/git"
-PV = "4.3.4"
+PV = "4.3.9"
 
 KODIADDONNAME = "plugin.video.ardundzdf"
 KODIADDONDIR = "${datadir}/kodi/addons"
