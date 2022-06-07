@@ -72,9 +72,11 @@ DEPENDS += " \
   libplist \
   libpng \
   libtinyxml \
+  libunistring \
   libusb \
   libxml2 \
   libxslt \
+  lsb-release \
   lzo \
   nasm-native \
   nettle \
@@ -133,6 +135,7 @@ PACKAGECONFIG[samba] = ",,samba"
 PACKAGECONFIG[systemd] = ",,,kodi-systemd-service"
 PACKAGECONFIG[vaapi] = "-DENABLE_VAAPI=ON,-DENABLE_VAAPI=OFF,libva intel-vaapi-driver,intel-vaapi-driver"
 PACKAGECONFIG[vdpau] = "-DENABLE_VDPAU=ON,-DENABLE_VDPAU=OFF,libvdpau,mesa-vdpau-drivers"
+PACKAGECONFIG[vorbis] = ",,libvorbis"
 
 # Compilation tunes
 
