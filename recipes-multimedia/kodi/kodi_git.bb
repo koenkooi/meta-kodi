@@ -24,8 +24,7 @@ SRC_URI:append:rockchip = " \
 
 SRC_URI:append:rpi = " \
 	file://rpi/kodi-001-deinterlace.patch \
-	file://rpi/kodi-002-set-max-bpc-for-high-bit-depth-videos.patch \
-	file://rpi/kodi-003-add-colourspace-connector-property.patch \
+	file://kodi-002-PR20006-gbm-colorspace-and-bits-per-pixel.patch \
 "
 
 OECMAKE_FIND_ROOT_PATH_MODE_PROGRAM = "BOTH"

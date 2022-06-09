@@ -110,7 +110,7 @@ index ff0f9f5fcf..88c951f59b 100644
  
    if (IsSupportedHwFormat(static_cast<AVPixelFormat>(m_pFrame->format)))
 diff --git a/xbmc/cores/VideoPlayer/DVDCodecs/Video/DVDVideoCodecDRMPRIME.h b/xbmc/cores/VideoPlayer/DVDCodecs/Video/DVDVideoCodecDRMPRIME.h
-index 42ef9b0d915..953d0854e0c 100644
+index db49d165e7..b5cacf1a3c 100644
 --- a/xbmc/cores/VideoPlayer/DVDCodecs/Video/DVDVideoCodecDRMPRIME.h
 +++ b/xbmc/cores/VideoPlayer/DVDCodecs/Video/DVDVideoCodecDRMPRIME.h
 @@ -14,6 +14,11 @@
@@ -125,33 +125,22 @@ index 42ef9b0d915..953d0854e0c 100644
  class CDVDVideoCodecDRMPRIME : public CDVDVideoCodec
  {
  public:
-@@ -33,15 +38,27 @@ public:
- 
- protected:
+@@ -35,6 +40,8 @@ protected:
    void Drain();
--  void SetPictureParams(VideoPicture* pVideoPicture);
-+  bool SetPictureParams(VideoPicture* pVideoPicture);
+   void SetPictureParams(VideoPicture* pVideoPicture);
    void UpdateProcessInfo(struct AVCodecContext* avctx, const enum AVPixelFormat fmt);
 +  CDVDVideoCodec::VCReturn ProcessFilterIn();
 +  CDVDVideoCodec::VCReturn ProcessFilterOut();
    static enum AVPixelFormat GetFormat(struct AVCodecContext* avctx, const enum AVPixelFormat* fmt);
    static int GetBuffer(struct AVCodecContext* avctx, AVFrame* frame, int flags);
-+  bool FilterOpen(const std::string& filters, bool test);
-+  void FilterClose();
-+  void FilterTest();
-+  std::string GetFilterChain(bool interlaced);
  
-   std::string m_name;
-+  std::string m_deintFilterName;
-+  std::string m_filters;
-   int m_codecControlFlags = 0;
-   CDVDStreamInfo m_hints;
+@@ -44,5 +51,8 @@ protected:
+   double m_DAR = 1.0;
    AVCodecContext* m_pCodecContext = nullptr;
+   AVFrame* m_pFrame = nullptr;
 +  AVFilterGraph* m_pFilterGraph = nullptr;
 +  AVFilterContext* m_pFilterIn = nullptr;
 +  AVFilterContext* m_pFilterOut = nullptr;
-   AVFrame* m_pFrame = nullptr;
-+  AVFrame* m_pFilterFrame = nullptr;
    std::shared_ptr<IVideoBufferPool> m_videoBufferPool;
  };
 -- 
@@ -627,6 +616,38 @@ index 88c951f59b..846b14b555 100644
  
    return VC_PICTURE;
  }
+diff --git a/xbmc/cores/VideoPlayer/DVDCodecs/Video/DVDVideoCodecDRMPRIME.h b/xbmc/cores/VideoPlayer/DVDCodecs/Video/DVDVideoCodecDRMPRIME.h
+index b5cacf1a3c..fab3431d40 100644
+--- a/xbmc/cores/VideoPlayer/DVDCodecs/Video/DVDVideoCodecDRMPRIME.h
++++ b/xbmc/cores/VideoPlayer/DVDCodecs/Video/DVDVideoCodecDRMPRIME.h
+@@ -38,19 +38,26 @@ public:
+ 
+ protected:
+   void Drain();
+-  void SetPictureParams(VideoPicture* pVideoPicture);
++  bool SetPictureParams(VideoPicture* pVideoPicture);
+   void UpdateProcessInfo(struct AVCodecContext* avctx, const enum AVPixelFormat fmt);
+   CDVDVideoCodec::VCReturn ProcessFilterIn();
+   CDVDVideoCodec::VCReturn ProcessFilterOut();
+   static enum AVPixelFormat GetFormat(struct AVCodecContext* avctx, const enum AVPixelFormat* fmt);
+   static int GetBuffer(struct AVCodecContext* avctx, AVFrame* frame, int flags);
++  bool FilterOpen(const std::string& filters, bool test);
++  void FilterClose();
++  void FilterTest();
++  std::string GetFilterChain(bool interlaced);
+ 
+   std::string m_name;
++  std::string m_deintFilterName;
++  std::string m_filters;
+   int m_codecControlFlags = 0;
+   CDVDStreamInfo m_hints;
+   double m_DAR = 1.0;
+   AVCodecContext* m_pCodecContext = nullptr;
+   AVFrame* m_pFrame = nullptr;
++  AVFrame* m_pFilterFrame = nullptr;
+   AVFilterGraph* m_pFilterGraph = nullptr;
+   AVFilterContext* m_pFilterIn = nullptr;
+   AVFilterContext* m_pFilterOut = nullptr;
 -- 
 2.30.2
 
@@ -898,3 +919,4 @@ index 85e1b7ec0c..b2b941f355 100644
  
 -- 
 2.30.2
+
