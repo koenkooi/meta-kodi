@@ -9,9 +9,9 @@ inherit kodi-addon
 
 DEPENDS += "expat"
 
-PV = "20.2.1"
+PV = "20.2.2"
 
-SRCREV = "59a026ed5c180fa3844215059f94b883582eae7e"
+SRCREV = "3e55aa75e2a785e8a3c872004d568b5659f916d4"
 SRC_URI = "git://github.com/xbmc/inputstream.adaptive.git;nobranch=1;protocol=https"
 S = "${WORKDIR}/git"
 
