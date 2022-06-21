@@ -6,7 +6,7 @@ inherit kodi-common
 KODIVER ?= "20.0"
 
 SRC_URI = "git://github.com/xbmc/xbmc.git;protocol=https;branch=master"
-SRCREV = "02986e91d807bf9192ef51680a091b97bb1f1182"
+SRCREV = "a8cd8aaeb66a506fb99d582653ea08462c8211d6"
 S = "${WORKDIR}/git"
 
 PV = "${KODIVER}-${KODICODENAME}"

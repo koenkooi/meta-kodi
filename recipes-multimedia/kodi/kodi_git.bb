@@ -113,9 +113,9 @@ PACKAGECONFIG:append:x86-64 = " vaapi"
 
 # Core windowing system choices
 
-PACKAGECONFIG[gbm] = "-DCORE_PLATFORM_NAME=gbm -DGBM_RENDER_SYSTEM=gles,,"
-PACKAGECONFIG[wayland] = "-DCORE_PLATFORM_NAME=wayland -DWAYLAND_RENDER_SYSTEM=gles,,wayland wayland-native waylandpp waylandpp-native libxkbcommon"
-PACKAGECONFIG[x11] = "-DCORE_PLATFORM_NAME=x11,,libxmu libxrandr glew"
+PACKAGECONFIG[gbm] = "-DCORE_PLATFORM_NAME=gbm -DAPP_RENDER_SYSTEM=gles,,virtual/libgbm"
+PACKAGECONFIG[wayland] = "-DCORE_PLATFORM_NAME=wayland -DAPP_RENDER_SYSTEM=gles,,wayland wayland-native waylandpp waylandpp-native libxkbcommon virtual/libgles2"
+PACKAGECONFIG[x11] = "-DCORE_PLATFORM_NAME=x11 -DAPP_RENDER_SYSTEM=gl,,libxmu libxrandr glew virtual/libgl"
 
 # Features
 PACKAGECONFIG[airtunes] = "-DENABLE_AIRTUNES=ON,-DENABLE_AIRTUNES=OFF,shairplay"
@@ -147,15 +147,7 @@ LDFLAGS += "${TOOLCHAIN_OPTIONS}"
 LDFLAGS:append:mipsarch = " -latomic -lpthread"
 EXTRA_OECMAKE:append:mipsarch = " -DWITH_ARCH=${TARGET_ARCH}"
 
-#| cmake/scripts/common/Platform.cmake:11 (message):
-#|   You need to decide whether you want to use GL- or GLES-based rendering.
-#|   Please set APP_RENDER_SYSTEM to either "gl" or "gles".
-#|   For embedded systems you will usually want to use "gles".
-
-KODI_OPENGL_STANDARD ?= "gles"
-
 EXTRA_OECMAKE = " \
-    -DAPP_RENDER_SYSTEM=${KODI_OPENGL_STANDARD} \
     \
     -DWITH_TEXTUREPACKER=${STAGING_BINDIR_NATIVE}/TexturePacker \
     -DWITH_JSONSCHEMABUILDER=${STAGING_BINDIR_NATIVE}/JsonSchemaBuilder \
@@ -167,6 +159,7 @@ EXTRA_OECMAKE = " \
     -DFFMPEG_PATH=${STAGING_DIR_TARGET} \
     -DENABLE_INTERNAL_CROSSGUID=OFF \
     -DENABLE_INTERNAL_RapidJSON=OFF \
+    -DENABLE_INTERNAL_FLATBUFFERS=OFF \
     -DWAYLANDPP_PROTOCOLS_DIR=${STAGING_DATADIR}/waylandpp/protocols \
     -DCMAKE_BUILD_TYPE=RelWithDebInfo \
 "
