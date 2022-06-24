@@ -192,6 +192,7 @@ RRECOMMENDS:${PN} = " \
   python3-distutils \
   python3-html \
   python3-json \
+  python3-multiprocessing \
   python3-netclient \
   python3-pillow \
   python3-pycryptodome \
@@ -239,3 +240,4 @@ KODI_PLUGINS_INSTALL ??= " \
 "
 
 do_compile[network] = "1"
+
