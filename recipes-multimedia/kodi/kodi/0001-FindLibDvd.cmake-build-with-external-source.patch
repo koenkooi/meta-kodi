@@ -1,0 +1,32 @@
+From 97636759bf41ccc39228db7c6b914c5273fb88cf Mon Sep 17 00:00:00 2001
+From: Markus Volk <f_l_k@t-online.de>
+Date: Sun, 26 Jun 2022 17:30:03 +0200
+Subject: [PATCH] FindLibDvd.cmake: allow to build with external libdvd
+
+The code to find libdvd is hidden behind the KODI_DEPENDSBUILD flag,
+which if enabled would cause more problems than it solves.
+Hack that to make it behave as desired without having to set the
+KODI_DEPENDSBUILD flag for the entire build system.
+
+Patch-Status: Inappropriate
+
+---
+ cmake/modules/FindLibDvd.cmake | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/cmake/modules/FindLibDvd.cmake b/cmake/modules/FindLibDvd.cmake
+index 8b579bbf6ae..81eeeb68dd3 100644
+--- a/cmake/modules/FindLibDvd.cmake
++++ b/cmake/modules/FindLibDvd.cmake
+@@ -23,7 +23,7 @@ function(addstep_autoreconf module_name)
+                                   WORKING_DIRECTORY <SOURCE_DIR>)
+ endfunction()
+ 
+-if(KODI_DEPENDSBUILD)
++if(True)
+   set(_dvdlibs dvdread dvdnav)
+   set(_handlevars LIBDVD_INCLUDE_DIRS DVDREAD_LIBRARY DVDNAV_LIBRARY)
+   if(ENABLE_DVDCSS)
+-- 
+2.25.1
+
