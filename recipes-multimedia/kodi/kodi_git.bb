@@ -15,6 +15,7 @@ SRC_URI:append = " \
 	file://libreelec/kodi-100.03-disable-online-check.patch \
 	file://libreelec/kodi-995.10-devinputmappings.patch \
 	file://libreelec/kodi-999.15-disable-using-tv-menu-language-by-default.patch \
+	file://0001-FindLibDvd.cmake-build-with-external-source.patch \
 "
 	
 SRC_URI:append:rockchip = " \
@@ -60,6 +61,8 @@ DEPENDS += " \
   libcdio \
   libcec \
   libdrm \
+  libdvdnav \
+  libdvdread \
   libevdev \
   libffi \
   libgcrypt \
@@ -121,7 +124,7 @@ PACKAGECONFIG[x11] = "-DCORE_PLATFORM_NAME=x11 -DAPP_RENDER_SYSTEM=gl,,libxmu li
 PACKAGECONFIG[airtunes] = "-DENABLE_AIRTUNES=ON,-DENABLE_AIRTUNES=OFF,shairplay"
 PACKAGECONFIG[bluetooth] = ",,bluez5"
 PACKAGECONFIG[doxygen] = ",,doxygen-native"
-PACKAGECONFIG[dvdcss] = "-DENABLE_DVDCSS=ON,-DENABLE_DVDCSS=OFF"
+PACKAGECONFIG[dvdcss] = "-DENABLE_DVDCSS=ON,-DENABLE_DVDCSS=OFF,libdvdcss"
 PACKAGECONFIG[joystick] = ",,,kodi-addon-peripheral-joystick"
 PACKAGECONFIG[lcms] = ",,lcms"
 PACKAGECONFIG[lirc] = ",,lirc"
@@ -238,6 +241,3 @@ KODI_PLUGINS_INSTALL ??= " \
   kodi-addon-pvr-iptvsimple \
   kodi-addon-pvr-plutotv \
 "
-
-do_compile[network] = "1"
-
