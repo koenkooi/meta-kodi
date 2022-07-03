@@ -5,9 +5,9 @@ LIC_FILES_CHKSUM = "file://LICENSE.md;md5=2532aa690bfeebabd9ff611d964f4cd8"
 
 RDEPENDS:${PN} = "kodi-addon-signals kodi-addon-inputstreamhelper mysql-connector-python python3-unixadmin"
 
-PV = "1.18.4"
+PV = "1.18.8"
 
-SRCREV = "500b5a39ccd8bd44e42f1c6843f032b34a5bc946"
+SRCREV = "dfa358cd0a4912a4930342a13a654a79dde65dce"
 SRC_URI = "git://github.com/CastagnaIT/plugin.video.netflix.git;branch=master;protocol=https"
 
 S = "${WORKDIR}/git"
