@@ -32,13 +32,10 @@ OECMAKE_FIND_ROOT_PATH_MODE_PROGRAM = "BOTH"
 
 DEPENDS += " \
   alsa-lib \
-  autoconf-native \
-  automake-native \
   avahi \
   bzip2 \
   crossguid \
   curl \
-  curl-native \
   dbus \
   expat \
   ffmpeg \
@@ -94,11 +91,9 @@ DEPENDS += " \
   sqlite3 \
   swig-native \
   taglib \
-  unzip-native \
   virtual/egl \
   xz \
   yasm-native \
-  zip-native \
   zlib \
 "
 
@@ -151,7 +146,7 @@ LDFLAGS:append:mipsarch = " -latomic -lpthread"
 EXTRA_OECMAKE:append:mipsarch = " -DWITH_ARCH=${TARGET_ARCH}"
 
 EXTRA_OECMAKE = " \
-    \
+    -DUSE_INTERNAL_LIBS=OFF \
     -DWITH_TEXTUREPACKER=${STAGING_BINDIR_NATIVE}/TexturePacker \
     -DWITH_JSONSCHEMABUILDER=${STAGING_BINDIR_NATIVE}/JsonSchemaBuilder \
     -DJava_JAVA_EXECUTABLE=/usr/bin/java \
