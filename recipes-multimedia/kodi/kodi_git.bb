@@ -7,8 +7,8 @@ macOS, iOS and Windows."
 HOMEPAGE = "https://kodi.tv/"
 BUGTRACKER = "https://github.com/xbmc/xbmc/issues"
 
-require ${BPN}.inc
-inherit ccache cmake pkgconfig gettext python3-dir python3native
+require kodi.inc
+inherit ccache cmake pkgconfig gettext python3native
 
 SRC_URI:append = " \
 	file://0001-mysqldataset-we-use-mysql-includedir-name-for-mari.patch \
@@ -27,8 +27,6 @@ SRC_URI:append:rpi = " \
 	file://rpi/kodi-001-deinterlace.patch \
 	file://kodi-002-PR20006-gbm-colorspace-and-bits-per-pixel.patch \
 "
-
-OECMAKE_FIND_ROOT_PATH_MODE_PROGRAM = "BOTH"
 
 DEPENDS += " \
   alsa-lib \
@@ -82,10 +80,6 @@ DEPENDS += " \
   openssl \
   p8platform \
   pcre \
-  python3 \
-  python3-pillow \
-  python3-pycryptodome \
-  python3-setuptools \
   rapidjson \
   spdlog \
   sqlite3 \
