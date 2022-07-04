@@ -222,11 +222,6 @@ KODI_PLUGINS_INSTALL ??= " \
   kodi-addon-inputstream-rtmp \
   kodi-addon-inputstream-ffmpegdirect \
   kodi-addon-inputstreamhelper \
-  kodi-addon-netflix \
   kodi-addon-peripheral-joystick \
-  kodi-addon-ardundzdf \
-  kodi-addon-radio \
-  kodi-addon-fluxfm \
   kodi-addon-pvr-iptvsimple \
-  kodi-addon-pvr-plutotv \
 "
