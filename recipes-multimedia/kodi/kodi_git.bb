@@ -224,4 +224,6 @@ KODI_PLUGINS_INSTALL ??= " \
   kodi-addon-inputstreamhelper \
   kodi-addon-peripheral-joystick \
   kodi-addon-pvr-iptvsimple \
+  kodi-addon-vfs-rar \
+  kodi-addon-vfs-libarchive \
 "
