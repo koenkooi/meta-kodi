@@ -10,7 +10,7 @@ DEPENDS += "kodi libtinyxml libretro-common rcheevos"
 PV = "20.2.0"
 
 SRCREV = "f172bd2287ff16ad7113293316606bdd2774996c"
-SRC_URI = "gitsm://github.com/kodi-game/game.libretro.git;nobranch=1;protocol=https"
+SRC_URI = "git://github.com/kodi-game/game.libretro.git;nobranch=1;protocol=https"
 S = "${WORKDIR}/git"
 
 KODIADDONNAME = "game.libretro"
