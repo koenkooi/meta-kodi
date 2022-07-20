@@ -16,3 +16,7 @@ S = "${WORKDIR}/git"
 
 KODIADDONNAME = "visualization.goom"
 
+PACKAGECONFIG[opengl] = ",,virtual/libgl"
+PACKAGECONFIG[gles] = ",,virtual/libgles3"
+
+PACKAGECONFIG ?= "${@bb.utils.filter('DISTRO_FEATURES', 'opengl gles', d)}"
