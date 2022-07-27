@@ -16,11 +16,12 @@ SRC_URI:append = " \
 	file://libreelec/kodi-995.10-devinputmappings.patch \
 	file://libreelec/kodi-999.15-disable-using-tv-menu-language-by-default.patch \
 	file://0001-FindLibDvd.cmake-build-with-external-source.patch \
-"
-	
-SRC_URI:append:rockchip = " \
-	file://rockchip/0001-WIP-DVDVideoCodecDRMPRIME-add-support-for-filters.patch \
-	file://rockchip/0002-WIP-DRMPRIME-deinterlace-filter.patch \
+	file://drmprime-filter/0001-WIP-DVDVideoCodecDRMPRIME-add-support-for-filters.patch \
+	file://drmprime-filter/0002-WIP-DRMPRIME-deinterlace-filter.patch \
+	file://drmprime-filter/0003-DVDVideoCodecDRMPRIME-Avoid-exception-with-AV_PIX_FM.patch \
+	file://drmprime-filter/0004-DVDVideoCodecDRMPRIME-Leave-deinterlace-filter-activ.patch \
+	file://drmprime-filter/0005-SetVideoInterlaced-Set-and-unset-deinterlace-method-.patch \
+	file://drmprime-filter/0006-DVDVideoCodecDRMPRIME-Close-deinterlace-filter-on-er.patch \
 "
 
 SRC_URI:append:rpi = " \
