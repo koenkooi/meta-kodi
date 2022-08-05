@@ -6,7 +6,7 @@ DEPENDS = "libdvdread"
 
 SRC_URI = "git://github.com/xbmc/libdvdnav.git;protocol=https;branch=nexus"
 
-SRCREV = "ce25d1fd0c97ee74d1647af3ffea75f6faf76057"
+SRCREV = "25229a54b2c4be9930d677f6abe3a0025514f3db"
 S = "${WORKDIR}/git"
 PV = "6.1.1-Next-Nexus-Alpha2"
 
