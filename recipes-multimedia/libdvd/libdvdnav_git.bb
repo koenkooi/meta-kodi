@@ -8,7 +8,7 @@ SRC_URI = "git://github.com/xbmc/libdvdnav.git;protocol=https;branch=nexus"
 
 SRCREV = "25229a54b2c4be9930d677f6abe3a0025514f3db"
 S = "${WORKDIR}/git"
-PV = "6.1.1-Next-Nexus-Alpha2"
+PV = "6.1.1-Next-Nexus-Alpha2-2"
 
 inherit autotools lib_package binconfig pkgconfig
 
