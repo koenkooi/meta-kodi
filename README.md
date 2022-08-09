@@ -10,9 +10,7 @@ The meta-kodi layer depends on:
 	layers: meta
 
 	URI: git://git.openembedded.org/meta-openembedded
-	layers: meta-oe, meta-multimedia, meta-networking
-	
-	URI: https://git.openembedded.org/meta-python2
+	layers: meta-oe, meta-multimedia, meta-networking, meta-python
 
 Please follow the recommended setup procedures of your OE distribution. For Angstrom that is http://www.angstrom-distribution.org/building-angstrom, other distros should have similar online resources.
 
