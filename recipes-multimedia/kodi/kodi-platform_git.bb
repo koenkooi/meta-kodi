@@ -37,14 +37,7 @@ do_compile:prepend() {
 }
 
 do_install:append() {
-	sed -i -e '/CXX/d' \
-               -e '/CC/d' \
-               -e 's:${STAGING_LIBDIR}:${libdir}:g' \
-               -e 's:${STAGING_DIR_HOST}:/:g' \
-               -e 's:${STAGING_DIR_NATIVE}:/:g' \
-               -e 's:${prefix}/${libdir}:${libdir}:g' \
-               -e 's:${WORKDIR}=::g' \ 
-            ${D}${libdir}/pkgconfig/*.pc
+            rm ${D}${libdir}/pkgconfig/*.pc
 }
 
 RPROVIDES:${PN} += "libkodiplatform"
