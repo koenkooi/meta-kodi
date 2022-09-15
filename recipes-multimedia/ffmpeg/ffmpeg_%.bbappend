@@ -2,6 +2,7 @@ FILESEXTRAPATHS:prepend := "${THISDIR}/ffmpeg:"
 
 SRC_URI = " \
 	git://github.com/xbmc/FFmpeg.git;protocol=https;branch=release/4.4-kodi \
+	file://ffmpeg-support-dav1d-1-0-0.patch \
 	file://ffmpeg-openssl3.patch \
 	file://libreelec/ffmpeg-001-libreelec.patch \
 "
@@ -9,7 +10,7 @@ SRC_URI = " \
 SRC_URI:append:rpi = "	\
 	file://rpi/ffmpeg-001-rpi.patch \
 "
-	
+
 SRC_URI:append:rockchip = " \
 	file://v4l2-drmprime/ffmpeg-001-v4l2-drmprime.patch \
 	file://v4l2-request/ffmpeg-001-v4l2-request.patch \
