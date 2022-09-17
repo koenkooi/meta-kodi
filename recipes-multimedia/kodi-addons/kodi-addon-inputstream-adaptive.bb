@@ -11,7 +11,7 @@ DEPENDS += "expat bento4"
 
 PV = "20.2.3"
 
-SRCREV = "875c95d9e48c2f13d4410d6ab15a9a164b44c50d"
+SRCREV = "9a9ec48bc275182666fb61823148668d47c32d05"
 SRC_URI = "git://github.com/xbmc/inputstream.adaptive.git;nobranch=1;protocol=https"
 S = "${WORKDIR}/git"
 
