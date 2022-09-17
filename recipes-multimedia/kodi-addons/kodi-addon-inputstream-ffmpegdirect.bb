@@ -5,9 +5,9 @@ LIC_FILES_CHKSUM = "file://${COREBASE}/meta/files/common-licenses/GPL-2.0-only;m
 
 inherit kodi-addon
 
-PV = "20.4.0"
+PV = "20.5.0"
 
-SRCREV = "e122f567d8e02f5e753159aef4a53ed03d18bf5c"
+SRCREV = "156ce0a8d9da24b94865883c029dbeb4cef52559"
 SRC_URI = "git://github.com/xbmc/inputstream.ffmpegdirect.git;protocol=https;nobranch=1"
 
 S = "${WORKDIR}/git"
