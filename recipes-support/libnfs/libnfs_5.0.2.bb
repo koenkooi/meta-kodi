@@ -6,7 +6,7 @@ LICENSE = "LGPL-2.1-only & GPL-3.0-only"
 LIC_FILES_CHKSUM = "file://COPYING;md5=825301ba17efc9d188ee0abd4b924ada"
 
 SRC_URI = "git://github.com/sahlberg/libnfs.git;protocol=https;branch=master"
-SRCREV = "2772c70be691329d8af7a3502b0c710482fbd70f"
+SRCREV = "40348f45d6beb8a8f50b6b63414a98fc1a061b7d"
 S = "${WORKDIR}/git"
 
 inherit cmake
