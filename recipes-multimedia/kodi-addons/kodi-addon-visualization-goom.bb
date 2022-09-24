@@ -7,9 +7,9 @@ DEPENDS += "glm"
 
 inherit kodi-addon
 
-PV = "20.1.0-Nexus"
+PV = "20.1.1-Nexus"
 
-SRCREV = "53f722562f6ee45a43c0229ada5a8cadad7bd37c"
+SRCREV = "9a9efffe6166048fe26a0598da700b8c3c5bf1f3"
 SRC_URI = "git://github.com/xbmc/visualization.goom.git;protocol=https;nobranch=1"
 
 S = "${WORKDIR}/git"
