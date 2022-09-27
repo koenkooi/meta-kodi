@@ -108,8 +108,6 @@ EXTRA_FFCONF = " \
 	--enable-mdct \
 	--enable-rdft \
 	--disable-crystalhd \
-	--extra-ldflags="${TARGET_LDFLAGS},--gc-sections -Wl,--print-gc-sections,-lrt" \
-	--extra-cflags="${TARGET_CFLAGS} ${HOST_CC_ARCH}${TOOLCHAIN_OPTIONS} -ffunction-sections -fdata-sections -fno-aggressive-loop-optimizations" \
 "
 
 EXTRA_FFCONF:append:arm = " \
