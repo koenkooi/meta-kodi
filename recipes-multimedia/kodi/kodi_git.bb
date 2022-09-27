@@ -12,6 +12,7 @@ inherit ccache cmake pkgconfig gettext python3native
 
 SRC_URI:append = " \
 	file://0001-mysqldataset-we-use-mysql-includedir-name-for-mari.patch \
+	file://0001-AEELDParser.cpp-fix-rtrim-function-for-clang.patch \
 	file://libreelec/kodi-100.03-disable-online-check.patch \
 	file://libreelec/kodi-995.10-devinputmappings.patch \
 	file://libreelec/kodi-999.15-disable-using-tv-menu-language-by-default.patch \
@@ -95,6 +96,8 @@ DEPENDS += " \
 PACKAGECONFIG ?= " \
   ${@bb.utils.filter('DISTRO_FEATURES', 'systemd bluetooth lirc pulseaudio pipewire samba', d)} \
   ${@bb.utils.filter('KODIGRAPHICALBACKEND', 'gbm wayland x11', d)} \
+  ${@bb.utils.contains('TOOLCHAIN', 'clang', 'clang', '', d)} \
+  ${@bb.utils.contains('DISTRO_FEATURES', 'ld-is-lld', 'lld', '', d)} \
   airtunes \
   joystick \
   lcms \
@@ -105,7 +108,6 @@ PACKAGECONFIG:append:x86 = " vaapi"
 PACKAGECONFIG:append:x86-64 = " vaapi"
 
 # Core windowing system choices
-
 PACKAGECONFIG[gbm] = "-DCORE_PLATFORM_NAME=gbm -DAPP_RENDER_SYSTEM=gles,,libxkbcommon virtual/libgbm"
 PACKAGECONFIG[wayland] = "-DCORE_PLATFORM_NAME=wayland -DAPP_RENDER_SYSTEM=gles,,wayland wayland-native waylandpp waylandpp-native libxkbcommon virtual/libgles2"
 PACKAGECONFIG[x11] = "-DCORE_PLATFORM_NAME=x11 -DAPP_RENDER_SYSTEM=gl,,libxmu libxrandr glew virtual/libgl"
@@ -129,25 +131,31 @@ PACKAGECONFIG[vaapi] = "-DENABLE_VAAPI=ON,-DENABLE_VAAPI=OFF,libva intel-vaapi-d
 PACKAGECONFIG[vdpau] = "-DENABLE_VDPAU=ON,-DENABLE_VDPAU=OFF,libvdpau,mesa-vdpau-drivers"
 PACKAGECONFIG[vorbis] = ",,libvorbis"
 
-# Compilation tunes
 
+# Compilation tunes
+PACKAGECONFIG[lld] = "-DENABLE_LLD=ON,-DENABLE_LLD=OFF"
+PACKAGECONFIG[clang] = "-DENABLE_CLANGFORMAT=ON -DENABLE_CLANGTIDY=ON,-DENABLE_CLANGFORMAT=OFF -DENABLE_CLANGTIDY=OFF"
 PACKAGECONFIG[lto] = "-DUSE_LTO=${@oe.utils.cpu_count()},-DUSE_LTO=OFF"
 PACKAGECONFIG[testing] = "-DENABLE_TESTING=ON,-DENABLE_TESTING=0FF,googletest"
 
 # MIPS
-
 LDFLAGS += "${TOOLCHAIN_OPTIONS}"
 LDFLAGS:append:mipsarch = " -latomic -lpthread"
 EXTRA_OECMAKE:append:mipsarch = " -DWITH_ARCH=${TARGET_ARCH}"
+
+RUNTIME_NM_TARGET_DIR = "${@bb.utils.contains('TARGET_ARCH', 'aarch64', '${TARGET_SYS}/', '', d)}"
+RUNTIME_NM = "${@bb.utils.contains('RUNTIME', 'llvm', '${TARGET_PREFIX}llvm-nm', '${TARGET_PREFIX}gcc-nm', d)}"
 
 EXTRA_OECMAKE = " \
     -DUSE_INTERNAL_LIBS=OFF \
     -DWITH_TEXTUREPACKER=${STAGING_BINDIR_NATIVE}/TexturePacker \
     -DWITH_JSONSCHEMABUILDER=${STAGING_BINDIR_NATIVE}/JsonSchemaBuilder \
     -DJava_JAVA_EXECUTABLE=/usr/bin/java \
+    -DCLANG_TIDY_EXECUTABLE=${STAGING_BINDIR_NATIVE}/clang-tidy \
+    -DCLANG_FORMAT_EXECUTABLE=${STAGING_BINDIR_NATIVE}/clang-format \
     \
     -DENABLE_STATIC_LIBS=FALSE \
-    -DCMAKE_NM='${NM}' \
+    -DCMAKE_NM=${STAGING_BINDIR_NATIVE}/${RUNTIME_NM_TARGET_DIR}${RUNTIME_NM} \
     \
     -DFFMPEG_PATH=${STAGING_DIR_TARGET} \
     -DENABLE_INTERNAL_CROSSGUID=OFF \
@@ -162,8 +170,6 @@ do_configure:prepend() {
 	liblto=$(find ${STAGING_DIR_NATIVE} -name "liblto_plugin.so.0.0.0")
 	mkdir -p ${STAGING_LIBDIR_NATIVE}/bfd-plugins
 	ln -sf $liblto ${STAGING_LIBDIR_NATIVE}/bfd-plugins/liblto_plugin.so
-
-	sed -i -e 's:CMAKE_NM}:}${TARGET_PREFIX}gcc-nm:' ${S}/xbmc/cores/DllLoader/exports/CMakeLists.txt
 }
 
 FILES:${PN} += "${datadir}/metainfo ${datadir}/xsessions ${datadir}/icons ${libdir}/xbmc ${datadir}/xbmc ${libdir}/firewalld"

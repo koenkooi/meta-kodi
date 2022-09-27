@@ -85,7 +85,7 @@ index aa1d12c3017..a825f406b32 100644
 +    if(ENABLE_DVDCSS)
 +      list(APPEND _linklibs ${DVDCSS_LIBRARY})
 +    endif()
-+    core_link_library(${DVDNAV_LIBRARY} system/players/VideoPlayer/libdvdnav dvdnav archives "${_linklibs}")
++    set(_linklibs ${DVDNAV_LIBRARY})
 +    set(LIBDVD_LIBRARIES ${DVDNAV_LIBRARY})
 +    mark_as_advanced(LIBDVD_INCLUDE_DIRS LIBDVD_LIBRARIES)
 +  endif()
