@@ -59,7 +59,6 @@ PACKAGECONFIG:append = " \
 	vpx \
 	webp \
 	x264 \
-	x265 \
 "
 
 PACKAGECONFIG:append:arm = "v4l2-m2m v4l2-request"
