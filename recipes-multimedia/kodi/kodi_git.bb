@@ -143,7 +143,6 @@ LDFLAGS += "${TOOLCHAIN_OPTIONS}"
 LDFLAGS:append:mipsarch = " -latomic -lpthread"
 EXTRA_OECMAKE:append:mipsarch = " -DWITH_ARCH=${TARGET_ARCH}"
 
-RUNTIME_NM_TARGET_DIR = "${@bb.utils.contains('TARGET_ARCH', 'aarch64', '${TARGET_SYS}/', '', d)}"
 RUNTIME_NM = "${@bb.utils.contains('RUNTIME', 'llvm', '${TARGET_PREFIX}llvm-nm', '${TARGET_PREFIX}gcc-nm', d)}"
 
 EXTRA_OECMAKE = " \
@@ -155,7 +154,7 @@ EXTRA_OECMAKE = " \
     -DCLANG_FORMAT_EXECUTABLE=${STAGING_BINDIR_NATIVE}/clang-format \
     \
     -DENABLE_STATIC_LIBS=FALSE \
-    -DCMAKE_NM=${STAGING_BINDIR_NATIVE}/${RUNTIME_NM_TARGET_DIR}${RUNTIME_NM} \
+    -DCMAKE_NM=${STAGING_BINDIR_NATIVE}/${TARGET_SYS}/${RUNTIME_NM} \
     \
     -DFFMPEG_PATH=${STAGING_DIR_TARGET} \
     -DENABLE_INTERNAL_CROSSGUID=OFF \
