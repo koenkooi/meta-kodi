@@ -54597,14 +54597,14 @@ index 0000000000..cfa94d55c4
 +    return !dev ? 0 : dev->src_type;
 +}
 +
-+uint32_t decdev_src_pixelformat(const struct decdev *const dev)
++int decdev_src_pixelformat(const struct decdev *const dev)
 +{
 +    return !dev ? 0 : dev->src_fmt_v4l2;
 +}
 +
 +
 +const struct decdev *devscan_find(struct devscan *const scan,
-+                  const uint32_t src_fmt_v4l2)
++                  const int src_fmt_v4l2)
 +{
 +    unsigned int i;
 +
@@ -54709,9 +54709,9 @@ index 0000000000..0baef36535
 +const char *decdev_media_path(const struct decdev *const dev);
 +const char *decdev_video_path(const struct decdev *const dev);
 +enum v4l2_buf_type decdev_src_type(const struct decdev *const dev);
-+uint32_t decdev_src_pixelformat(const struct decdev *const dev);
++int decdev_src_pixelformat(const struct decdev *const dev);
 +
-+const struct decdev *devscan_find(struct devscan *const scan, const uint32_t src_fmt_v4l2);
++const struct decdev *devscan_find(struct devscan *const scan, const int src_fmt_v4l2);
 +
 +int devscan_build(void * const dc, struct devscan **pscan);
 +void devscan_delete(struct devscan **const pScan);
