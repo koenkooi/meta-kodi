@@ -10,7 +10,7 @@ inherit cmake pkgconfig
 SRC_URI = "git://github.com/xbmc/Bento4;protocol=https;nobranch=1"
 
 PV = "1.6.0-639-Nexus"
-SRCREV = "8d7253e1ac05554da4b50d3567706cd42727ecb0"
+SRCREV = "1565b65344839552b2089b09a46ebc774a0711a1"
 S = "${WORKDIR}/git"
 
 EXTRA_OECMAKE = "-DBUILD_APPS=OFF -DCMAKE_POSITION_INDEPENDENT_CODE=ON -DCMAKE_BUILD_TYPE=Release"
