@@ -26,8 +26,10 @@ SRC_URI:append = " \
 "
 
 SRC_URI:append:rpi = " \
-	file://rpi/kodi-001-deinterlace.patch \
-	file://kodi-002-PR20006-gbm-colorspace-and-bits-per-pixel.patch \
+	file://rpi/0001-CDVDVideoCodecDRMPRIME-Also-support-YUV420-buffers.patch \
+	file://rpi/0002-gbm-Set-max-bpc-for-high-bit-depth-videos.patch \
+	file://rpi/0003-CVideoLayerBridgeDRMPRIME-add-colourspace-connector-.patch \
+	file://rpi/0004-DVDVideoCodecDRMPRIME-use-AV_PIX_FMT_DRM_PRIME-for-f.patch \
 "
 
 DEPENDS += " \
