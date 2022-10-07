@@ -1,8 +1,7 @@
 FILESEXTRAPATHS:prepend := "${THISDIR}/ffmpeg:"
 
 SRC_URI = " \
-	git://github.com/xbmc/FFmpeg.git;protocol=https;branch=release/4.4-kodi \
-	file://ffmpeg-support-dav1d-1-0-0.patch \
+	git://github.com/FFmpeg/FFmpeg.git;protocol=https;branch=release/4.4 \
 	file://ffmpeg-openssl3.patch \
 	file://libreelec/ffmpeg-001-libreelec.patch \
 "
@@ -22,8 +21,8 @@ SRC_URI:append:rockchip = " \
 "
 
 S = "${WORKDIR}/git"
-PV = "4.4.1-N-Alpha1"
-SRCREV = "293e067b0c0f592628ee0de71769ed2e9c3d07f2"
+PV = "4.4.3"
+SRCREV = "a8f16d4eb479d9d18ffa6e46f5611ce57b6b7030"
 
 PACKAGECONFIG[dav1d] = "--enable-libdav1d,--disable-libdav1d,dav1d"
 PACKAGECONFIG[libass] = "--enable-libass,--disable-libass,libass"
