@@ -1,0 +1,30 @@
+From 7feac77d8020666c299d5f1c8c75b2ec2bc4d8cf Mon Sep 17 00:00:00 2001
+From: Markus Volk <f_l_k@t-online.de>
+Date: Tue, 11 Oct 2022 06:41:08 +0200
+Subject: [PATCH] FindNFS.cmake: dont use cmake-config
+
+It is broken for crosscompilation. Rely on pkgconfig instead
+
+Signed-off-by: Markus Volk <f_l_k@t-online.de>
+---
+ cmake/modules/FindNFS.cmake | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/cmake/modules/FindNFS.cmake b/cmake/modules/FindNFS.cmake
+index 11767fc563a..c682d48ec74 100644
+--- a/cmake/modules/FindNFS.cmake
++++ b/cmake/modules/FindNFS.cmake
+@@ -21,7 +21,9 @@ set(MODULE_LC libnfs)
+ SETUP_BUILD_VARS()
+ 
+ # Search for cmake config. Suitable for all platforms including windows
+-find_package(LIBNFS CONFIG QUIET)
++if(NOT UNIX)
++  find_package(LIBNFS CONFIG QUIET)
++endif()
+ 
+ if(NOT LIBNFS_FOUND)
+   if(ENABLE_INTERNAL_NFS)
+-- 
+2.34.1
+
