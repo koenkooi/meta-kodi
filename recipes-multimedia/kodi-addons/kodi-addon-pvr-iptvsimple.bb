@@ -9,9 +9,9 @@ DEPENDS = "pugixml"
 
 inherit kodi-addon
 
-PV = "20.5.1"
+PV = "20.6.0"
 
-SRCREV = "e455a2f05e88e643d3bfae35b1dfff9f74932ef3"
+SRCREV = "89aef8dbde50148bfcada674112f89d4ecf013b8"
 SRC_URI = "git://github.com/kodi-pvr/pvr.iptvsimple.git;nobranch=1;protocol=https"
 S = "${WORKDIR}/git"
 
