@@ -3,10 +3,10 @@
 
 inherit kodi-common
 
-KODIVER ?= "20.0-rc1"
+KODIVER ?= "20.0-rc2"
 
-SRC_URI = "git://github.com/xbmc/xbmc.git;protocol=https;branch=master"
-SRCREV = "911ad268d07049f6dc08fd2bbd7feae60c6fb6e8"
+SRC_URI = "git://github.com/xbmc/xbmc.git;protocol=https;branch=Nexus"
+SRCREV = "a184a3a7fce8baae9ea423dbed97db8a3b263f63"
 S = "${WORKDIR}/git"
 
 PV = "${KODIVER}-${KODICODENAME}"
