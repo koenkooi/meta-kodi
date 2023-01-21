@@ -11,6 +11,7 @@ require kodi.inc
 inherit ccache cmake pkgconfig gettext python3native
 
 SRC_URI:append = " \
+	file://0001-fix-include-order-issue.patch \
 	file://0001-mysqldataset-we-use-mysql-includedir-name-for-mari.patch \
 	file://0001-AEELDParser.cpp-fix-rtrim-function-for-clang.patch \
 	file://libreelec/kodi-100.03-disable-online-check.patch \
