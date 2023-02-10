@@ -1,4 +1,4 @@
-From 68f2b59fb1c90f4bdad899339b59a65d69dc5037 Mon Sep 17 00:00:00 2001
+From 1d23e125b6f76e74b754560c3b6931507cacddce Mon Sep 17 00:00:00 2001
 From: Timo Rothenpieler <timo@rothenpieler.org>
 Date: Tue, 7 Sep 2021 19:35:31 +0200
 Subject: [PATCH] configure: account for openssl3 license change
@@ -8,10 +8,10 @@ Subject: [PATCH] configure: account for openssl3 license change
  1 file changed, 5 insertions(+), 2 deletions(-)
 
 diff --git a/configure b/configure
-index 4ba72bf84b..cd3fb1888f 100755
+index c87a010387..ed7345b2c1 100755
 --- a/configure
 +++ b/configure
-@@ -1735,7 +1735,6 @@ EXTERNAL_LIBRARY_GPL_LIST="
+@@ -1765,7 +1765,6 @@ EXTERNAL_LIBRARY_GPL_LIST="
  EXTERNAL_LIBRARY_NONFREE_LIST="
      decklink
      libfdk_aac
@@ -19,7 +19,7 @@ index 4ba72bf84b..cd3fb1888f 100755
      libtls
  "
  
-@@ -1827,6 +1826,7 @@ EXTERNAL_LIBRARY_LIST="
+@@ -1857,6 +1856,7 @@ EXTERNAL_LIBRARY_LIST="
      mediacodec
      openal
      opengl
@@ -27,7 +27,7 @@ index 4ba72bf84b..cd3fb1888f 100755
      pocketsphinx
      vapoursynth
  "
-@@ -6524,7 +6524,10 @@ enabled omx_rpi           && { test_code cc OMX_Core.h OMX_IndexConfigBrcmVideoR
+@@ -6572,7 +6572,10 @@ enabled omx_rpi           && { test_code cc OMX_Core.h OMX_IndexConfigBrcmVideoR
                                 die "ERROR: OpenMAX IL headers from raspberrypi/firmware not found"; } &&
                               enable omx
  enabled omx               && require_headers OMX_Core.h
@@ -39,3 +39,6 @@ index 4ba72bf84b..cd3fb1888f 100755
                                 check_pkg_config openssl openssl openssl/ssl.h SSL_library_init ||
                                 check_lib openssl openssl/ssl.h OPENSSL_init_ssl -lssl -lcrypto ||
                                 check_lib openssl openssl/ssl.h SSL_library_init -lssl -lcrypto ||
+-- 
+2.34.1
+
