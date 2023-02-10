@@ -15,7 +15,6 @@ SRC_URI:append:rockchip = " \
 	file://v4l2-request/ffmpeg-001-v4l2-request.patch \
 	file://rockchip/ffmpeg-0002-WIP-deint-filter.patch \
 	file://rockchip/ffmpeg-0003-libavfilter-v4l2deinterlace-dequeue-both-destination.patch \
-	file://rockchip/ffmpeg-0004-v4l2request-hevc-increase-max-slices.patch \
 	file://rockchip/ffmpeg-0006-deint_v4l2m2m-increase-input-and-output-buffers.patch \
 	file://rockchip/ffmpeg-0006-libavfilter-v4l2deinterlace-support-more-formats-aut.patch \
 "
