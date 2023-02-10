@@ -25,6 +25,7 @@ SRC_URI:append = " \
 	file://drmprime-filter/0004-DVDVideoCodecDRMPRIME-Leave-deinterlace-filter-activ.patch \
 	file://drmprime-filter/0005-SetVideoInterlaced-Set-and-unset-deinterlace-method-.patch \
 	file://drmprime-filter/0006-DVDVideoCodecDRMPRIME-Close-deinterlace-filter-on-er.patch \
+	file://kodi-999.16-PR20632-base-m_bFullScreenRoot-setting-on-res-infos-bFullScreen.patch \
 "
 
 SRC_URI:append:rpi = " \
