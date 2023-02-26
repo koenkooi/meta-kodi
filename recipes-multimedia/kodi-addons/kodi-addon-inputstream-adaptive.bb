@@ -9,9 +9,9 @@ inherit kodi-addon
 
 DEPENDS += "expat bento4"
 
-PV = "20.3.3"
+PV = "20.3.4"
 
-SRCREV = "a5d1987544b6b9fc204830d20f54cb015b100b5c"
+SRCREV = "13516e0d42a9609c167cbe98b25dda0c97bc0bb7"
 SRC_URI = "git://github.com/xbmc/inputstream.adaptive.git;nobranch=1;protocol=https"
 S = "${WORKDIR}/git"
 
