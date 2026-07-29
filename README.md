@@ -91,6 +91,11 @@ optical drive support (`optical`) are separate `PACKAGECONFIG` options;
 Blu-ray support (libbluray) is not wired up yet because no current recipe
 for it exists in openembedded-core or meta-openembedded.
 
+## Maintainers
+
+* Koen Kooi <koen@dominion.thruhere.net>
+
 ## Contributing
 
-Send pull requests to https://github.com/koenkooi/meta-kodi
+Send patches or pull requests to https://github.com/koenkooi/meta-kodi. For
+security issues, see [SECURITY.md](SECURITY.md).
