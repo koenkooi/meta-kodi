@@ -1,0 +1,47 @@
+From: Koen Kooi <koen@dominion.thruhere.net>
+Subject: [PATCH] cmake: prefix wayland pkgdatadir results with the pkg-config sysroot
+
+pkg_get_variable() returns raw .pc variable values; in a cross build
+the waylandpp data directory lives under the pkg-config sysroot, not
+the host /usr/share. Skip the prefix when the .pc already applied it
+itself via pc_sysrootdir, as wayland-protocols.pc does.
+
+Upstream-Status: Pending
+
+---
+diff -ruN a/cmake/modules/FindWaylandProtocols.cmake b/cmake/modules/FindWaylandProtocols.cmake
+--- a/cmake/modules/FindWaylandProtocols.cmake	2026-07-28 17:06:54
++++ b/cmake/modules/FindWaylandProtocols.cmake	2026-07-28 17:28:54
+@@ -11,6 +11,14 @@
+ pkg_check_modules(PC_WAYLAND_PROTOCOLS wayland-protocols ${SEARCH_QUIET})
+ if(PC_WAYLAND_PROTOCOLS_FOUND)
+   pkg_get_variable(WAYLAND_PROTOCOLS_DIR wayland-protocols pkgdatadir)
++  # pkg_get_variable returns raw .pc values; prefix with the pkg-config
++  # sysroot unless the .pc already did (via pc_sysrootdir)
++  if(DEFINED ENV{PKG_CONFIG_SYSROOT_DIR})
++    string(FIND "${WAYLAND_PROTOCOLS_DIR}" "$ENV{PKG_CONFIG_SYSROOT_DIR}" _sysroot_pos)
++    if(NOT _sysroot_pos EQUAL 0)
++      set(WAYLAND_PROTOCOLS_DIR "$ENV{PKG_CONFIG_SYSROOT_DIR}${WAYLAND_PROTOCOLS_DIR}")
++    endif()
++  endif()
+ endif()
+ 
+ # Promote to cache variables so all code can access it
+diff -ruN a/cmake/modules/FindWaylandpp.cmake b/cmake/modules/FindWaylandpp.cmake
+--- a/cmake/modules/FindWaylandpp.cmake	2026-07-28 17:06:54
++++ b/cmake/modules/FindWaylandpp.cmake	2026-07-28 17:28:54
+@@ -12,6 +12,14 @@
+ 
+   if(PC_WAYLANDPP_FOUND)
+     pkg_get_variable(PC_WAYLANDPP_PKGDATADIR wayland-client++ pkgdatadir)
++    # pkg_get_variable returns raw .pc values; prefix with the pkg-config
++    # sysroot unless the .pc already did (via pc_sysrootdir)
++    if(DEFINED ENV{PKG_CONFIG_SYSROOT_DIR})
++      string(FIND "${PC_WAYLANDPP_PKGDATADIR}" "$ENV{PKG_CONFIG_SYSROOT_DIR}" _sysroot_pos)
++      if(NOT _sysroot_pos EQUAL 0)
++        set(PC_WAYLANDPP_PKGDATADIR "$ENV{PKG_CONFIG_SYSROOT_DIR}${PC_WAYLANDPP_PKGDATADIR}")
++      endif()
++    endif()
+   else()
+     message(SEND_ERROR "wayland-client++ not found via pkg-config")
+   endif()

@@ -1,0 +1,17 @@
+[Unit]
+Description=Kodi media center
+After=network-online.target sound.target systemd-user-sessions.service
+Wants=network-online.target
+
+[Service]
+User=kodi
+SupplementaryGroups=video input render audio tty
+TTYPath=/dev/tty1
+StandardInput=tty
+StandardOutput=journal
+ExecStart=/usr/bin/kodi-standalone
+Restart=on-abort
+TimeoutStopSec=15
+
+[Install]
+WantedBy=multi-user.target
