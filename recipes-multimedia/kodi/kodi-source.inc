@@ -23,6 +23,10 @@ LICENSE = "GPL-2.0-or-later"
 LIC_FILES_CHKSUM = "file://LICENSE.md;md5=7b423f1c9388eae123332e372451a4f7"
 
 PV = "21+22.0-beta3"
+# An earlier local build shipped PV = "22.0~beta1", which the "~" pre-
+# release operator sorts below "22.0" -- this PV scheme sorts as a plain
+# string instead, so it needs an epoch bump to compare as newer than that.
+PE = "1"
 
 SRC_URI = "git://github.com/xbmc/xbmc.git;protocol=https;branch=master;destsuffix=kodi-${PV}"
 SRCREV = "77395cf42e141000b0475b8d5a54925ad67bfeba"
