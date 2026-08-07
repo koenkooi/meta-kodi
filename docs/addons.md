@@ -80,10 +80,10 @@ should not be revived. What's genuinely unverified is CEC *usage* on real
 hardware (does a connected TV remote actually control Kodi) -- that needs a
 real board, not a recipe change.
 
-## The open gap: addon activation
+## Addon activation
 
-Kodi addons -- pvr.hts included -- **install disabled**. Nothing in this layer
-currently turns one on.
+Kodi addons -- pvr.hts included -- **install disabled** by default. This
+layer now turns pvr.hts on at boot; see "Implemented" below.
 
 Kodi's own `CAddonMgr`/`CAddonDatabase` (`xbmc/addons/AddonManager.cpp`,
 `AddonDatabase.cpp` -- stock Kodi behavior, not a LibreELEC patch) reads
@@ -107,26 +107,31 @@ already installs a binary addon's files straight into
 class) -- exactly the "files present on disk before first boot" half this
 mechanism needs. LibreELEC's zip-repository path (`PKG_IS_ADDON="yes"`, what
 `pvr.hts` actually uses *there*) is the one that stays dormant -- this
-project was never on that path to begin with. The only missing piece is
-adding `pvr.hts` to Kodi's `addon-manifest.xml`, as `optional` (not `system`
--- a `system` entry that's missing or unconfigured makes `CAddonMgr::Init()`
-treat it as a hard boot failure; `optional` doesn't).
+project was never on that path to begin with. `special://xbmc/system/addon-manifest.xml`
+is confirmed as a plain source file in Kodi's own tree, not generated (xbmc's
+top-level CMakeLists.txt feeds `cmake/installdata/common/common.txt` -- which
+lists it -- through `install_data`, installed by
+`cmake/scripts/linux/Install.cmake`'s `install(FILES ...)` loop straight to
+`${datarootdir}/kodi/system/`), so it lands in `${D}` at kodi's own
+`do_install` like any other installed file.
 
-Not yet implemented -- concrete options, in order of preference:
+**Implemented:** a second `do_install:append()` on `kodi_21+22.0-beta3.bb`
+seds `<addon optional="true">pvr.hts</addon>` in before the closing
+`</addons>` tag (`optional`, not `system` -- a missing/unconfigured `system`
+entry hard-fails Kodi's boot, `optional` doesn't) -- no bbappend or
+image-level `ROOTFS_POSTPROCESS_COMMAND` needed.
 
-1. **(Preferred)** Patch or `ROOTFS_POSTPROCESS_COMMAND`-edit Kodi's own
-   `${datadir}/kodi/system/addon-manifest.xml` to add
-   `<addon optional="true">pvr.hts</addon>`, in either `kodi_21+22.0-beta3.bb`
-   itself (if the manifest is a static installed file) or `kodi-image.bb`
-   (if editing post-rootfs-assembly is cleaner) -- verify which by checking
-   whether `addon-manifest.xml` lands in `${D}` from kodi's own `do_install`
-   or needs image-level access to definitely reach the final rootfs path.
-2. A first-boot systemd oneshot calling `Addons.SetAddonEnabled` over Kodi's
-   JSON-RPC socket (needs `jsonrpc` enabled via a seeded
-   `advancedsettings.xml`) -- a fallback if (1) turns out harder than
-   expected.
-3. Ship a pre-populated `userdata/Database/Addons33.db` as a committed binary
-   seed -- discouraged, rots silently against the next Kodi DB schema bump.
+Fallbacks, no longer needed but kept for reference:
+
+- A first-boot systemd oneshot calling `Addons.SetAddonEnabled` over Kodi's
+  JSON-RPC socket (needs `jsonrpc` enabled via a seeded
+  `advancedsettings.xml`) -- superseded by the manifest edit above.
+- Ship a pre-populated `userdata/Database/Addons33.db` as a committed binary
+  seed -- still discouraged, rots silently against the next Kodi DB schema
+  bump.
+
+Not yet verified: an actual boot test that pvr.hts shows up enabled in the
+Kodi UI/JSON-RPC (this was a recipe-only change, no image build done here).
 
 Not independently verified: which Kodi-internal component actually launches
 the `xbmc.service` Python thread once `CAddonMgr` marks an addon enabled
