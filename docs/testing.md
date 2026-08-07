@@ -53,13 +53,16 @@ A full boot-to-render pass succeeded, not just "the build completed":
 - The Estuary skin loaded fully, through `Home.xml` -- a real, rendered UI, not
   just a process that didn't crash
 
-The **only** real runtime issue found: no audio sink
-(`CActiveAESink::OpenSink - no sink was returned`, repeating for the whole
-session) -- no audio device is wired into the qemu boot config for this
-machine/image combination. Purely a missing `-audiodev`/`-device` on the qemu
-command line (or `QB_AUDIO_DRV`/`QB_AUDIO_OPT` in the machine conf) plus
-whatever guest-side ALSA/Pulse wiring it needs -- not a Kodi or recipe problem,
-tracked as an open TODO item separately from anything in this layer.
+Audio works end-to-end. Two layered fixes were needed, both in meta-angstrom
+not this layer: a qemu-only kernel config fragment (`CONFIG_SND_VIRTIO=y`
+etc) plus a `virtio-sound-pci` qemu device get the kernel to register a real
+ALSA card, but Kodi still fails to open it on its own -- `weston-init.bb`
+(oe-core) never puts the `weston` user in the `audio` group, so the device
+exists and works at the system level (`aplay -l`, `/dev/snd/pcmC0D0p` all
+correct) but Kodi gets permission denied opening it. A `weston-init.bbappend`
+adding that group membership closes the gap. Confirmed via a real boot:
+`CAESinkALSA::Initialize - Opened device "sysdefault:CARD=SoundCard"`, zero
+`no sink was returned` occurrences.
 
 ## Re-running this after a change
 
