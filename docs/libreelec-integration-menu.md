@@ -64,37 +64,46 @@ works, see `addons.md`), and both are marked **WIP by LibreELEC themselves**.
 
 ## B. Addon packaging & activation
 
-**B1. Confirmed: no LibreELEC prior art for pre-enabling addons.** Full-tree
-grep for addon-activation seeding (`guisettings`/`addon_data`/`Addons33`/
-`sources.xml`/`userdata`) found nothing. No device's default package list
-includes any `pvr.*` addon. The one build-time "always included" flag
-(`PKG_IS_ADDON="embedded"`, used only by `peripheral.joystick`) is a compile-set
-flag, not a Kodi-DB enabled flag, and no PVR client uses it. This project's own
-open "pvr.hts ships disabled" gap has no shortcut to steal from here -- it's
-net-new design work either way.
+**B1. Kodi's own `addon-manifest.xml` -- real, reusable prior art.** Stock
+Kodi (`xbmc/addons/AddonManager.cpp`, `AddonDatabase.cpp` -- not a LibreELEC
+patch) reads `special://xbmc/system/addon-manifest.xml` at every startup and
+auto-enables any addon whose ID is listed there the moment its `addon.xml` is
+discovered on disk, **regardless of extension-point type**. LibreELEC injects
+`service.libreelec.settings`'s ID into that manifest via `xmlstarlet` in
+`packages/mediacenter/kodi/package.mk`'s `post_makeinstall_target()` -- static,
+build-time, no first-boot script. LibreELEC's own PVR clients do NOT use this
+path -- their `pvr.hts/package.mk` goes through the separate zip-repository
+pipeline (B2 below) and stays disabled until a human installs one. The
+manifest mechanism itself is general and not addon-type-gated, though, making
+it directly reusable here even though LibreELEC doesn't currently use it for
+anything PVR-shaped. Full mechanism writeup is in `addons.md`'s "open gap"
+section.
 
-**B2. Local Kodi addon repository ("repository.angstrom") -- DO NOW, top
-structural pick.** LibreELEC's actual answer, at a different layer: addons
-build into a per-arch zip feed, and the base image ships only a small bootstrap
-addon pointing Kodi's addon browser at that feed. Installing from a repo
-fetches *and* enables in one step -- the activation problem evaporates because
-a disabled addon is never shipped in the first place. Effort: roughly (a) a
-small task emitting the addon zip + `addons.xml`/`addons.xml.md5` from what
-`kodi-addon.bbclass` already builds, (b) hook into the existing
+This project is already halfway onto this exact mechanism: `kodi-addon.bbclass`
+already installs a binary addon's files straight into
+`${datadir}/kodi/addons/<id>` (not via any repository-fetch flow) -- exactly
+the "files present on disk before first boot" half of what LibreELEC's own
+settings addon relies on. The only missing piece: add `pvr.hts`'s ID to
+Kodi's `addon-manifest.xml` as `optional="true"` (not a bare `system` entry --
+that variant hard-fails Kodi's boot if the addon is ever missing or
+unconfigured, appropriate for a required system component, wrong for an
+opt-in PVR backend). This is the preferred approach for closing the
+activation gap -- see `addons.md` for the concrete next-step options in order
+of preference.
+
+**B2. Local Kodi addon repository ("repository.angstrom") -- still worth
+doing, now a distribution/discoverability feature rather than the primary
+activation fix.** LibreELEC's other real mechanism: addons build into a
+per-arch zip feed, and the base image ships a small bootstrap addon pointing
+Kodi's addon browser at that feed -- useful for addons a user might want to
+*add* post-boot (not just the ones baked into the image), and still a clean
+model for anything not shipped in `IMAGE_INSTALL` by default. Effort: roughly
+(a) a small task emitting the addon zip + `addons.xml`/`addons.xml.md5` from
+what `kodi-addon.bbclass` already builds, (b) hook into the existing
 `scripts/publish-feed.sh`, (c) one small `kodi-repository-angstrom.bb`
 installing a short `addon.xml` bootstrap, (d) add it to `kodi-image.bb`. No
 Kodi patch needed (unlike LibreELEC, this project doesn't need to be on Kodi's
-official-repo allowlist for a locally-installed repo addon to work). Caveat:
-needs a reachable feed URL at runtime, so it doesn't cover an offline/unattended
-qemu boot test on its own -- see B3.
-
-**B3. Activation for the unattended qemu boot test -- DO NOW, pick one.**
-(a) a first-boot systemd oneshot waiting on Kodi's JSON-RPC socket, calling
-`Addons.SetAddonEnabled` (needs `jsonrpc` enabled via a seeded
-`advancedsettings.xml`); or (b) a pre-generated `userdata/Database/Addons33.db`
-committed as a binary seed. **Prefer (a)** -- a binary DB seed keyed to a Kodi
-schema version rots silently on the next Kodi bump; JSON-RPC is inspectable
-and self-healing.
+official-repo allowlist for a locally-installed repo addon to work).
 
 ---
 
@@ -211,10 +220,11 @@ if ever picked up.
    on the entire menu: one file, confirmed still-unmerged upstream, and it
    targets the exact code path (`kiosk-shell.so` fullscreening clients on its
    own authority) this project's Weston setup actually runs.
-2. **B2 + B3** -- close the addon-activation gap. The actual open TODO item;
-   confirmed there's no shortcut to steal from LibreELEC. Take their
-   *architecture* (local addon repository, so install = enable) paired with a
-   small JSON-RPC first-boot oneshot for the offline qemu-test path.
+2. **B1** -- close the addon-activation gap via Kodi's own
+   `addon-manifest.xml` mechanism. The actual open TODO item; add `pvr.hts`
+   as an `optional` entry, which this project is already halfway set up for
+   since `kodi-addon.bbclass` already installs addon files directly rather
+   than through any repository-fetch flow.
 3. **E2** -- cross-check PACKAGECONFIG against Kodi's real `ENABLE_*` surface.
    An hour of work, one file; the missing `bluray` entry alone justifies it.
 

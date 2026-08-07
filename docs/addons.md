@@ -83,19 +83,56 @@ real board, not a recipe change.
 ## The open gap: addon activation
 
 Kodi addons -- pvr.hts included -- **install disabled**. Nothing in this layer
-currently turns one on. Confirmed via a structured comparison against
-LibreELEC (see `libreelec-integration-menu.md`, section B) that there's no
-prior art to port here either -- LibreELEC's own answer is architectural (ship
-addons via a local Kodi-repository feed, so *installing* one enables it in the
-same step, rather than pre-seeding an "enabled" flag anywhere), not a
-first-boot trick. Two concrete options remain open, neither implemented yet:
+currently turns one on.
 
-1. A first-boot systemd oneshot that waits for Kodi's JSON-RPC socket (needs
-   `jsonrpc` enabled via a seeded `advancedsettings.xml`) and calls
-   `Addons.SetAddonEnabled`.
-2. Ship a pre-populated `userdata/Database/Addons33.db` as a committed binary
-   seed -- discouraged, since it silently rots against the next Kodi DB schema
-   bump; prefer (1).
+Kodi's own `CAddonMgr`/`CAddonDatabase` (`xbmc/addons/AddonManager.cpp`,
+`AddonDatabase.cpp` -- stock Kodi behavior, not a LibreELEC patch) reads
+`special://xbmc/system/addon-manifest.xml` at every startup. Any addon whose
+ID is listed there gets enabled automatically the moment `FindAddons()`
+discovers its `addon.xml` on disk -- **regardless of extension point type**
+(`xbmc.service`, `xbmc.pvrclient`, anything) -- as a `system` entry
+(force-`enabled=1` on every boot; a missing/unconfigured `system` addon is a
+hard boot failure) or an `optional` one (auto-`enabled=1` the first time it's
+discovered, not force-re-enabled afterward). LibreELEC uses exactly this for
+its own always-on settings addon, `service.libreelec.settings`, injecting its
+ID into the manifest via three `xmlstarlet ed` calls in
+`packages/mediacenter/kodi/package.mk`'s own `post_makeinstall_target()` --
+baked into the image at kodi-build time, no first-boot script involved. See
+`libreelec-integration-menu.md` section B for the fuller LibreELEC-side
+writeup.
+
+This project is already halfway onto this exact mechanism: `kodi-addon.bbclass`
+already installs a binary addon's files straight into
+`${datadir}/kodi/addons/<id>` (see `FILES:${PN} += "${KODIADDONDIR}"` in the
+class) -- exactly the "files present on disk before first boot" half this
+mechanism needs. LibreELEC's zip-repository path (`PKG_IS_ADDON="yes"`, what
+`pvr.hts` actually uses *there*) is the one that stays dormant -- this
+project was never on that path to begin with. The only missing piece is
+adding `pvr.hts` to Kodi's `addon-manifest.xml`, as `optional` (not `system`
+-- a `system` entry that's missing or unconfigured makes `CAddonMgr::Init()`
+treat it as a hard boot failure; `optional` doesn't).
+
+Not yet implemented -- concrete options, in order of preference:
+
+1. **(Preferred)** Patch or `ROOTFS_POSTPROCESS_COMMAND`-edit Kodi's own
+   `${datadir}/kodi/system/addon-manifest.xml` to add
+   `<addon optional="true">pvr.hts</addon>`, in either `kodi_21+22.0-beta3.bb`
+   itself (if the manifest is a static installed file) or `kodi-image.bb`
+   (if editing post-rootfs-assembly is cleaner) -- verify which by checking
+   whether `addon-manifest.xml` lands in `${D}` from kodi's own `do_install`
+   or needs image-level access to definitely reach the final rootfs path.
+2. A first-boot systemd oneshot calling `Addons.SetAddonEnabled` over Kodi's
+   JSON-RPC socket (needs `jsonrpc` enabled via a seeded
+   `advancedsettings.xml`) -- a fallback if (1) turns out harder than
+   expected.
+3. Ship a pre-populated `userdata/Database/Addons33.db` as a committed binary
+   seed -- discouraged, rots silently against the next Kodi DB schema bump.
+
+Not independently verified: which Kodi-internal component actually launches
+the `xbmc.service` Python thread once `CAddonMgr` marks an addon enabled
+(well-established Kodi behavior, but not traced to a specific source line
+here) -- worth confirming before leaning on it for anything more elaborate
+than "gets enabled."
 
 See `libreelec-integration-menu.md` section B for the fuller writeup,
 including the local-addon-repository idea as the more structural fix.
