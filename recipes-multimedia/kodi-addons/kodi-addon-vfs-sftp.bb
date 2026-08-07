@@ -18,12 +18,3 @@ KODIADDONNAME = "vfs.sftp"
 # FindSSH.cmake pkg_check_modules()s "libssh", not libssh2). OpenSSL and
 # zlib are also find_package()d but already staged via kodi/kodi-platform.
 DEPENDS += "libssh"
-
-# Auto-activate: see kodi-addon-pvr-hts.bb for the mechanism.
-RDEPENDS:${PN} += "kodi"
-pkg_postinst:${PN}() {
-    manifest="$D${datadir}/kodi/system/addon-manifest.xml"
-    if [ -f "$manifest" ] && ! grep -q '>vfs.sftp<' "$manifest"; then
-        sed -i 's#</addons>#  <addon optional="true">vfs.sftp</addon>\n</addons>#' "$manifest"
-    fi
-}

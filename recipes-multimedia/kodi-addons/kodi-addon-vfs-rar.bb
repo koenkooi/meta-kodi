@@ -17,12 +17,3 @@ KODIADDONNAME = "vfs.rar"
 # CMakeLists.txt only find_package()s TinyXML (already staged via
 # kodi-addon.bbclass -> kodi-platform -> libtinyxml). Unrar itself is
 # bundled in-tree under lib/UnrarXLib, so no extra DEPENDS needed.
-
-# Auto-activate: see kodi-addon-pvr-hts.bb for the mechanism.
-RDEPENDS:${PN} += "kodi"
-pkg_postinst:${PN}() {
-    manifest="$D${datadir}/kodi/system/addon-manifest.xml"
-    if [ -f "$manifest" ] && ! grep -q '>vfs.rar<' "$manifest"; then
-        sed -i 's#</addons>#  <addon optional="true">vfs.rar</addon>\n</addons>#' "$manifest"
-    fi
-}

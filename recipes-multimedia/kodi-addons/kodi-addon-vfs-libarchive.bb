@@ -18,12 +18,3 @@ KODIADDONNAME = "vfs.libarchive"
 # libarchive; LibLZMA is optional upstream but included here for feature
 # parity with the addon's other builds.
 DEPENDS += "libarchive bzip2 lz4 lzo xz zlib openssl"
-
-# Auto-activate: see kodi-addon-pvr-hts.bb for the mechanism.
-RDEPENDS:${PN} += "kodi"
-pkg_postinst:${PN}() {
-    manifest="$D${datadir}/kodi/system/addon-manifest.xml"
-    if [ -f "$manifest" ] && ! grep -q '>vfs.libarchive<' "$manifest"; then
-        sed -i 's#</addons>#  <addon optional="true">vfs.libarchive</addon>\n</addons>#' "$manifest"
-    fi
-}
