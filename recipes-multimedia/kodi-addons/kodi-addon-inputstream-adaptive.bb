@@ -23,12 +23,3 @@ DEPENDS += "bento4 nlohmann-json nss pugixml"
 do_install:append:aarch64() {
     install -m 0755 ${B}/lib/cdm_aarch64/libcdm_aarch64_loader.so ${D}${KODIADDONDIR}/${KODIADDONNAME}/
 }
-
-# Auto-activate, see kodi-addon-pvr-hts.bb for the full rationale.
-RDEPENDS:${PN} += "kodi"
-pkg_postinst:${PN}() {
-    manifest="$D${datadir}/kodi/system/addon-manifest.xml"
-    if [ -f "$manifest" ] && ! grep -q '>inputstream.adaptive<' "$manifest"; then
-        sed -i 's#</addons>#  <addon optional="true">inputstream.adaptive</addon>\n</addons>#' "$manifest"
-    fi
-}

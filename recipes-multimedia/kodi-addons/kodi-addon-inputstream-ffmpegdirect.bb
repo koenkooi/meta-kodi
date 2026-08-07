@@ -19,12 +19,3 @@ KODIADDONNAME = "inputstream.ffmpegdirect"
 # referenced at all -- those are ffmpeg's own optional build deps, not
 # this addon's, so no DEPENDS on the new zvbi recipe here.
 DEPENDS += "ffmpeg zlib bzip2"
-
-# Auto-activate, see kodi-addon-pvr-hts.bb for the full rationale.
-RDEPENDS:${PN} += "kodi"
-pkg_postinst:${PN}() {
-    manifest="$D${datadir}/kodi/system/addon-manifest.xml"
-    if [ -f "$manifest" ] && ! grep -q '>inputstream.ffmpegdirect<' "$manifest"; then
-        sed -i 's#</addons>#  <addon optional="true">inputstream.ffmpegdirect</addon>\n</addons>#' "$manifest"
-    fi
-}

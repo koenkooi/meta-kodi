@@ -15,12 +15,3 @@ SRC_URI = "git://github.com/kodi-pvr/pvr.hdhomerun.git;nobranch=1;protocol=https
 KODIADDONNAME = "pvr.hdhomerun"
 
 DEPENDS += "jsoncpp libhdhomerun"
-
-# Auto-activate, see kodi-addon-pvr-hts.bb for the full rationale.
-RDEPENDS:${PN} += "kodi"
-pkg_postinst:${PN}() {
-    manifest="$D${datadir}/kodi/system/addon-manifest.xml"
-    if [ -f "$manifest" ] && ! grep -q '>pvr.hdhomerun<' "$manifest"; then
-        sed -i 's#</addons>#  <addon optional="true">pvr.hdhomerun</addon>\n</addons>#' "$manifest"
-    fi
-}
