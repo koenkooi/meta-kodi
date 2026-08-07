@@ -23,3 +23,8 @@ DEPENDS += "bento4 nlohmann-json nss pugixml"
 do_install:append:aarch64() {
     install -m 0755 ${B}/lib/cdm_aarch64/libcdm_aarch64_loader.so ${D}${KODIADDONDIR}/${KODIADDONNAME}/
 }
+
+# kodi-addon.bbclass already skips this for ${PN} -- every kodi binary
+# addon installs its .so under the addon dir, not libdir, by design.
+# Its own -dbg split of this extra CDM shim is not covered by that.
+INSANE_SKIP:${PN}-dbg += "libdir"
