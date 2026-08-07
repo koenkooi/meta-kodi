@@ -138,14 +138,19 @@ Fallbacks, no longer needed but kept for reference:
   seed -- still discouraged, rots silently against the next Kodi DB schema
   bump.
 
-Not yet verified: an actual boot test that pvr.hts shows up enabled in the
-Kodi UI/JSON-RPC (this was a recipe-only change, no image build done here).
-
-Not independently verified: which Kodi-internal component actually launches
-the `xbmc.service` Python thread once `CAddonMgr` marks an addon enabled
-(well-established Kodi behavior, but not traced to a specific source line
-here) -- worth confirming before leaning on it for anything more elaborate
-than "gets enabled."
+Verified via a real boot test (qemuarm64, `kodi-image`): `kodi-image.bb`
+needs `kodi-addon-pvr-hts` in `CORE_IMAGE_EXTRA_INSTALL` or the addon is
+never in the image and the postinst has nothing to act on. With that in
+place, `kodi.log` from a real boot shows the whole chain working:
+`Addon Manager: Found addon: 'pvr.hts v22.9.1'`, then
+`Creating PVR client: addonId=pvr.hts, instanceId=1, clientId=1`, then
+`<pvr.hts>: starting PVR client`, then repeated
+`<pvr.hts>: unable to connect to 127.0.0.1:9982` (Tvheadend's HTSP port) --
+the expected failure with no server running in this qemu boot, and exactly
+the bar this was verified against: the addon really starts and attempts a
+real backend connection. pvr.hts is an `xbmc.pvrclient` extension point,
+instantiated directly by `CPVRManager` once enabled -- there is no separate
+`xbmc.service` Python-thread launch step for this addon type.
 
 See `libreelec-integration-menu.md` section B for the fuller writeup,
 including the local-addon-repository idea as the more structural fix.
