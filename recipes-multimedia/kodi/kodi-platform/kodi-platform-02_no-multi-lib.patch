@@ -1,0 +1,25 @@
+From: Koen Kooi <koen@dominion.thruhere.net>
+Subject: [PATCH] CMakeLists.txt: drop UseMultiArch.cmake
+
+OE handles multilib/multiarch its own way; upstream's UseMultiArch.cmake
+module is neither needed nor available in this cross-build context.
+
+Upstream-Status: Inappropriate [OE-specific cross-build, multilib is
+handled by the OE build system itself, not by this in-tree cmake module]
+Signed-off-by: Koen Kooi <koen@dominion.thruhere.net>
+---
+ CMakeLists.txt | 1 -
+ 1 file changed, 1 deletion(-)
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 9485ae5..e7d2eb2 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -21,7 +21,6 @@ foreach(_root ${CMAKE_FIND_ROOT_PATH})
+   string(REPLACE "${_root}" "" kodiplatform_TINYXML_LIBRARIES_EXPORT "${kodiplatform_TINYXML_LIBRARIES_EXPORT}")
+ endforeach()
+
+-include(UseMultiArch.cmake)
+ include(CheckAtomic.cmake)
+
+ set(kodiplatform_NAME kodiplatform)

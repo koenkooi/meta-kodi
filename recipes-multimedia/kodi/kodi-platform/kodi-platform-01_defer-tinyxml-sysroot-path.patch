@@ -1,0 +1,72 @@
+From: Koen Kooi <koen@dominion.thruhere.net>
+Subject: [PATCH] Defer TinyXML's sysroot path in the exported cmake config
+
+find_package(TinyXML)'s TINYXML_INCLUDE_DIR/TINYXML_LIBRARIES resolve to
+this build's own absolute CMAKE_FIND_ROOT_PATH-prefixed sysroot path (real
+CMake behaviour under cross-compilation, not a bug in FindTinyXML.cmake).
+kodiplatform-config.cmake.in already defers ITS OWN CMAKE_INSTALL_PREFIX-
+derived paths correctly, via a literal (unexpanded) ${CMAKE_FIND_ROOT_PATH}
+left in the generated file for whichever build later consumes it to expand
+against its own sysroot -- but it bakes TinyXML's paths in pre-resolved,
+with no equivalent deferral, so the exported kodi-platform-dev package
+embeds this build's raw TMPDIR path (do_package_qa's buildpaths check,
+correctly, catches this).
+
+Strip whatever CMAKE_FIND_ROOT_PATH entry matched from TinyXML's resolved
+paths into new *_EXPORT variables, used only by the exported config
+(kept separate from TINYXML_INCLUDE_DIR/TINYXML_LIBRARIES themselves,
+which must stay absolute for this build's own compile/link steps right
+below them), then reference those in the template the same
+${CMAKE_FIND_ROOT_PATH}-deferred way as the file's existing entries.
+
+Upstream-Status: Pending
+Signed-off-by: Koen Kooi <koen@dominion.thruhere.net>
+---
+ CMakeLists.txt               | 11 +++++++++++
+ kodiplatform-config.cmake.in |  4 ++--
+ 2 files changed, 13 insertions(+), 2 deletions(-)
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 05a6775..9485ae5 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -10,6 +10,17 @@ find_package(Kodi REQUIRED)
+ find_package(TinyXML REQUIRED)
+ find_package(Threads REQUIRED)
+ find_package(p8-platform REQUIRED)
++
++# Sysroot-stripped copies of TinyXML's find_package() results, for the
++# exported kodiplatform-config.cmake only -- TINYXML_INCLUDE_DIR/LIBRARIES
++# themselves stay absolute for this build's own compile/link below.
++set(kodiplatform_TINYXML_INCLUDE_DIR_EXPORT "${TINYXML_INCLUDE_DIR}")
++set(kodiplatform_TINYXML_LIBRARIES_EXPORT "${TINYXML_LIBRARIES}")
++foreach(_root ${CMAKE_FIND_ROOT_PATH})
++  string(REPLACE "${_root}" "" kodiplatform_TINYXML_INCLUDE_DIR_EXPORT "${kodiplatform_TINYXML_INCLUDE_DIR_EXPORT}")
++  string(REPLACE "${_root}" "" kodiplatform_TINYXML_LIBRARIES_EXPORT "${kodiplatform_TINYXML_LIBRARIES_EXPORT}")
++endforeach()
++
+ include(UseMultiArch.cmake)
+ include(CheckAtomic.cmake)
+
+diff --git a/kodiplatform-config.cmake.in b/kodiplatform-config.cmake.in
+index 1bc437a..5fa268b 100644
+--- a/kodiplatform-config.cmake.in
++++ b/kodiplatform-config.cmake.in
+@@ -10,7 +10,7 @@
+ #
+ # propagate these properties from one build system to the other
+ set (kodiplatform_VERSION "@kodiplatform_VERSION_MAJOR@.@kodiplatform_VERSION_MINOR@")
+-set (kodiplatform_INCLUDE_DIRS @TINYXML_INCLUDE_DIR@ ${CMAKE_FIND_ROOT_PATH}@kodiplatform_INCLUDE_DIRS@ ${CMAKE_FIND_ROOT_PATH}@CMAKE_INSTALL_PREFIX@/include)
++set (kodiplatform_INCLUDE_DIRS ${CMAKE_FIND_ROOT_PATH}@kodiplatform_TINYXML_INCLUDE_DIR_EXPORT@ ${CMAKE_FIND_ROOT_PATH}@kodiplatform_INCLUDE_DIRS@ ${CMAKE_FIND_ROOT_PATH}@CMAKE_INSTALL_PREFIX@/include)
+ set (kodiplatform_LIBRARY_DIRS "@CMAKE_LIBRARY_OUTPUT_DIRECTORY@")
+ set (kodiplatform_LINKER_FLAGS "@kodiplatform_LINKER_FLAGS@")
+ set (kodiplatform_CONFIG_VARS "@kodiplatform_CONFIG_VARS@")
+@@ -21,7 +21,7 @@ if(WIN32)
+ else(WIN32)
+   set (kodiplatform_LIBRARY "-L${CMAKE_FIND_ROOT_PATH}@CMAKE_INSTALL_PREFIX@/@CMAKE_INSTALL_LIBDIR@ -lkodiplatform")
+ endif(WIN32)
+-set (kodiplatform_LIBRARIES ${kodiplatform_LIBRARY} "@kodiplatform_LIBRARIES@")
++set (kodiplatform_LIBRARIES ${kodiplatform_LIBRARY} "${CMAKE_FIND_ROOT_PATH}@kodiplatform_TINYXML_LIBRARIES_EXPORT@")
+ mark_as_advanced (kodiplatform_LIBRARY)
+
+ # add the library as a target, so that other things in the project including
