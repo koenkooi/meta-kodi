@@ -115,11 +115,19 @@ lists it -- through `install_data`, installed by
 `${datarootdir}/kodi/system/`), so it lands in `${D}` at kodi's own
 `do_install` like any other installed file.
 
-**Implemented:** a second `do_install:append()` on `kodi_21+22.0-beta3.bb`
-seds `<addon optional="true">pvr.hts</addon>` in before the closing
-`</addons>` tag (`optional`, not `system` -- a missing/unconfigured `system`
-entry hard-fails Kodi's boot, `optional` doesn't) -- no bbappend or
-image-level `ROOTFS_POSTPROCESS_COMMAND` needed.
+**Implemented, at the addon package, not the base kodi recipe.** A
+`pkg_postinst:${PN}()` on `kodi-addon-pvr-hts.bb` seds
+`<addon optional="true">pvr.hts</addon>` into `addon-manifest.xml` before the
+closing `</addons>` tag (`optional`, not `system` -- a missing/unconfigured
+`system` entry hard-fails Kodi's boot, `optional` doesn't), guarded by an
+idempotent `grep` against double-insertion on rebuild/reinstall.
+`RDEPENDS:${PN} += "kodi"` guarantees install ordering so kodi's manifest is
+already in the rootfs; `$D` covers both the rootfs-time execution path
+(preferred -- runs during `do_rootfs` via pseudo) and the deferred
+first-boot path a `read-only-rootfs` image would force instead. Keeping this
+on the addon recipe rather than `kodi_21+22.0-beta3.bb` means adding a second
+auto-activated addon later means writing its own postinst, not editing
+kodi's recipe again.
 
 Fallbacks, no longer needed but kept for reference:
 

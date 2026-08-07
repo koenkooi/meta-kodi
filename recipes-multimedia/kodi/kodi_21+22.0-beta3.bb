@@ -184,16 +184,6 @@ do_install:append() {
     fi
 }
 
-# Auto-activate pvr.hts: CAddonMgr reads this manifest at every startup
-# and enables any listed addon ID once its addon.xml is found on disk
-# (kodi-addon-pvr-hts.bb installs straight into ${datadir}/kodi/addons,
-# no repository-fetch flow). "optional" auto-enables once without
-# forcing a hard boot failure if the addon is ever missing.
-do_install:append() {
-    sed -i 's#</addons>#  <addon optional="true">pvr.hts</addon>\n</addons>#' \
-        ${D}${datadir}/kodi/system/addon-manifest.xml
-}
-
 USERADD_PACKAGES = "${PN}"
 USERADD_PARAM:${PN} = "--system --create-home --home-dir /home/kodi --shell /bin/sh --user-group kodi"
 
