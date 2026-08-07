@@ -1,0 +1,79 @@
+From dbc8742b6ffc6c7d58bce9147fb2de2bb35c7666 Mon Sep 17 00:00:00 2001
+From: Koen Kooi <koen@dominion.thruhere.net>
+Date: Fri, 7 Aug 2026 21:20:46 +0200
+Subject: [PATCH 01/10] reader-cryptoworks: fix a latent NULL deref in upstream
+ own BIGNUM fix
+
+Upstream already converted exp/ucpk from BIGNUM value fields to
+pointers (needed for OpenSSL 1.1+/3.x, BIGNUM went opaque) but never
+assigns BN_bin2bn own return value back to those pointers -- they stay
+NULL since cs_malloc zero-initializes the struct, so cw_RSA() gets
+handed a NULL exponent. Assign the return value at all three call
+sites. Also adds a card_done hook freeing exp/ucpk on card removal --
+none existed before, a pre-existing leak, not something this fix
+introduces.
+
+Signed-off-by: Koen Kooi <koen@dominion.thruhere.net>
+Co-Authored-By: Claude Sonnet 5 <noreply@anthropic.com>
+Upstream-Status: Pending
+---
+ reader-cryptoworks.c | 18 +++++++++++++++---
+ 1 file changed, 15 insertions(+), 3 deletions(-)
+
+diff --git a/reader-cryptoworks.c b/reader-cryptoworks.c
+index 456e14c..e6a8c80 100644
+--- a/reader-cryptoworks.c
++++ b/reader-cryptoworks.c
+@@ -282,7 +282,7 @@ static int32_t cryptoworks_card_init(struct s_reader *reader, ATR *newatr)
+ 		if(search_boxkey(reader, reader->caid, (char *)keybuf))
+ 		{
+ 			ipk = BN_new();
+-			BN_bin2bn(cwexp, sizeof(cwexp), csystem_data->exp);
++			csystem_data->exp = BN_bin2bn(cwexp, sizeof(cwexp), csystem_data->exp);
+ 			BN_bin2bn(keybuf, 64, ipk);
+ 			cw_RSA(reader, cta_res + 2, cta_res + 2, 0x40, csystem_data->exp, ipk, 0);
+ 			BN_free(ipk);
+@@ -291,7 +291,7 @@ static int32_t cryptoworks_card_init(struct s_reader *reader, ATR *newatr)
+ 			if(csystem_data->ucpk_valid)
+ 			{
+ 				cta_res[2] |= 0x80;
+-				BN_bin2bn(cta_res + 2, 0x40, csystem_data->ucpk);
++				csystem_data->ucpk = BN_bin2bn(cta_res + 2, 0x40, csystem_data->ucpk);
+ 				rdr_log_dump_dbg(reader, D_READER, cta_res + 2, 0x40, "IPK available -> session-key:");
+ 			}
+ 			else
+@@ -299,7 +299,7 @@ static int32_t cryptoworks_card_init(struct s_reader *reader, ATR *newatr)
+ 				csystem_data->ucpk_valid = (keybuf[0] == (((mfid & 0xFF) >> 1) | 0x80));
+ 				if(csystem_data->ucpk_valid)
+ 				{
+-					BN_bin2bn(keybuf, 0x40, csystem_data->ucpk);
++					csystem_data->ucpk = BN_bin2bn(keybuf, 0x40, csystem_data->ucpk);
+ 					rdr_log_dump_dbg(reader, D_READER, keybuf, 0x40, "session-key found:");
+ 				}
+ 				else
+@@ -343,6 +343,17 @@ static int32_t cryptoworks_card_init(struct s_reader *reader, ATR *newatr)
+ 	return OK;
+ }
+ 
++static void cryptoworks_card_done(struct s_reader *reader)
++{
++	struct cryptoworks_data *csystem_data = reader->csystem_data;
++	if(!csystem_data)
++		{ return; }
++	BN_free(csystem_data->exp);
++	BN_free(csystem_data->ucpk);
++	csystem_data->exp = NULL;
++	csystem_data->ucpk = NULL;
++}
++
+ static int32_t cryptoworks_do_ecm(struct s_reader *reader, const ECM_REQUEST *er, struct s_ecm_answer *ea)
+ {
+ 	def_resp;
+@@ -908,6 +919,7 @@ const struct s_cardsystem reader_cryptoworks =
+ 	.do_ecm            = cryptoworks_do_ecm,
+ 	.card_info         = cryptoworks_card_info,
+ 	.card_init         = cryptoworks_card_init,
++	.card_done         = cryptoworks_card_done,
+ 	.get_emm_type      = cryptoworks_get_emm_type,
+ 	.get_emm_filter    = cryptoworks_get_emm_filter,
+ };

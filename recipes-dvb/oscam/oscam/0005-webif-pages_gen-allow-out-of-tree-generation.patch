@@ -1,0 +1,93 @@
+From bfa8511170be9fb4325369ff4e5804bd0e2d1520 Mon Sep 17 00:00:00 2001
+From: Koen Kooi <koen@dominion.thruhere.net>
+Date: Fri, 7 Aug 2026 09:34:05 +0200
+Subject: [PATCH 05/10] webif/pages_gen: allow out of tree generation
+
+- optional argv: pages_gen [template_dir [output_dir]]
+- without arguments it still reads and writes the current directory,
+  which is what webif/Makefile relies on
+- lets a build system generate pages.c/pages.h into its own build
+  directory instead of into the source tree
+
+Signed-off-by: Koen Kooi <koen@dominion.thruhere.net>
+Co-Authored-By: Claude Sonnet 5 <noreply@anthropic.com>
+Upstream-Status: Pending
+---
+ webif/pages_gen.c | 31 ++++++++++++++++++++++++++-----
+ 1 file changed, 26 insertions(+), 5 deletions(-)
+
+diff --git a/webif/pages_gen.c b/webif/pages_gen.c
+index 3725fde..e833372 100644
+--- a/webif/pages_gen.c
++++ b/webif/pages_gen.c
+@@ -87,6 +87,19 @@ static FILE *xfopen(char *filename, char *mode)
+ 	return fh;
+ }
+ 
++// Generated files go to output_dir when the caller asks for an out of tree
++// build (see main()), otherwise next to the templates as before.
++static const char *output_dir = NULL;
++
++static FILE *xfopen_out(char *filename, char *mode)
++{
++	char path[4096];
++	if(!output_dir)
++		{ return xfopen(filename, mode); }
++	snprintf(path, sizeof(path), "%s/%s", output_dir, filename);
++	return xfopen(path, mode);
++}
++
+ static void readfile(const char *filename, uint8_t **data, size_t *data_len)
+ {
+ 	struct stat sb;
+@@ -353,13 +366,21 @@ static void dump_binary(char *ident, uint8_t *buf, size_t buf_len)
+ }
+ #endif
+ 
+-int main(void)
++// Usage: pages_gen [template_dir [output_dir]]
++// Without arguments it reads and writes the current directory, which is what
++// webif/Makefile does. Out of tree build systems pass both directories.
++int main(int argc, char **argv)
+ {
+ 	int i;
+ 
++	if(argc > 1 && chdir(argv[1]) != 0)
++		{ die("chdir(%s): %s\n", argv[1], strerror(errno)); }
++	if(argc > 2)
++		{ output_dir = argv[2]; }
++
+ 	parse_index_file(index_filename);
+ 
+-	output_file = xfopen(output_pages_h, "w");
++	output_file = xfopen_out(output_pages_h, "w");
+ 	fprintf(output_file, "#ifndef WEBIF_PAGES_H_\n");
+ 	fprintf(output_file, "#define WEBIF_PAGES_H_\n");
+ 	fprintf(output_file, "\n");
+@@ -401,7 +422,7 @@ int main(void)
+ 	fprintf(output_file, "#endif\n");
+ 	fclose(output_file);
+ 
+-	output_file = xfopen(output_pages_c, "w");
++	output_file = xfopen_out(output_pages_c, "w");
+ 	fprintf(output_file, "#include \"../globals.h\"\n");
+ 	fprintf(output_file, "\n");
+ 	fprintf(output_file, "#ifdef WEBIF\n");
+@@ -447,7 +468,7 @@ int main(void)
+ 			{ continue; }
+ 		memcpy(data + t->deps_ofs, t->deps, strlen(t->deps));
+ 	}
+-	FILE *bin = xfopen("pages.bin", "w");
++	FILE *bin = xfopen_out("pages.bin", "w");
+ 	fwrite(data, data_len, 1, bin);
+ 	fclose(bin);
+ 
+@@ -483,7 +504,7 @@ int main(void)
+ 		return 2;
+ 	}
+ 
+-	bin = xfopen("pages.bin.compressed", "w");
++	bin = xfopen_out("pages.bin.compressed", "w");
+ 	fwrite(out, out_len, 1, bin);
+ 	fclose(bin);
+ 

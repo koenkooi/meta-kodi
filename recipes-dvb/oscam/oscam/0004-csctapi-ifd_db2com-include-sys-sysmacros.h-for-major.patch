@@ -1,0 +1,29 @@
+From d2d9aeab4e568e029a52b3a019988725ce1565f3 Mon Sep 17 00:00:00 2001
+From: Koen Kooi <koen@dominion.thruhere.net>
+Date: Fri, 7 Aug 2026 21:21:11 +0200
+Subject: [PATCH 04/10] csctapi/ifd_db2com: include sys/sysmacros.h for
+ major/minor
+
+major()/minor() are glibc macros from sys/sysmacros.h, not implicitly
+available via sys/types.h on a modern glibc -- implicit-function
+declaration is a hard error on current GCC/Clang.
+
+Signed-off-by: Koen Kooi <koen@dominion.thruhere.net>
+Co-Authored-By: Claude Sonnet 5 <noreply@anthropic.com>
+Upstream-Status: Pending
+---
+ csctapi/ifd_db2com.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/csctapi/ifd_db2com.c b/csctapi/ifd_db2com.c
+index 1cdf8ba..fb5a050 100644
+--- a/csctapi/ifd_db2com.c
++++ b/csctapi/ifd_db2com.c
+@@ -1,6 +1,7 @@
+ #include "../globals.h"
+ 
+ #ifdef CARDREADER_DB2COM
++#include <sys/sysmacros.h> // major()/minor()
+ #include "../oscam-time.h"
+ #include "icc_async.h"
+ #include "ifd_phoenix.h"

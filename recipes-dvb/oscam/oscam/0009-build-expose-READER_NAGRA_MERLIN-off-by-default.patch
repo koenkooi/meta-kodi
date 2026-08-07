@@ -1,0 +1,127 @@
+From ab097b6e9d19fd27e32eda17bc6bfd3f3814a591 Mon Sep 17 00:00:00 2001
+From: Koen Kooi <koen@dominion.thruhere.net>
+Date: Fri, 7 Aug 2026 21:42:21 +0200
+Subject: [PATCH 09/10] build: expose READER_NAGRA_MERLIN, off by default
+
+Real gap in the meson build system port: READER_NAGRA_MERLIN is a
+genuine independent reader added upstream after the r11273 fork point
+this project started from (oscam.c own cardsystems list references
+reader_nagracak7 unconditionally whenever config.h defines it, which
+the checked-in config.h at this pin does). Missing it was a real link
+failure: undefined reference to reader_nagracak7, mbedtls_sha256_xxx,
+AesCtxIni/AesEncrypt.
+
+Wired up properly rather than just working around the symptom: a real
+meson option (default false, so it stays fully inert unless someone
+opts in), the LIB_MDC2/LIB_FAST_AES/LIB_SHA256 derived flags config.sh
+computes for it, and the new mbedcrypto dependency (mbedtls sha256
+module, no pkg-config file, plain find_library) it genuinely needs.
+Left mbedtls out of the recipe DEPENDS since the option defaults off --
+whoever flips it on needs to add that too.
+
+Signed-off-by: Koen Kooi <koen@dominion.thruhere.net>
+Co-Authored-By: Claude Sonnet 5 <noreply@anthropic.com>
+Upstream-Status: Pending
+---
+ meson.build       | 35 ++++++++++++++++++++++++++++++-----
+ meson_options.txt |  2 ++
+ 2 files changed, 32 insertions(+), 5 deletions(-)
+
+diff --git a/meson.build b/meson.build
+index 0544d68..dc0802b 100644
+--- a/meson.build
++++ b/meson.build
+@@ -122,7 +122,8 @@ protocol_opts = [
+   ['MODULE_SCAM', 'module-scam'],
+ ]
+ reader_opts = [
+-  ['READER_NAGRA', 'reader-nagra'], ['READER_IRDETO', 'reader-irdeto'],
++  ['READER_NAGRA', 'reader-nagra'], ['READER_NAGRA_MERLIN', 'reader-nagra-merlin'],
++  ['READER_IRDETO', 'reader-irdeto'],
+   ['READER_CONAX', 'reader-conax'], ['READER_CRYPTOWORKS', 'reader-cryptoworks'],
+   ['READER_SECA', 'reader-seca'], ['READER_VIACCESS', 'reader-viaccess'],
+   ['READER_VIDEOGUARD', 'reader-videoguard'], ['READER_DRE', 'reader-dre'],
+@@ -182,13 +183,17 @@ configure_file(input: 'config.h.in', output: 'config.h', configuration: config_h
+ # LIB_xxx: the bundled crypto/compression code needed once libcrypto isn't
+ # doing the job, or a specific protocol/reader needs it. Mirrors config.sh's
+ # list_config() exactly (the only place this logic lived before).
+-lib_bignum = not libcrypto_dep.found() and (conf['READER_CONAX'] or conf['READER_CRYPTOWORKS'] or conf['READER_NAGRA'])
++lib_bignum = not libcrypto_dep.found() and (conf['READER_CONAX'] or conf['READER_CRYPTOWORKS'] or conf['READER_NAGRA'] or conf['READER_NAGRA_MERLIN'])
+ lib_aes    = not libcrypto_dep.found()
+-lib_des    = conf['READER_DRE'] or conf['MODULE_SCAM'] or conf['READER_VIACCESS'] or conf['READER_NAGRA'] or conf['READER_VIDEOGUARD'] or conf['READER_CONAX']
+-lib_idea   = conf['MODULE_CCCAM'] or conf['READER_NAGRA'] or conf['READER_SECA']
++lib_des    = conf['READER_DRE'] or conf['MODULE_SCAM'] or conf['READER_VIACCESS'] or conf['READER_NAGRA'] or conf['READER_NAGRA_MERLIN'] or conf['READER_VIDEOGUARD'] or conf['READER_CONAX']
++lib_idea   = conf['MODULE_CCCAM'] or conf['READER_NAGRA'] or conf['READER_NAGRA_MERLIN'] or conf['READER_SECA']
+ lib_rc6    = conf['MODULE_CCCAM']
+ lib_sha1   = not libcrypto_dep.found() and conf['MODULE_CCCAM']
+ lib_minilzo = conf['MODULE_GBOX'] or conf['WEBIF']
++# Nagra Merlin/CAK7 only: mirrors config.sh (enabled READER_NAGRA_MERLIN).
++lib_mdc2     = conf['READER_NAGRA_MERLIN']
++lib_fast_aes = conf['READER_NAGRA_MERLIN']
++lib_sha256   = conf['READER_NAGRA_MERLIN']
+ 
+ #----------------------- sources ----------------------------------------------
+ 
+@@ -251,6 +256,15 @@ endif
+ if lib_minilzo
+   srcs += files('minilzo/minilzo.c')
+ endif
++if lib_mdc2
++  srcs += files('cscrypt/mdc2.c')
++endif
++if lib_fast_aes
++  srcs += files('cscrypt/fast_aes.c')
++endif
++if lib_sha256
++  srcs += files('cscrypt/sha256.c')
++endif
+ 
+ conditional_srcs = {
+   'WITH_CARDREADER'          : ['csctapi/atr.c', 'csctapi/icc_async.c',
+@@ -296,7 +310,8 @@ conditional_srcs = {
+                                 'reader-dre-common.c', 'reader-dre-st20.c'],
+   'READER_GRIFFIN'           : ['reader-griffin.c'],
+   'READER_IRDETO'            : ['reader-irdeto.c'],
+-  'READER_NAGRA'             : ['reader-nagra.c', 'reader-nagra-common.c'],
++  'READER_NAGRA'             : ['reader-nagra.c'],
++  'READER_NAGRA_MERLIN'      : ['reader-nagracak7.c'],
+   'READER_SECA'              : ['reader-seca.c'],
+   'READER_TONGFANG'          : ['reader-tongfang.c'],
+   'READER_VIACCESS'          : ['reader-viaccess.c'],
+@@ -316,6 +331,9 @@ endforeach
+ if conf['MODULE_CAMD35'] or conf['MODULE_CAMD35_TCP']
+   srcs += files('module-camd35.c')
+ endif
++if conf['READER_NAGRA'] or conf['READER_NAGRA_MERLIN']
++  srcs += files('reader-nagra-common.c')
++endif
+ # WITH_COOLAPI alone uses the legacy implementation; WITH_COOLAPI2 and
+ # WITH_SU980 share the current one (matches the Makefile SRC-y table --
+ # this split changed upstream since this project first packaged it).
+@@ -455,6 +473,13 @@ if dl_dep.found()
+   oscam_deps += dl_dep
+ endif
+ 
++# Nagra Merlin/CAK7 only: csctapi/icc_async.c uses mbedtls_sha256_xxx
++# directly. mbedcrypto is the specific sub-library that lives in (no
++# TLS/X.509 needed), no pkg-config file shipped, plain find_library().
++if conf['READER_NAGRA_MERLIN']
++  oscam_deps += cc.find_library('mbedcrypto', required: true)
++endif
++
+ # librt is only pulled in for the CLOCKFIX clock_gettime() use, and only on
+ # platforms where it is a separate library.
+ if conf['CLOCKFIX']
+diff --git a/meson_options.txt b/meson_options.txt
+index 7d64357..fcabbce 100644
+--- a/meson_options.txt
++++ b/meson_options.txt
+@@ -67,6 +67,8 @@ option('module-scam', type: 'boolean', value: true, description: 'scam protocol'
+ 
+ # Readers
+ option('reader-nagra', type: 'boolean', value: true, description: 'Nagra reader')
++option('reader-nagra-merlin', type: 'boolean', value: false,
++       description: 'Nagra Merlin/CAK7 reader (added upstream after the fork point this project started from; needs mbedtls, off by default to avoid the extra dependency unless actually wanted)')
+ option('reader-irdeto', type: 'boolean', value: true, description: 'Irdeto reader')
+ option('reader-conax', type: 'boolean', value: true, description: 'Conax reader')
+ option('reader-cryptoworks', type: 'boolean', value: true, description: 'Cryptoworks reader')

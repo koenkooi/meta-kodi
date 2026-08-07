@@ -1,0 +1,55 @@
+From 13b786f6dc13a2a26b8f90b0737f459b38f9f097 Mon Sep 17 00:00:00 2001
+From: Koen Kooi <koen@dominion.thruhere.net>
+Date: Fri, 7 Aug 2026 21:21:02 +0200
+Subject: [PATCH 03/10] oscam: bound the trailing slash append on cs_confdir
+
+cs_strlen(cs_confdir) - 1 underflows (size_t) to a wild index when
+cs_confdir is empty, reachable via oscam -c with an empty argument.
+Both call sites now share a bound-checked helper.
+
+Signed-off-by: Koen Kooi <koen@dominion.thruhere.net>
+Co-Authored-By: Claude Sonnet 5 <noreply@anthropic.com>
+Upstream-Status: Pending
+---
+ oscam.c | 14 +++++++++++---
+ 1 file changed, 11 insertions(+), 3 deletions(-)
+
+diff --git a/oscam.c b/oscam.c
+index d16f2ba..e6a88d5 100644
+--- a/oscam.c
++++ b/oscam.c
+@@ -1661,6 +1661,15 @@ const struct s_cardreader *cardreaders[] =
+ 	NULL
+ };
+ 
++// cs_strlen(cs_confdir) - 1 underflows (size_t) to a wild index when
++// cs_confdir is empty -- reachable via "oscam -c ''". Bound-check first.
++static void cs_confdir_append_slash(void)
++{
++	size_t len = cs_strlen(cs_confdir);
++	if(len && cs_confdir[len - 1] != '/')
++		{ cs_strncat(cs_confdir, "/", sizeof(cs_confdir)); }
++}
++
+ static void find_conf_dir(void)
+ {
+ 	static const char* confdirs[] =
+@@ -1680,8 +1689,7 @@ static void find_conf_dir(void)
+ 	char conf_file[128+16];
+ 	int32_t i;
+ 
+-	if(cs_confdir[cs_strlen(cs_confdir) - 1] != '/')
+-		{ cs_strncat(cs_confdir, "/", sizeof(cs_confdir)); }
++	cs_confdir_append_slash();
+ 
+ 	if(snprintf(conf_file, sizeof(conf_file), "%soscam.conf", cs_confdir) < 0)
+ 		{ return; }
+@@ -1790,7 +1798,7 @@ int32_t main(int32_t argc, char *argv[])
+ 	memset(&cfg, 0, sizeof(struct s_config));
+ 	cfg.max_pending = max_pending;
+ 
+-	if(cs_confdir[cs_strlen(cs_confdir) - 1] != '/') { cs_strncat(cs_confdir, "/", sizeof(cs_confdir)); }
++	cs_confdir_append_slash();
+ 	init_signal_pre(); // because log could cause SIGPIPE errors, init a signal handler first
+ 	init_first_client();
+ 	cs_lock_create(__func__, &system_lock, "system_lock", 5000);

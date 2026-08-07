@@ -1,0 +1,51 @@
+From e6bf9ae7efb8e6766e36d45c5d3dc6048ba097f6 Mon Sep 17 00:00:00 2001
+From: Koen Kooi <koen@dominion.thruhere.net>
+Date: Fri, 7 Aug 2026 10:31:46 +0200
+Subject: [PATCH 06/10] webif/pages_gen: read is_defined.txt from output_dir
+ too
+
+is_defined.txt is generated, not a template, so an out of tree build
+needs pages_gen to find it next to pages.c/pages.h/pages.bin instead
+of requiring a write into the source tree.
+
+Signed-off-by: Koen Kooi <koen@dominion.thruhere.net>
+Co-Authored-By: Claude Sonnet 5 <noreply@anthropic.com>
+Upstream-Status: Pending
+---
+ webif/pages_gen.c | 16 ++++++++++++++--
+ 1 file changed, 14 insertions(+), 2 deletions(-)
+
+diff --git a/webif/pages_gen.c b/webif/pages_gen.c
+index e833372..7bfd763 100644
+--- a/webif/pages_gen.c
++++ b/webif/pages_gen.c
+@@ -100,6 +100,16 @@ static FILE *xfopen_out(char *filename, char *mode)
+ 	return xfopen(path, mode);
+ }
+ 
++// is_defined.txt is generated (not a template), so it lives in output_dir
++// for an out of tree build, same as pages.c/pages.h/pages.bin.
++static const char *in_out_path(const char *filename, char *buf, size_t buflen)
++{
++	if(!output_dir)
++		{ return filename; }
++	snprintf(buf, buflen, "%s/%s", output_dir, filename);
++	return buf;
++}
++
+ static void readfile(const char *filename, uint8_t **data, size_t *data_len)
+ {
+ 	struct stat sb;
+@@ -152,8 +162,10 @@ static void parse_index_file(char *filename)
+ {
+ 	uint8_t *is_defined = NULL;
+ 	size_t is_defined_len = 0;
+-	if(access(defined_file, R_OK) != -1)
+-		readfile(defined_file, &is_defined, &is_defined_len);
++	char defined_path_buf[4096];
++	const char *defined_path = in_out_path(defined_file, defined_path_buf, sizeof(defined_path_buf));
++	if(access(defined_path, R_OK) != -1)
++		readfile(defined_path, &is_defined, &is_defined_len);
+ 	FILE *f = xfopen(filename, "r");
+ 	int max_fields = 3;
+ 	char line[1024];

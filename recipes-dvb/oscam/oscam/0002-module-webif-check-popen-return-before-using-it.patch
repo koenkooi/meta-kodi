@@ -1,0 +1,67 @@
+From 8f0c31eb32da7747c097dd1cec41bbe220e391f6 Mon Sep 17 00:00:00 2001
+From: Koen Kooi <koen@dominion.thruhere.net>
+Date: Fri, 7 Aug 2026 21:20:54 +0200
+Subject: [PATCH 02/10] module-webif: check popen return before using it
+
+send_oscam_script: fgets/pclose ran on a possibly-NULL FILE* if popen
+failed, and the scriptparam length check tested sizeof() on a
+pointer (always true) instead of the string length -- fixed to
+cs_strlen.
+
+send_oscam_scanusb: fgets executed before the NULL check on fp due
+to left to right evaluation order, so a failed popen crashed instead
+of hitting the intended failed to run message.
+
+Signed-off-by: Koen Kooi <koen@dominion.thruhere.net>
+Co-Authored-By: Claude Sonnet 5 <noreply@anthropic.com>
+Upstream-Status: Pending
+---
+ module-webif.c | 19 +++++++++++++------
+ 1 file changed, 13 insertions(+), 6 deletions(-)
+
+diff --git a/module-webif.c b/module-webif.c
+index 2c90e51..01a0087 100644
+--- a/module-webif.c
++++ b/module-webif.c
+@@ -7036,7 +7036,7 @@ static char *send_oscam_script(struct templatevars * vars, struct uriparams * pa
+ 					FILE *fp;
+ 					char buf[256];
+ 
+-					if((scriptparam != NULL) && (sizeof(scriptparam) > 0))
++					if((scriptparam != NULL) && (cs_strlen(scriptparam) > 0))
+ 					{
+ 						cs_strncat(system_str, " ", sizeof(system_str));
+ 						cs_strncat(system_str, scriptparam, sizeof(system_str));
+@@ -7044,12 +7044,19 @@ static char *send_oscam_script(struct templatevars * vars, struct uriparams * pa
+ 
+ 					fp = popen(system_str, "r");
+ 
+-					while (fgets(buf, sizeof(buf), fp) != NULL)
++					if(fp)
+ 					{
+-						tpl_addVar(vars, TPLAPPEND, "SCRIPTRESULTOUT", buf);
+-					}
++						while (fgets(buf, sizeof(buf), fp) != NULL)
++						{
++							tpl_addVar(vars, TPLAPPEND, "SCRIPTRESULTOUT", buf);
++						}
+ 
+-					rc = pclose(fp)/256;
++						rc = pclose(fp)/256;
++					}
++					else
++					{
++						rc = -1;
++					}
+ 
+ 					tpl_printf(vars, TPLAPPEND, "CODE", "returncode: %d", rc);
+ 					tpl_printf(vars, TPLADD, "SCRIPTNAME", "scriptname: %s", scriptname);
+@@ -7077,7 +7084,7 @@ static char *send_oscam_scanusb(struct templatevars * vars)
+ 	char path[1035];
+ 
+ 	fp = popen("lsusb -v | egrep '^Bus|^ *iSerial|^ *iProduct'", "r");
+-	if(!fgets(path, sizeof(path) - 1, fp) || !fp)
++	if(!fp || !fgets(path, sizeof(path) - 1, fp))
+ 	{
+ 		tpl_addVar(vars, TPLADD, "USBENTRY", "<b>lsusb:</b> Failed to run or not installed!");
+ 		tpl_addVar(vars, TPLADD, "USBBIT", tpl_getTpl(vars, "SCANUSBBIT"));

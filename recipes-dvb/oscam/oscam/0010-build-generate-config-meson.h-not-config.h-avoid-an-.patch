@@ -1,0 +1,63 @@
+From 663c0810efdb8bccb884cf6ffd117f72c07319f6 Mon Sep 17 00:00:00 2001
+From: Koen Kooi <koen@dominion.thruhere.net>
+Date: Fri, 7 Aug 2026 21:49:38 +0200
+Subject: [PATCH 10/10] build: generate config-meson.h, not config.h, avoid an
+ include clash
+
+Root cause of the READER_NAGRA_MERLIN link failure: globals.h does
+#include "config.h", a quote include, which C resolves against the
+including file own directory (the source tree, where a real config.h
+already exists for the legacy Makefile/CMake/config.sh path) before
+ever consulting -I. -- the meson build directory copy was silently
+never reached, no matter what -I. said. This only stayed invisible on
+the old r11273 base because that source tree own config.h happened to
+match this project chosen option defaults; the Toysoft base own
+config.h genuinely differs (READER_NAGRA_MERLIN enabled there), which
+is what finally exposed it.
+
+Real fix, not a workaround: the generated header is config-meson.h
+now, a name that does not exist anywhere in the source tree, so there
+is no ambiguity left to resolve. globals.h is patched to include that
+name instead. config.h itself is untouched, still real and correct
+for anyone using the Makefile/CMake/config.sh path directly.
+
+Signed-off-by: Koen Kooi <koen@dominion.thruhere.net>
+Co-Authored-By: Claude Sonnet 5 <noreply@anthropic.com>
+Upstream-Status: Pending
+---
+ globals.h   | 2 +-
+ meson.build | 8 +++++++-
+ 2 files changed, 8 insertions(+), 2 deletions(-)
+
+diff --git a/globals.h b/globals.h
+index a6f866a..9c37121 100644
+--- a/globals.h
++++ b/globals.h
+@@ -54,7 +54,7 @@
+ #define __config_enabled(arg1_or_junk) ___config_enabled(arg1_or_junk 1, 0)
+ #define ___config_enabled(__ignored, val, ...) val
+ 
+-#include "config.h"
++#include "config-meson.h"
+ 
+ #if defined(WITH_SSL) && !defined(WITH_LIBCRYPTO)
+ # define WITH_LIBCRYPTO 1
+diff --git a/meson.build b/meson.build
+index dc0802b..7d8bdab 100644
+--- a/meson.build
++++ b/meson.build
+@@ -178,7 +178,13 @@ config_h_cdata.set('TOP_LEVEL_DEFINES', '\n'.join(top_level_lines))
+ config_h_cdata.set('WITH_CARDREADER_DEFINE',
+                    with_cardreader ? '#define WITH_CARDREADER 1' : '#undef WITH_CARDREADER')
+ config_h_cdata.set('CARDREADER_DEFINES', '\n'.join(cardreader_lines))
+-configure_file(input: 'config.h.in', output: 'config.h', configuration: config_h_cdata)
++# NOT named config.h: globals.h's own #include "config.h" is a quote
++# include, which C resolves against the including file's OWN directory
++# (the source tree, where a same-named config.h already exists for the
++# legacy Makefile/CMake/config.sh path) before it ever consults -I --
++# the build directory copy would silently never be seen. globals.h is
++# patched (see the patch series) to include this name instead.
++configure_file(input: 'config.h.in', output: 'config-meson.h', configuration: config_h_cdata)
+ 
+ # LIB_xxx: the bundled crypto/compression code needed once libcrypto isn't
+ # doing the job, or a specific protocol/reader needs it. Mirrors config.sh's
