@@ -4,7 +4,7 @@ ShairPort. Kodi links against it for its AirTunes audio streaming \
 support (PACKAGECONFIG airtunes)."
 HOMEPAGE = "https://github.com/juhovh/shairplay"
 
-LICENSE = "MIT & LGPL-2.1-or-later & BSD-2-Clause"
+LICENSE = "MIT AND LGPL-2.1-or-later AND BSD-2-Clause"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=7fff59c88f17faa814f26f26b06a7100"
 
 DEPENDS = "avahi libao"
